@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #5b7ead;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 85px;
+      }
+
+      .cls-2 {
+        fill: #1a1919;
+      }
+    </style>
+  </defs>
+  <g id="_0П" data-name="0П">
+    <polyline class="cls-1" points="252.8 78.33 423.8 249.33 252.8 420.33"/>
+  </g>
+  <g id="_0П_копия_" data-name="0П (копия)">
+    <line class="cls-1" x1="81.8" y1="249.33" x2="423.8" y2="249.33"/>
+  </g>
+  <g id="_06" data-name="06">
+    <path class="cls-2" d="M452.47,249.33a28.67,28.67,0,1,1-28.67-28.66A28.67,28.67,0,0,1,452.47,249.33Z"/>
+  </g>
+</svg>

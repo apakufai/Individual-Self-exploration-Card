@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 496.1 496.1" style="enable-background:new 0 0 496.1 496.1;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+	.st2{fill:none;stroke:#A6AFB1;stroke-width:85;stroke-linecap:round;stroke-linejoin:round;}
+	
+		.st3{opacity:0.75;fill:none;stroke:#245391;stroke-width:85;stroke-linecap:round;stroke-linejoin:round;enable-background:new    ;}
+	.st4{fill:#1A1919;}
+	.st5{fill:#C64053;}
+	.st6{fill:#FFFFFF;}
+	.st7{fill:none;stroke:#A6AFB1;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;}
+	.st8{fill:none;stroke:#A6AFB1;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<g id="Слой_1" class="st0">
+	<g id="_0М" class="st1">
+		<polyline class="st2" points="79.8,247.4 79.8,76.4 250.8,247.4 421.8,76.4 421.8,418.4 		"/>
+	</g>
+	<g id="_0П" class="st1">
+		<polyline class="st3" points="79.8,247.4 250.8,76.4 421.8,247.4 250.8,418.4 		"/>
+	</g>
+	<g id="_09" class="st1">
+		<path class="st4" d="M450.5,418.4c0,15.8-12.8,28.7-28.7,28.7s-28.7-12.8-28.7-28.7c0-15.8,12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C437.7,389.7,450.5,402.5,450.5,418.4z"/>
+	</g>
+	<g id="_08" class="st1">
+		<path class="st4" d="M279.5,418.4c0,15.8-12.8,28.7-28.7,28.7s-28.7-12.8-28.7-28.7c0-15.8,12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C266.7,389.7,279.5,402.5,279.5,418.4z"/>
+	</g>
+	<g id="_07" class="st1">
+		<path class="st5" d="M108.5,418.4c0,15.8-12.8,28.7-28.7,28.7c-15.8,0-28.7-12.8-28.7-28.7c0-15.8,12.8-28.7,28.7-28.7
+			c0,0,0,0,0,0C95.7,389.7,108.5,402.5,108.5,418.4z"/>
+	</g>
+	<g id="_06" class="st1">
+		<path class="st4" d="M450.5,247.4c0,15.8-12.8,28.7-28.7,28.7s-28.7-12.8-28.7-28.7s12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C437.7,218.7,450.5,231.5,450.5,247.4z"/>
+	</g>
+	<g id="_05" class="st1">
+		<path class="st4" d="M279.5,247.4c0,15.8-12.8,28.7-28.7,28.7s-28.7-12.8-28.7-28.7s12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C266.7,218.7,279.5,231.5,279.5,247.4z"/>
+	</g>
+	<g id="_04" class="st1">
+		<path class="st4" d="M108.5,247.4c0,15.8-12.8,28.7-28.7,28.7s-28.7-12.8-28.7-28.7c0-15.8,12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C95.7,218.7,108.5,231.5,108.5,247.4z"/>
+	</g>
+	<g id="_03" class="st1">
+		<path class="st4" d="M450.5,76.4c0,15.8-12.8,28.7-28.7,28.7c-15.8,0-28.7-12.8-28.7-28.7s12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C437.7,47.7,450.5,60.5,450.5,76.4z"/>
+	</g>
+	<g id="_02" class="st1">
+		<path class="st4" d="M279.5,76.4c0,15.8-12.8,28.7-28.7,28.7c-15.8,0-28.7-12.8-28.7-28.7s12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C266.7,47.7,279.5,60.5,279.5,76.4z"/>
+	</g>
+	<g id="_01" class="st1">
+		<path class="st4" d="M108.5,76.4c0,15.8-12.8,28.7-28.7,28.7C64,105,51.2,92.2,51.2,76.4c0-15.8,12.8-28.7,28.7-28.7c0,0,0,0,0,0
+			C95.7,47.7,108.5,60.5,108.5,76.4z"/>
+	</g>
+</g>
+<g id="Слой_2">
+	<circle class="st6" cx="250.8" cy="247.4" r="212.6"/>
+	<circle class="st7" cx="248" cy="248" r="212.6"/>
+	<line class="st8" x1="127.7" y1="248" x2="368.3" y2="248"/>
+	<line class="st8" x1="127.7" y1="158" x2="368.3" y2="158"/>
+	<line class="st8" x1="127.7" y1="338" x2="368.3" y2="338"/>
+</g>
+</svg>

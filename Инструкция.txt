@@ -1,0 +1,7 @@
+Включение локального сервера:
+cd C:\Users\Admin\Desktop\ISeC\app
+python app.py
+
+Переход в папку проекта и активация виртуального окружения:
+cd C:\Users\Admin\Desktop\ISeC
+venv\Scripts\activate

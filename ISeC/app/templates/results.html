@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ru">
+
+</html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Итоги. ИКС-файл</title>
+	<script type="text/javascript"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+
+</head>
+
+<body>
+
+	<section class="vertical_lines">
+		<img class="line_1" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_2" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_3" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_4" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_5" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_6" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_7" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_8" src="{{ url_for('static', filename='images/line.svg') }}">
+	</section>
+	<section class="horizontal_lines">
+		<img class="line_9" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_10" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_11" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_12" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_13" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_14" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_15" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_16" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_17" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_18" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_19" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_20" src="{{ url_for('static', filename='images/line.svg') }}">
+	</section>
+
+	<main>
+
+		<div class="descr_test" name="testEnding">
+			<p class="end_test_title">Итоги теста</p>
+
+			<p class="descr_generation" id="resultMessage">&emsp;Тест успешно завершён. После завершения генерации у
+				Вас будет пять минут,
+				чтобы скачать ИКС-файл. Позднее результаты будут доступны по Вашему персональному id (userId), который
+				выслан Вам
+				на электронную почту.
+			</p>
+
+			<div class="generation">
+
+				<div class="generation_sides"></div>
+
+				<div class="generation_space"></div>
+
+				<p class="generation_text">Создание PDF-файла:</p>
+
+				<div class="generation_space"></div>
+
+				<div class="generation_sides">
+
+					<svg width="40px" height="40px" id="generation" xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 80 80">
+						<defs>
+							<style>
+								.generation {
+									fill: none;
+									stroke: #5b7fad;
+									stroke-linecap: round;
+									stroke-miterlimit: 10;
+									stroke-width: 10px;
+									stroke-dasharray: 220;
+									stroke-dashoffset: 55;
+									animation: change 2s linear infinite;
+								}
+
+								@keyframes change {
+
+									0%,
+									100% {
+										stroke-dashoffset: 55;
+									}
+
+									50% {
+										stroke-dashoffset: 110;
+									}
+								}
+
+								#generation {
+									animation: rotate 1.5s linear infinite;
+								}
+
+								@keyframes rotate {
+									from {
+										transform: rotate(0deg);
+									}
+
+									to {
+										transform: rotate(360deg);
+									}
+								}
+
+								.fade-out {
+									transition: opacity 0.5s ease-out;
+									opacity: 0;
+								}
+							</style>
+						</defs>
+						<path class="generation" d="M40,75A35,35,0,1,1,75,40" />
+					</svg>
+
+					<svg width="40px" height="40px" id="gener_completed" xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 80 80">
+						<defs>
+							<style>
+								.gener_completed {
+									fill: none;
+									stroke: #8bab4e;
+									stroke-linecap: round;
+									stroke-linejoin: round;
+									stroke-width: 10px;
+								}
+							</style>
+						</defs>
+						<path class="gener_completed" d="M5,40 L30,65 L75,15" />
+					</svg>
+
+				</div>
+
+			</div>
+
+
+		</div>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+
+				// Добавляем анимацию для SVG
+				const generationSvg = document.getElementById('generation');
+				const completedSvg = document.getElementById('gener_completed');
+				completedSvg.style.display = 'none';
+
+				// Проверка на окончание генерации
+				let generatedPDF = false;
+
+				// Получаем данные из sessionStorage
+				const userId = sessionStorage.getItem('userId');
+				// Перенос userId в текст тега <p>
+				const resultMessage = document.getElementById('resultMessage');
+				resultMessage.innerHTML = resultMessage.innerHTML.replace('userId', userId);
+
+				const userGroup = sessionStorage.getItem('userGroup');
+
+				const userName = sessionStorage.getItem('userName');
+				const userSurname = sessionStorage.getItem('userSurname');
+				const userSex = sessionStorage.getItem('userSex');
+				const userBirthyear = parseInt(sessionStorage.getItem('userBirthyear'), 10);
+				const userCategory = sessionStorage.getItem('userCategory');
+				const userEmail = sessionStorage.getItem('userEmail');
+
+				const adaptation_1 = parseInt(sessionStorage.getItem('adaptation_1'), 10);
+				const compromise_1 = parseInt(sessionStorage.getItem('compromise_1'), 10);
+				const bidding_1 = parseInt(sessionStorage.getItem('bidding_1'), 10);
+				const threat_1 = parseInt(sessionStorage.getItem('threat_1'), 10);
+				const logicArgument_1 = parseInt(sessionStorage.getItem('logicArgument_1'), 10);
+				const emotionsArgument_1 = parseInt(sessionStorage.getItem('emotionsArgument_1'), 10);
+				const adaptationCount_1 = parseFloat(sessionStorage.getItem('adaptationCount_1'));
+				const compromiseCount_1 = parseFloat(sessionStorage.getItem('compromiseCount_1'));
+				const biddingCount_1 = parseFloat(sessionStorage.getItem('biddingCount_1'));
+				const threatCount_1 = parseFloat(sessionStorage.getItem('threatCount_1'));
+				const logicArgumentCount_1 = parseFloat(sessionStorage.getItem('logicArgumentCount_1'));
+				const emotionsArgumentCount_1 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_1'));
+
+				const adaptation_2 = parseInt(sessionStorage.getItem('adaptation_2'), 10);
+				const compromise_2 = parseInt(sessionStorage.getItem('compromise_2'), 10);
+				const threat_2 = parseInt(sessionStorage.getItem('threat_2'), 10);
+				const cooperation_2 = parseInt(sessionStorage.getItem('cooperation_2'), 10);
+				const avoidance_2 = parseInt(sessionStorage.getItem('avoidance_2'), 10);
+				const adaptationCount_2 = parseFloat(sessionStorage.getItem('adaptationCount_2'));
+				const compromiseCount_2 = parseFloat(sessionStorage.getItem('compromiseCount_2'));
+				const threatCount_2 = parseFloat(sessionStorage.getItem('threatCount_2'));
+				const cooperationCount_2 = parseFloat(sessionStorage.getItem('cooperationCount_2'));
+				const avoidanceCount_2 = parseFloat(sessionStorage.getItem('avoidanceCount_2'));
+
+				const adaptation_3 = parseInt(sessionStorage.getItem('adaptation_3'), 10);
+				const threat_3 = parseInt(sessionStorage.getItem('threat_3'), 10);
+				const cooperation_3 = parseInt(sessionStorage.getItem('cooperation_3'), 10);
+				const adaptationCount_3 = parseFloat(sessionStorage.getItem('adaptationCount_3'));
+				const threatCount_3 = parseFloat(sessionStorage.getItem('threatCount_3'));
+				const cooperationCount_3 = parseFloat(sessionStorage.getItem('cooperationCount_3'));
+
+				const understandingOfStyles_4 = parseInt(sessionStorage.getItem('understandingOfStyles_4'), 10);
+				const strengthInstallation_4 = parseInt(sessionStorage.getItem('strengthInstallation_4'), 10);
+				const manipulationInstallation_4 = parseInt(sessionStorage.getItem('manipulationInstallation_4'), 10);
+				const negotiationsInstallation_4 = parseInt(sessionStorage.getItem('negotiationsInstallation_4'), 10);
+				const strengthInstallationCount_4 = parseFloat(sessionStorage.getItem('strengthInstallationCount_4'));
+				const manipulationInstallationCount_4 = parseFloat(sessionStorage.getItem('manipulationInstallationCount_4'));
+				const negotiationsInstallationCount_4 = parseFloat(sessionStorage.getItem('negotiationsInstallationCount_4'));
+
+				const adaptation_5 = parseInt(sessionStorage.getItem('adaptation_5'), 10);
+				const bidding_5 = parseInt(sessionStorage.getItem('bidding_5'), 10);
+				const logicArgument_5 = parseInt(sessionStorage.getItem('logicArgument_5'), 10);
+				const emotionsArgument_5 = parseInt(sessionStorage.getItem('emotionsArgument_5'), 10);
+				const avoidance_5 = parseInt(sessionStorage.getItem('avoidance_5'), 10);
+				const adaptationCount_5 = parseFloat(sessionStorage.getItem('adaptationCount_5'));
+				const biddingCount_5 = parseFloat(sessionStorage.getItem('biddingCount_5'));
+				const logicArgumentCount_5 = parseFloat(sessionStorage.getItem('logicArgumentCount_5'));
+				const emotionsArgumentCount_5 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_5'));
+				const avoidanceCount_5 = parseFloat(sessionStorage.getItem('avoidanceCount_5'));
+
+				const logicArgument_6 = parseInt(sessionStorage.getItem('logicArgument_6'), 10);
+				const emotionsArgument_6 = parseInt(sessionStorage.getItem('emotionsArgument_6'), 10);
+				const logicArgumentCount_6 = parseFloat(sessionStorage.getItem('logicArgumentCount_6'));
+				const emotionsArgumentCount_6 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_6'));
+
+				// Создаем JSON-объект для хранения данных
+				const ISeC_results = {
+					userGroup: userGroup,
+					userId: userId,
+					userName: userName,
+					userSurname: userSurname,
+					userSex: userSex,
+					userBirthyear: userBirthyear,
+					userCategory: userCategory,
+					userEmail: userEmail,
+
+					adaptation_1: adaptation_1,
+					compromise_1: compromise_1,
+					bidding_1: bidding_1,
+					threat_1: threat_1,
+					logicArgument_1: logicArgument_1,
+					emotionsArgument_1: emotionsArgument_1,
+					adaptationCount_1: adaptationCount_1,
+					compromiseCount_1: compromiseCount_1,
+					biddingCount_1: biddingCount_1,
+					threatCount_1: threatCount_1,
+					logicArgumentCount_1: logicArgumentCount_1,
+					emotionsArgumentCount_1: emotionsArgumentCount_1,
+
+					adaptation_2: adaptation_2,
+					compromise_2: compromise_2,
+					threat_2: threat_2,
+					cooperation_2: cooperation_2,
+					avoidance_2: avoidance_2,
+					adaptationCount_2: adaptationCount_2,
+					compromiseCount_2: compromiseCount_2,
+					threatCount_2: threatCount_2,
+					cooperationCount_2: cooperationCount_2,
+					avoidanceCount_2: avoidanceCount_2,
+
+					adaptation_3: adaptation_3,
+					threat_3: threat_3,
+					cooperation_3: cooperation_3,
+					adaptationCount_3: adaptationCount_3,
+					threatCount_3: threatCount_3,
+					cooperationCount_3: cooperationCount_3,
+
+					understandingOfStyles_4: understandingOfStyles_4,
+					strengthInstallation_4: strengthInstallation_4,
+					manipulationInstallation_4: manipulationInstallation_4,
+					negotiationsInstallation_4: negotiationsInstallation_4,
+					strengthInstallationCount_4: strengthInstallationCount_4,
+					manipulationInstallationCount_4: manipulationInstallationCount_4,
+					negotiationsInstallationCount_4: negotiationsInstallationCount_4,
+
+					adaptation_5: adaptation_5,
+					bidding_5: bidding_5,
+					logicArgument_5: logicArgument_5,
+					emotionsArgument_5: emotionsArgument_5,
+					avoidance_5: avoidance_5,
+					adaptationCount_5: adaptationCount_5,
+					biddingCount_5: biddingCount_5,
+					logicArgumentCount_5: logicArgumentCount_5,
+					emotionsArgumentCount_5: emotionsArgumentCount_5,
+					avoidanceCount_5: avoidanceCount_5,
+
+					logicArgument_6: logicArgument_6,
+					emotionsArgument_6: emotionsArgument_6,
+					logicArgumentCount_6: logicArgumentCount_6,
+					emotionsArgumentCount_6: emotionsArgumentCount_6
+				};
+
+				if (ISeC_results) { // Проверяем, что данные существуют
+
+					fetch('/generate_and_download_pdf', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(ISeC_results)
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Ошибка при генерации PDF');
+							}
+							return response.blob();
+						})
+						.then(blob => {
+							const url = window.URL.createObjectURL(blob);
+							const a = document.createElement('a');
+							a.style.display = 'none';
+							a.href = url;
+							a.download = `ИКС-файл ${ISeC_results.userId}.pdf`;
+							document.body.appendChild(a);
+							a.click();
+							window.URL.revokeObjectURL(url);
+
+							// Применяем fade-out к "generation"
+							generationSvg.style.transition = 'opacity 0.25s ease-in-out';
+							generationSvg.style.opacity = '0';
+
+							// Убираем generation и показываем completed через 0.25 секунд
+							setTimeout(() => {
+
+								generatedPDF = true;
+
+								generationSvg.style.display = 'none';
+								completedSvg.style.display = 'flex';
+
+								// Запускаем анимацию для completed
+								completedSvg.style.opacity = '1';  // Показываем
+
+								// Очищаем сессию на сервере
+								fetch('/clear_session', {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify({ clearSession: true })
+								}).then(response => {
+									if (response.ok) {
+										console.log('Сессия успешно очищена');
+									} else {
+										console.error('Ошибка при очистке сессии');
+									}
+								});
+
+								// Запускаем анимацию галочки
+								const path = completedSvg.querySelector('path');
+								path.style.strokeDasharray = '200';  // Устанавливаем длину пути
+								path.style.strokeDashoffset = '200'; // Начальная точка
+
+								// Анимация рисования галочки
+								setTimeout(() => {
+									path.style.transition = 'stroke-dashoffset 1s ease-in-out';
+									path.style.strokeDashoffset = '0'; // Рисуем галочку
+								}, 50);
+
+							}, 300);
+						})
+
+						.catch(error => {
+							console.error('Ошибка:', error);
+							// alert('Произошла ошибка. Обратитесь к администратору');
+						});
+
+				} else {
+					console.error('ISeC_results не найден в sessionStorage или загрузка уже идет');
+					alert('Данные для генерации PDF отсутствуют, или процесс загрузки уже запущен.');
+				}
+			});
+
+		</script>
+
+	</main>
+
+</body>
+
+</html>

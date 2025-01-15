@@ -11,7 +11,9 @@ from flask_cors import CORS
 import threading  # Таймер
 import sqlite3  # Подключение к базе данных
 import secrets  # Генерация секретного ключа
-import urllib.parse  # Импортируем urllib.parse для кодирования заголовка
+import urllib.parse  # Для кодирования заголовка
+import hashlib  # Для хеширования данных
+
 
 app = Flask(__name__)
 CORS(app)  # Разрешить CORS для всех маршрутов
@@ -22,6 +24,9 @@ user_locks = {}  # Словарь для хранения блокировок �
 # Словарь для хранения данных (вместо базы данных для простоты)
 data_store = {}
 
+
+
+# Функция подключение к беза данных
 def get_db_connection():
     try:
         db_path = os.path.join(os.path.dirname(__file__), 'database/ISeC_database.db')
@@ -36,16 +41,9 @@ def get_db_connection():
         print(f"Ошибка подключения к базе данных: {e}")
         return None
 
-def get_data():
-    conn = get_db_connection()
-    if conn is None:
-        print("Не удалось подключиться к базе данных.")
-    cursor = conn.cursor()
-    cursor.execute('SELECT code, testGroup FROM ISeC_accessCodes')  # SQL-запрос для вычленения пар кодов и групп
-    rows = cursor.fetchall()  # Извлекаем все строки результата
-    conn.close()
-    return rows
 
+
+# Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
 @app.route('/check_code', methods=['POST'])
 def check_code():
     input_code = request.json.get('code')  # Получаем код из запроса
@@ -61,6 +59,9 @@ def check_code():
     else:
         return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
 
+
+
+# Функция проверки существования id в базе (нужна для исключения дубликатов)
 @app.route('/check_id', methods=['POST'])
 def check_id():
     input_id = request.json.get('userId')  # Получаем код из запроса
@@ -85,10 +86,16 @@ def check_id():
     finally:
         conn.close()
 
+
+
+# Отображение фавикона
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
 
+
+
+# Маршруты переходов для страниц
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -197,6 +204,9 @@ def results():
         return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
     return render_template('results.html')
 
+
+
+# Работа с итоговым PDF-файлом и занесение данных в базу
 @app.route('/generate_and_download_pdf', methods=['POST'])
 def generate_and_download_pdf():
 
@@ -1715,7 +1725,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение семнадцатой страницы
 
-
         # Сохранение документа
         can.save()
         print(f"PDF-файл успешно создан: {pdf_path}")
@@ -1805,6 +1814,9 @@ def generate_and_download_pdf():
         # Возвращаем ответ с отправкой файла
         return response
 
+
+
+# Удаление PDF-файла из временной папки и id пользователя из словаря блокировок
 def cleanup(userId, pdf_path):
 
     # Удаляем PDF-файл
@@ -1827,6 +1839,9 @@ def cleanup_route():
 
     return jsonify({"status": "success"})
 
+
+
+# Очистка сессии после скачивания pdf-файла
 @app.route('/clear_session', methods=['POST'])
 def clear_session():
     data = request.get_json()
@@ -1841,6 +1856,78 @@ def clear_session():
         session.pop('test6Pass', None)
         session.pop('clearSession', None)
     return jsonify(success=True)
+
+
+
+    
+# Функция для хеширования пароля
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+
+# Маршрут для авторизации
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = hash_password(password)
+
+        conn = get_db_connection()
+
+        # Сначала ищем пользователя по логину
+        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE logins = ?', 
+                            (username,)).fetchone()
+
+        # Затем проверяем, существует ли пользователь и соответствует ли пароль
+        if user and check_password(user['passwords'], hashed_password):
+            session['username'] = username
+            return redirect(url_for('admin_cab'))
+        else:
+            flash('Неверный логин или пароль')
+
+    return render_template('login.html')
+
+
+# Маршрут для выхода из системы
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+
+# Маршрут для страницы администратора
+@app.route('/admin_cab', methods=['GET', 'POST'])
+def admin_cab():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        conn = get_db_connection()
+
+        if action == 'add':
+            hashed_password = hash_password(password)
+            conn.execute('INSERT INTO ISeC_adminAccounts (logins, passwords) VALUES (?, ?)', 
+                         (username, hashed_password))
+            conn.commit()
+            flash('Аккаунт успешно добавлен')
+        elif action == 'delete':
+            conn.execute('DELETE FROM ISeC_adminAccounts WHERE logins = ?', (username,))
+            conn.commit()
+            flash('Аккаунт успешно удален')
+
+        conn.close()
+
+    return render_template('admin_cab.html')
+
+
+
+
+
 
 
 if __name__ == '__main__':

@@ -104,6 +104,8 @@ INSERT INTO ISeC_results (
     17, 13, 5.0, 5.0
 );
 
+DELETE FROM ISeC_results;
+
 
 
 -- ТАБЛИЦА КОДОВ ДОСТУПА К ПРОХОЖДЕНИЮ ТЕСТА

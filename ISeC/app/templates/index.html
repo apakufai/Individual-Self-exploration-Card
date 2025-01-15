@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<title>Главная. ИКС-файл</title>
 	<script type="text/javascript"></script>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_ISeC.css') }}">
 	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 </head>
 
@@ -95,7 +95,7 @@
 			<button id="startTest" class="btn_startpage" type="button">Пройти тест</button>
 		</div>
 
-		<script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/functions_ISeC.js') }}"></script>
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
 
@@ -195,7 +195,7 @@
 							// Переход на другую страницу после окончания анимации при нажатии на кнопку
 							const lines = document.querySelectorAll('.vertical_lines, .horizontal_lines');
 							lines.forEach(line => line.classList.add('animBlockDisappear_end'));
-							nextPage(lines, '[name="descr_index"]', '/userDataInput');
+							nextPage(lines, '[name="descr_index"]', '/user_data_input');
 						}
 					};
 

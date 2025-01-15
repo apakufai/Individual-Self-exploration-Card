@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<title>Итоги. ИКС-файл</title>
 	<script type="text/javascript"></script>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_ISeC.css') }}">
 	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 
 </head>
@@ -44,11 +44,10 @@
 		<div class="descr_test" name="testEnding">
 			<p class="end_test_title">Итоги теста</p>
 
-			<p class="descr_generation" id="resultMessage">&emsp;Тест успешно завершён. После завершения генерации у
-				Вас будет пять минут,
-				чтобы скачать ИКС-файл. Позднее результаты будут доступны по Вашему персональному id (userId), который
-				выслан Вам
-				на электронную почту.
+			<p class="descr_generation" id="resultMessage">&emsp;Тест успешно завершён. ИКС-файл автоматически скачается в папку загрузок браузера после завершения генерации.
+				Позднее результаты будут доступны по Вашему персональному id (userId) (настоятельное рекомендуем записать его). Если по каким-то причинам ИКС-файл не скачался,
+				или же Вам понадобится его дубликат, отправьте письмо на почту "ISES_FILE_POCHTA@pochta.ru", в котором напишите Ваш id. ИКС-файл будет отправлен на электронную
+				почту, с которой было отправлено письмо.
 			</p>
 
 			<div class="generation">

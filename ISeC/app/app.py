@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, after_this_request, session, redirect, url_for
+from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -100,11 +100,11 @@ def set_index_pass():
         session['indexPass'] = True
     return jsonify(success=True)
 
-@app.route('/userDataInput')
-def userDataInput():
+@app.route('/user_data_input')
+def user_data_input():
     if 'indexPass' not in session or not session['indexPass']:
         return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
-    return render_template('userDataInput.html')
+    return render_template('user_data_input.html')
 
 @app.route('/set_UDI_pass', methods=['POST'])
 def set_UDI_pass():
@@ -116,7 +116,7 @@ def set_UDI_pass():
 @app.route('/test_1')
 def test_1():
     if 'UDIPass' not in session or not session['UDIPass']:
-        return redirect(url_for('userDataInput'))  # Перенаправляем на предыдущую страницу
+        return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
 @app.route('/set_test_1_pass', methods=['POST'])

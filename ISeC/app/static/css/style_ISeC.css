@@ -1,0 +1,1952 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body {
+   background-image: url("../images/background.svg"), linear-gradient(rgba(20, 36, 64, 1) 0%, rgba(52, 22, 74, 1) 50%, rgba(112, 0, 16, 1) 100%);
+   background-repeat: repeat;
+   background-size: 225px;
+   background-position: top;
+   background-attachment: fixed;
+}
+
+/* Выравнивание бегущих линий по высоте */
+main {
+   display: flex;
+   flex-direction: column;
+}
+
+/* Вертикальные бегущие линии */
+.vertical_lines img {
+   z-index: -1;
+   position: fixed;
+   top: 5000px;
+   width: 2px;
+   height: 100px;
+   margin-top: -100px;
+}
+
+.line_1 {
+   left: 50%;
+   margin-left: -788.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 3s;
+}
+
+.line_2 {
+   left: 50%;
+   margin-left: -563.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 6s;
+}
+
+.line_3 {
+   left: 50%;
+   margin-left: -338.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 2s;
+}
+
+.line_4 {
+   left: 50%;
+   margin-left: -113.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 8s;
+}
+
+.line_5 {
+   left: 50%;
+   margin-left: 111.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 4s;
+}
+
+.line_6 {
+   left: 50%;
+   margin-left: 336.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 1s;
+}
+
+.line_7 {
+   left: 50%;
+   margin-left: 561.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 5s;
+}
+
+.line_8 {
+   left: 50%;
+   margin-left: 786.5px;
+   animation: animVerticalLines 8s linear infinite;
+   animation-delay: 7s;
+}
+
+/* Горизонтальные бегущие линии */
+.horizontal_lines img {
+   z-index: -1;
+   position: fixed;
+   left: 5000px;
+   width: 2px;
+   height: 100px;
+   margin-left: -100px;
+   transform: rotate(90deg);
+}
+
+.line_9 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 5s;
+   margin-top: 175px;
+}
+
+.line_10 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 1s;
+   margin-top: 400px;
+}
+
+.line_11 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 3s;
+   margin-top: 625px;
+}
+
+.line_12 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 0s;
+   margin-top: 850px;
+}
+
+.line_13 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 6s;
+   margin-top: 1075px;
+}
+
+.line_14 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 4s;
+   margin-top: 1300px;
+}
+
+.line_15 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 2s;
+   margin-top: 1525px;
+}
+
+.line_16 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 7s;
+   margin-top: 1750px;
+}
+
+.line_17 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 5s;
+   margin-top: 1975px;
+}
+
+.line_18 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 1s;
+   margin-top: 2200px;
+}
+
+.line_19 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 3s;
+   margin-top: 2425px;
+}
+
+.line_20 {
+   animation: animHorizontalLines 8s linear infinite;
+   animation-delay: 0s;
+   margin-top: 2650px;
+}
+
+/* Всплывающее окно ошибки */
+.popup {
+   display: none;
+   justify-content: center;
+   align-items: center;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(198, 64, 83, 0.25);
+   z-index: 1;
+}
+
+.popup_content {
+   width: 500px;
+   height: 200px;
+   background-color: rgba(255, 255, 255, 1);
+   padding: 20px;
+   border: 5px solid #e29fa9;
+   border-radius: 30px;
+   text-align: center;
+   z-index: 1;
+   font-size: 16pt;
+   font-weight: lighter;
+   font-family: "Bahnschrift";
+}
+
+.error_title {
+   font-size: 24pt;
+   font-weight: normal;
+   margin-bottom: 10px;
+   color: #c64053;
+}
+
+.close_btn {
+   height: 60px;
+   width: 180px;
+   margin-top: 20px;
+   padding: 10px 15px;
+   background-color: #ffffff;
+   color: #7f7f7f;
+   border: 5px solid #e29fa9;
+   border-radius: 30px;
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   cursor: pointer;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   z-index: 1;
+   outline: none;
+   cursor: pointer;
+}
+
+.close_btn:hover {
+   border: 5px solid #c64053;
+   color: #c64053;
+   cursor: pointer;
+}
+
+.close_btn:active {
+   background-color: #e29fa9;
+   cursor: pointer;
+}
+
+/* Всплывающее окно справки */
+.popup_question {
+   display: none;
+   justify-content: center;
+   align-items: center;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(91, 126, 173, 0.25);
+   z-index: 1;
+}
+
+.popup_content_question {
+   width: 700px;
+   background-color: rgba(255, 255, 255, 1);
+   padding: 20px;
+   border: 5px solid #acbdd6;
+   border-radius: 30px;
+   text-align: center;
+   z-index: 1;
+   font-size: 16pt;
+   font-weight: lighter;
+   font-family: "Bahnschrift";
+}
+
+.popup_text_question {
+   text-align: left;
+   word-wrap: break-word;
+   /* Перенос длинных слов */
+   overflow-wrap: break-word;
+   /* Совместимость с разными браузерами */
+   hyphens: auto;
+   /* Автоматическое добавление переносов через тире */
+}
+
+.question_title {
+   font-size: 24pt;
+   font-weight: normal;
+   margin-bottom: 10px;
+   color: #5b7ead;
+}
+
+.close_btn_question {
+   height: 60px;
+   width: 180px;
+   margin-top: 20px;
+   padding: 10px 15px;
+   background-color: #ffffff;
+   color: #7f7f7f;
+   border: 5px solid #acbdd6;
+   border-radius: 30px;
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   cursor: pointer;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   z-index: 1;
+   outline: none;
+   cursor: pointer;
+}
+
+.close_btn_question:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   cursor: pointer;
+}
+
+.close_btn_question:active {
+   background-color: #acbdd6;
+   cursor: pointer;
+}
+
+/* Логотип ИКС-файла */
+.logo {
+   display: flex;
+   justify-content: center;
+   height: 100%;
+   width: 760px;
+   margin: 40px auto 40px auto;
+   animation: animLogo 0.75s ease;
+   background-color: rgba(255, 255, 255, 0.7);
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   border-radius: 30px;
+}
+
+/* Модели влияния */
+.models_1,
+.models_2 {
+   text-align: center;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   animation: animBlock_main_text 1s ease;
+}
+
+.models_1 *,
+.models_2 * {
+   padding: 10px 20px;
+   font-weight: normal;
+}
+
+.models_2 {
+   margin-top: 10px;
+}
+
+/* Окно с описанием блока */
+.descr_main {
+   position: static;
+   margin: 20px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   animation: animBlock_main 1s ease;
+}
+
+/* Текст окна с описанием блока */
+.descr_main_text {
+   display: flex;
+   justify-content: center;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   animation: animBlock_main_text 1s ease;
+   font-weight: lighter;
+}
+
+/* Текст последней строки в окне с описанием блока */
+.descr_main_text_lastString {
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   animation: animBlock_main_text 1s ease;
+   font-weight: lighter;
+}
+
+/* "Знаете ли вы, что есть пять моделей влияния в коммуникациях:" */
+.descr_main_models {
+   display: flex;
+   justify-content: center;
+   margin: 10px 20px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+   animation: animBlock_main_text 1s ease;
+}
+
+/* Ссылка на сайт "smart-skills" */
+.linkSmartSkills {
+   text-decoration: none;
+   color: #5b7ead;
+}
+
+/* Окно с вводом данных пользователя */
+.descr_dataInput {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   animation: animBlocks 1s ease;
+}
+
+/* Заголовок окна с вводом данных пользователя */
+.descr_dataInput_title {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-indent: 0;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 20pt;
+   font-weight: normal;
+   text-align: center;
+   animation: animBlocks_text 1s ease;
+}
+
+.descr_dataInput_header {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: end;
+}
+
+.descr_dataInput_headerSides {
+   width: 30px;
+   display: flex;
+   justify-content: end;
+}
+
+/* Текст с вводом данных пользователя */
+.descr_dataInput_text {
+   margin: 20px 0 10px 0;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   animation: animBlocks_text 1s ease;
+   font-weight: lighter;
+}
+
+.descr_dataInput_text_birthyear {
+   margin: auto 0;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   animation: animBlocks_text 1s ease;
+   font-weight: lighter;
+
+}
+
+/* Текст с вводом данных пользователя (мелкий шрифт) */
+.sexText {
+   margin-left: 5px;
+   font-family: "Bahnschrift";
+   font-size: 12pt;
+   animation: animBlocks_text 1s ease;
+   font-weight: lighter;
+}
+
+/* Кнопка вопроса */
+.btn_question {
+   margin-bottom: 5px;
+   display: flex;
+   justify-content: center;
+   height: 26px;
+   width: 26px;
+   border-radius: 13px;
+   border: 2px solid #000000;
+   animation: animButtons 1s ease;
+   background-color: rgba(255, 255, 255, 0);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   font-weight: lighter;
+   color: #000000;
+   animation-duration: 1s;
+   cursor: pointer;
+}
+
+.btn_question:hover {
+   border: 2px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(255, 255, 255, 0);
+   cursor: pointer;
+}
+
+.btn_question:active {
+   border: 2px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+
+
+
+
+/* Расположение кнопок выбора пола */
+.inp_sex {
+   display: flex;
+   flex-direction: row;
+}
+
+/* Расстояние между кнопками выбора пола в окне ввода данных пользователя */
+.dataInputSexSpace {
+   width: 100px;
+}
+
+/* Расстояние между кнопками выбора пола в окне ввода данных пользователя */
+.inp_birthyear {
+   margin-top: 30px;
+   display: flex;
+   flex-direction: row;
+}
+
+/* Расстояние между строкой и полем ввода года рождения в окне ввода данных пользователя */
+.dataInputBirthyearSpace {
+   width: 20px;
+}
+
+/* Расположение блока соглашения на обработку введённых данных*/
+.dataAgreement {
+   display: flex;
+   align-items: center;
+}
+
+/* Расстояние между текстом и кнопкой соглашения на обработку введённых данных*/
+.dataAgreementSpace {
+   width: 15px;
+}
+
+.radiosData {
+   display: flex;
+}
+
+/* Подгонка кнопки подтверждения введённых данных*/
+#user_confirmation {
+   margin: 20px 0 10px 0;
+}
+
+/* Окно с описанием блока теста */
+.descr_test {
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   animation: animBlocks 1s ease;
+   font-weight: lighter;
+}
+
+/* Заголовок окна с описанием блоков */
+.descr_test_title {
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 20pt;
+   font-weight: normal;
+   text-align: center;
+   animation: animBlocks_text 1s ease;
+}
+
+/* Текст окна с описанием блока */
+.descr_test_text {
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   animation: animBlocks_text 1s ease;
+}
+
+/* Поля ввода кода на главной странице */
+.inp_code {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0);
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #5b7ead;
+   animation: animButtons_main 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 220px;
+   padding: 10px;
+   outline: none;
+}
+
+/* Нижняя секция с кнопками и кодом */
+.low_section {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 30px;
+   margin: 30px auto 0 auto;
+}
+
+/* Кнопки на главной странице */
+.btn_startpage {
+   flex-shrink: 0;
+   border: 5px solid #ffffff;
+   border-radius: 40px;
+   background-color: rgba(255, 255, 255, 0.85);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   animation: animButtons_main 1s ease;
+   animation-duration: 1s;
+   height: 80px;
+   width: 240px;
+   cursor: pointer;
+}
+
+.btn_startpage:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(255, 255, 255, 0.85);
+   cursor: pointer;
+}
+
+.btn_startpage:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+/* Поле ввода кода на главной странице */
+.inp_startpage {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0.85);
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #5b7ead;
+   animation: animButtons_main 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 220px;
+   padding: 10px;
+   outline: none;
+}
+
+.inp_startpage::placeholder {
+   color: #7F7F7F;
+   text-align: center;
+   font-weight: lighter;
+}
+
+/* Поля ввода текста на странице данных пользователя */
+.inp_text {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0);
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   font-weight: lighter;
+   color: #5b7ead;
+   animation: animBlocks_text 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 500px;
+   padding: 10px;
+   outline: none;
+}
+
+.inp_text::placeholder {
+   color: #7F7F7F;
+   font-weight: lighter;
+}
+
+/* Поля ввода даты на странице данных пользователя */
+.inp_year {
+   justify-content: end;
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0);
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   font-weight: lighter;
+   color: #5b7ead;
+   animation: animBlocks_text 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 150px;
+   padding: 10px;
+   outline: none;
+   text-align: center;
+}
+
+.inp_year::placeholder {
+   color: #7F7F7F;
+   font-weight: lighter;
+}
+
+/* Выпадающее меню на странице данных пользователя */
+.inp_dropdown {
+   appearance: none;
+   /* Убираем стандартный стиль */
+   -moz-appearance: none;
+   /* Для Firefox */
+   -webkit-appearance: none;
+   /* Для Safari */
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0);
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   text-align: left;
+   font-weight: lighter;
+   color: #7F7F7F;
+   animation: animBlocks_text 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 500px;
+   padding: 10px;
+   outline: none;
+   cursor: pointer;
+}
+
+.inp_dropdown option {
+   color: #5b7ead;
+   font-size: 12pt;
+}
+
+/* Кнопка подтверждения ввода данных */
+.btn_sendUserData {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   background-color: rgba(172, 189, 214, 0);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   animation: animBlocks_text 1s ease;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   height: 60px;
+   width: 180px;
+   margin: 10px auto 20px auto;
+   outline: none;
+   cursor: pointer;
+}
+
+.btn_sendUserData:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0);
+   cursor: pointer;
+}
+
+.btn_sendUserData:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+/* Кнопки на страницах теста */
+.btn_test {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   background-color: rgba(172, 189, 214, 0);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   animation: animButtons 1s ease;
+   animation-duration: 1s;
+   height: 60px;
+   width: 400px;
+   margin: 15px auto;
+   outline: none;
+   cursor: pointer;
+}
+
+.btn_test:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0);
+   cursor: pointer;
+}
+
+.btn_test:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+/* Кнопки "далее" и "назад" страницах теста */
+.btn_nextprev {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   background-color: rgba(255, 255, 255, 0);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   height: 60px;
+   width: 120px;
+   margin: 15px auto;
+   outline: none;
+   cursor: pointer;
+}
+
+.btn_nextprev:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(255, 255, 255, 0);
+   cursor: pointer;
+}
+
+.btn_nextprev:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+/* Окно вопроса для всех блоков 1-5 */
+.inpBlock_1,
+.inpBlock_2,
+.inpBlock_3,
+.inpBlock_4,
+.inpBlock_5 {
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+
+/* Блок выбора вариантов из блоков 1 и 2 */
+.inp_top_1,
+.inp_bottom_1,
+.inp_top_2,
+.inp_bottom_2 {
+   display: flex;
+   flex-direction: row;
+   height: 30px;
+}
+
+.inp_right_1,
+.inp_right_2 {
+   display: flex;
+   flex-direction: row;
+}
+
+.inp_left_1,
+.inp_left_2 {
+   width: 120px;
+}
+
+.var_inputs {
+   width: 40px;
+   height: 40px;
+   margin-right: 10px;
+}
+
+
+
+/* Стилизация ползунков с бегунками */
+.slider,
+.slider_6 {
+   -webkit-appearance: none;
+   background: transparent;
+}
+
+/* Стилизация дорожки ползунка для WebKit-браузеров */
+.slider::-webkit-slider-runnable-track,
+.slider_6::-webkit-slider-runnable-track {
+   width: 100%;
+   height: 10px;
+   background: #ffffff;
+   border: 1px solid #5b7ead;
+   border-radius: 14px;
+   cursor: pointer;
+}
+
+/* Стилизация бегунка ползунка для WebKit-браузеров */
+.slider::-webkit-slider-thumb,
+.slider_6::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   width: 14px;
+   height: 14px;
+   background: #5b7ead;
+   border: none;
+   border-radius: 20%;
+   rotate: 45deg;
+   cursor: pointer;
+   margin-top: -3px;
+}
+
+/* Стилизация дорожки ползунка для Firefox */
+.slider::-moz-range-track,
+.slider_6::-moz-range-track {
+   width: 100%;
+   height: 10px;
+   background: #ffffff;
+   border: 1px solid #5b7ead;
+   border-radius: 14px;
+   cursor: pointer;
+}
+
+/* Стилизация бегунка ползунка для Firefox */
+.slider::-moz-range-thumb,
+.slider_6::-moz-range-thumb {
+   -webkit-appearance: none;
+   width: 14px;
+   height: 14px;
+   background: #5b7ead;
+   border: none;
+   border-radius: 20%;
+   rotate: 45deg;
+   cursor: pointer;
+   margin-top: -3px;
+}
+
+/* Стилизация дорожки ползунка для Microsoft Edge и IE */
+.slider::-ms-track,
+.slider_6::-ms-track {
+   width: 100%;
+   height: 10px;
+   background: #ffffff;
+   border: 1px solid #5b7ead;
+   border-radius: 14px;
+   cursor: pointer;
+}
+
+/* Стилизация заполненной части дорожки ползунка для Microsoft Edge и IE */
+.slider::-ms-fill-lower,
+.slider_6::-ms-fill-lower {
+   background: #ffffff;
+   border-radius: 5px;
+}
+
+/* Стилизация незаполненной части дорожки ползунка для Microsoft Edge и IE */
+.slider::-ms-fill-upper,
+.slider_6::-ms-fill-upper {
+   background: #ffffff;
+   border-radius: 5px;
+}
+
+/* Стилизация бегунка ползунка для Microsoft Edge и IE */
+.slider::-ms-thumb,
+.slider_6::-ms-thumb {
+   width: 14px;
+   height: 14px;
+   background: #5b7ead;
+   border: none;
+   border-radius: 20%;
+   rotate: 45deg;
+   cursor: pointer;
+   margin-top: -3px;
+}
+
+/* Цифры под ползунками */
+.range-output {
+   margin-top: 5px;
+   /* Отступ между ползунком и цифрами */
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   max-width: 200px;
+}
+
+.inpRadio {
+   /* Убираем стандартный стиль */
+   appearance: none;
+   width: 16px;
+   height: 16px;
+   border: 2px solid #7F7F7F;
+   border-radius: 50%;
+   /* Убираем обводку при фокусе */
+   outline: none;
+   cursor: pointer;
+   transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Цвет кружка при наведении */
+.inpRadio:hover {
+   border-color: #5b7ead;
+}
+
+/* Цвет кружка при активном состоянии*/
+.inpRadio:active {
+   background-color: #5b7ead;
+}
+
+/* Цвет кружка при нажатии */
+.inpRadio:checked {
+   background-color: #ffffff;
+   border-color: #5b7ead;
+}
+
+.inpRadio_UDI {
+   /* Убираем стандартный стиль */
+   appearance: none;
+   width: 16px;
+   height: 16px;
+   border: 2px solid #7F7F7F;
+   border-radius: 50%;
+   /* Убираем обводку при фокусе */
+   outline: none;
+   cursor: pointer;
+   transition: background-color 0.2s, border-color 0.2s;
+   animation: animBlocks_text 1s ease;
+}
+
+/* Цвет кружка при наведении */
+.inpRadio_UDI:hover {
+   border-color: #5b7ead;
+}
+
+/* Цвет кружка при активном состоянии*/
+.inpRadio_UDI:active {
+   background-color: #5b7ead;
+}
+
+/* Цвет кружка при нажатии */
+.inpRadio_UDI:checked {
+   background-color: #ffffff;
+   border-color: #5b7ead;
+}
+
+
+/* ------------------------------------------------ */
+/* -------------------- БЛОК 1 -------------------- */
+/* ------------------------------------------------ */
+
+/* Окно вопроса из блока 1 */
+.quest_1 {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна вопроса из блока 1 */
+.quest_1_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна вопроса из блока 1 */
+.quest_1_text {
+   display: flex;
+   flex-direction: column;
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Утверждения вопроса из блока 1 */
+.affirm_1 {
+   font-weight: normal;
+   margin-bottom: 5px;
+}
+
+/* Нижняя часть окон блока 1 */
+.quest_1_sect {
+   display: flex;
+   flex-direction: row;
+}
+
+
+/* ------------------------------------------------ */
+/* -------------------- БЛОК 2 -------------------- */
+/* ------------------------------------------------ */
+
+/* Окно вопроса из блока 2 */
+.quest_2 {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна вопроса из блока 2 */
+.quest_2_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна вопроса из блока 2 */
+.quest_2_text {
+   display: flex;
+   flex-direction: column;
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Утверждения вопроса из блока 2 */
+.affirm_2 {
+   font-weight: normal;
+   margin-bottom: 5px;
+}
+
+/* Нижняя часть окон блока 2 */
+.quest_2_sect {
+   display: flex;
+   flex-direction: row;
+}
+
+
+/* ------------------------------------------------ */
+/* -------------------- БЛОК 3 -------------------- */
+/* ------------------------------------------------ */
+
+/* Окно вопроса из блока 3 */
+.quest_3 {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна вопроса из блока 3 */
+.quest_3_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна вопроса из блока 3 */
+.quest_3_text {
+   display: flex;
+   flex-direction: column;
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Утверждения вопроса из блока 3 */
+.affirm_3 {
+   font-weight: normal;
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+/* Нижняя часть окон блока 3 */
+.quest_3_sect {
+   display: flex;
+   flex-direction: row;
+}
+
+.inpBlock_3 {
+   display: flex;
+   flex-direction: row;
+}
+
+.inp_count_3 {
+   display: flex;
+   flex-direction: column;
+   width: 120px;
+   margin: 0 10px;
+}
+
+.inp_count_3 input {
+   width: 80px;
+   align-self: center;
+}
+
+.inp_count_3 span {
+   text-align: center;
+}
+
+.inp_count_3> :nth-child(1) {
+   margin: 5px 0;
+}
+
+.inp_count_3 .range-output {
+   margin-top: 5px;
+   margin-left: 1px;
+   display: flex;
+   width: 70px;
+   align-self: center;
+   max-width: 200px;
+   font-size: 16px;
+}
+
+
+/* ------------------------------------------------ */
+/* -------------------- БЛОК 4 -------------------- */
+/* ------------------------------------------------ */
+
+.inpBlock_4 {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+
+.inp_top_4,
+.inp_bottom_4 {
+   display: flex;
+   flex-direction: row;
+   margin-bottom: 10px;
+}
+
+.inp_top_4 {
+   gap: 30px;
+}
+
+.inp_bottom_4 {
+   gap: 110px;
+}
+
+/* Окно вопроса из блока 4 */
+.quest_4 {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна вопроса из блока 4 */
+.quest_4_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна вопроса из блока 4 */
+.quest_4_text {
+   display: flex;
+   flex-direction: column;
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+.quest_4_dialogue {
+   display: flex;
+   text-align: left;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Утверждения вопроса из блока 4 */
+.affirm_4 {
+   font-weight: normal;
+   margin-bottom: 5px;
+}
+
+/* Нижняя часть окон блока 4 */
+.quest_4_sect {
+   display: flex;
+   flex-direction: row;
+}
+
+
+/* ------------------------------------------------ */
+/* -------------------- БЛОК 5 -------------------- */
+/* ------------------------------------------------ */
+
+/* Окно вопроса из блока 5 */
+.quest_5 {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна вопроса из блока 5 */
+.quest_5_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна вопроса из блока 5 */
+.quest_5_text {
+   display: flex;
+   flex-direction: column;
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Утверждения вопроса из блока 5 */
+.affirm_5 {
+   font-weight: normal;
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+/* Нижняя часть окон блока 5 */
+.quest_5_sect {
+   display: flex;
+   flex-direction: row;
+}
+
+.inpBlock_5 {
+   display: flex;
+   flex-direction: row;
+}
+
+.inp_count_5 {
+   display: flex;
+   flex-direction: column;
+   width: 120px;
+   margin: 0 10px;
+}
+
+.inp_count_5 input {
+   width: 80px;
+   align-self: center;
+}
+
+.inp_count_5 span {
+   text-align: center;
+}
+
+.inp_count_5> :nth-child(1) {
+   margin: 5px 0;
+}
+
+.inp_count_5 .range-output {
+   margin-top: 5px;
+   margin-left: 1px;
+   display: flex;
+   width: 70px;
+   align-self: center;
+   max-width: 200px;
+   font-size: 16px;
+}
+
+
+/* ------------------------------------------------ */
+/* -------------------- БЛОК 6 -------------------- */
+/* ------------------------------------------------ */
+
+/* Окно вопроса из блока 6 */
+.quest_6 {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна вопроса из блока 6 */
+.quest_6_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна вопроса из блока 6 */
+.quest_6_text {
+   display: flex;
+   flex-direction: column;
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Утверждения вопроса из блока 6 */
+.affirm_6 {
+   font-weight: normal;
+   margin-bottom: 5px;
+}
+
+/* Нижняя часть окон блока 2 */
+.quest_6_sect {
+   display: flex;
+   flex-direction: row;
+   padding-top: 15px;
+}
+
+
+.inpBlock_6 {
+   display: flex;
+   flex-direction: row;
+}
+
+.inp_count_6 {
+   display: flex;
+   flex-direction: column;
+   width: 100px;
+   margin-left: 10px;
+}
+
+.inp_count_6 input {
+   width: 100px;
+   align-self: center;
+}
+
+.inp_count_6 span {
+   text-align: center;
+}
+
+.inp_count_6 .range-output {
+   margin-top: 5px;
+   margin-left: 3px;
+   display: flex;
+   width: 92px;
+   align-self: center;
+   max-width: 200px;
+   font-size: 16px;
+}
+
+.inpBlock_6 {
+   display: grid;
+   grid-template-columns: 60px 140px 60px 120px;
+   grid-template-rows: 60px 60px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+   margin-left: 10px;
+}
+
+.quest_6_sect .btn_nextprev {
+   margin: 15px auto auto auto;
+}
+
+
+/* ------------------------------------------------ */
+/* ---------------- ФИНАЛЬНЫЕ ОКНА ---------------- */
+/* ------------------------------------------------ */
+
+/* Окно завершения блока */
+.end_test {
+   display: none;
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   margin-bottom: 30px;
+}
+
+/* Заголовок окна завершения блока */
+.end_test_title {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: normal;
+   text-align: center;
+}
+
+/* Текст окна завершения блока */
+.end_test_text {
+   display: flex;
+   width: 720px;
+   align-self: center;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+/* Нижняя часть окна завершения блока */
+.end_sect {
+   display: flex;
+   flex-direction: row;
+}
+
+.confirm_answers {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 30px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+   font-weight: lighter;
+   margin: auto;
+}
+
+.confirm_answers span {
+   padding-right: 10px;
+}
+
+
+/* Кнопка "назад" */
+.end_sect :nth-child(1) {
+   margin-right: auto;
+   margin-left: 50px;
+}
+
+/* Кнопка "продолжить" */
+.end_sect :nth-child(3) {
+   margin-left: auto;
+   margin-right: 50px;
+}
+
+.btn_continue {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   background-color: rgba(255, 255, 255, 0);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   height: 60px;
+   width: 180px;
+   margin: 15px auto;
+   outline: none;
+   cursor: pointer;
+}
+
+.btn_continue:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(255, 255, 255, 0);
+   cursor: pointer;
+}
+
+.btn_continue:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+
+/* ------------------------------------------------ */
+/* --------------- ОКНО РЕЗУЛЬТАТОВ --------------- */
+/* ------------------------------------------------ */
+
+
+.descr_generation {
+   width: 720px;
+   margin: 10px 15px;
+   font-family: "Bahnschrift";
+   font-size: 16pt;
+}
+
+.generation {
+   display: flex;
+   justify-content: center;
+   width: 720px;
+   margin: 20px auto;
+}
+
+
+.generation_sides {
+   width: 40px;
+   height: 40px;
+}
+
+
+.generation_space {
+   width: 20px;
+   height: 40px;
+}
+
+.generation_text {
+   display: flex;
+   justify-content: center;
+   margin: auto 0;
+   font-family: "Bahnschrift";
+   font-size: 18pt;
+   font-weight: lighter;
+   text-align: center;
+}
+
+/* ------------------------------------------------ */
+/* ------------------- АНИМАЦИЯ ------------------- */
+/* ------------------------------------------------ */
+
+/* Анимация вертикальных бегущих линий */
+
+@keyframes animVerticalLines {
+   0% {
+      top: 0px;
+   }
+
+   100% {
+      top: 5000px;
+   }
+}
+
+/* Анимация горизонтальных бегущих линий */
+
+@keyframes animHorizontalLines {
+   0% {
+      left: 0px;
+   }
+
+   100% {
+      left: 5000px;
+   }
+}
+
+/* Анимация логотипа */
+
+@keyframes animLogo {
+   0% {
+      height: 221.97px;
+      width: 640px;
+      opacity: 0;
+   }
+
+   100% {
+      height: 221.97px;
+      width: 760px;
+      opacity: 1;
+   }
+}
+
+/* Анимация блока описания на главной странице */
+
+@keyframes animBlock_main {
+   0% {
+      scale: 95%;
+      opacity: 0;
+   }
+
+   25% {
+      scale: 95%;
+      opacity: 0;
+   }
+
+   75% {
+      scale: 100%;
+      opacity: 1;
+   }
+
+   100% {
+      scale: 100%;
+      opacity: 1;
+   }
+}
+
+/* Анимация текста блока описания на главной странице */
+
+@keyframes animBlock_main_text {
+   0% {
+      opacity: 0;
+   }
+
+   66.6666% {
+      opacity: 0;
+   }
+
+   100% {
+      opacity: 1;
+   }
+}
+
+/* Анимация кнопок на главной странице */
+
+@keyframes animButtons_main {
+   0% {
+      opacity: 0;
+   }
+
+   66.6666% {
+      opacity: 0;
+   }
+
+   100% {
+      opacity: 1;
+   }
+}
+
+/* Анимация блока описания на всех страницах, кроме главной */
+
+@keyframes animBlocks {
+   0% {
+      scale: 95%;
+      opacity: 0;
+   }
+
+   50% {
+      scale: 100%;
+      opacity: 1;
+   }
+
+   100% {
+      scale: 100%;
+      opacity: 1;
+   }
+}
+
+/* Анимация текста блока описания на всех страницах, кроме главной */
+
+@keyframes animBlocks_text {
+   0% {
+      opacity: 0;
+   }
+
+   50% {
+      opacity: 0;
+   }
+
+   100% {
+      opacity: 1;
+   }
+}
+
+/* Анимация кнопок на всех страницах, кроме главной */
+
+@keyframes animButtons {
+   0% {
+      opacity: 0;
+   }
+
+   50% {
+      opacity: 0;
+   }
+
+   100% {
+      opacity: 1;
+   }
+}
+
+/* Сокрытие всех блоков кроме первого на страницах теста */
+
+.hidden {
+   display: none;
+}
+
+/* Анимация перелистывания окон */
+
+.animBlockAppear_next {
+   animation: animBlockAppear_next 0.35s forwards;
+}
+
+@keyframes animBlockAppear_next {
+   from {
+      transform: translateX(100px);
+      opacity: 0;
+   }
+
+   to {
+      transform: translateX(0px);
+      opacity: 1;
+   }
+}
+
+.animBlockDisappear_next {
+   animation: animBlockDisappear_next 0.35s forwards;
+}
+
+@keyframes animBlockDisappear_next {
+   from {
+      transform: translateX(0);
+      opacity: 1;
+   }
+
+   to {
+      transform: translateX(-100px);
+      opacity: 0;
+   }
+}
+
+.animBlockAppear_prev {
+   animation: animBlockAppear_prev 0.35s forwards;
+}
+
+@keyframes animBlockAppear_prev {
+   from {
+      transform: translateX(-100px);
+      opacity: 0;
+   }
+
+   to {
+      transform: translateX(0px);
+      opacity: 1;
+   }
+}
+
+.animBlockDisappear_prev {
+   animation: animBlockDisappear_prev 0.35s forwards;
+}
+
+@keyframes animBlockDisappear_prev {
+   from {
+      transform: translateX(0);
+      opacity: 1;
+   }
+
+   to {
+      transform: translateX(100px);
+      opacity: 0;
+   }
+}
+
+.animBlockDisappear_end {
+   animation: animBlockDisappear_end 0.35s forwards;
+}
+
+@keyframes animBlockDisappear_end {
+   from {
+      opacity: 1;
+   }
+
+   to {
+      opacity: 0;
+   }
+}
+
+.hiddenResults {
+   display: none;
+}

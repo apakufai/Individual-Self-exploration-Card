@@ -44,5 +44,5 @@ ISeC/
 │   ├── test_6.html               # Страница блока 6
 │   └── userDataInput.html        # Страница ввода данных пользователя
 └── tests/                        # Папка для тестов
-    ├── testISeC_full x2.py       # Полный тест ISeC (дубликат)
-    └── testISeC_full.py          # Полный тест ISeC
+    ├── testISeC_full x2.py       # Полное прохождение теста (двойное)
+    └── testISeC_full.py          # Полное прохождение теста

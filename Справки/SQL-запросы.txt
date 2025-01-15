@@ -73,8 +73,6 @@ CREATE TABLE ISeC_results (
     emotionsArgumentCount_6 REAL
 );
 
-DROP TABLE ISeC_results;
-
 INSERT INTO ISeC_results (
     userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
     adaptation_1, compromise_1, bidding_1, threat_1, logicArgument_1, emotionsArgument_1,
@@ -106,6 +104,8 @@ INSERT INTO ISeC_results (
 
 DELETE FROM ISeC_results;
 
+DROP TABLE ISeC_results;
+
 
 
 -- ТАБЛИЦА КОДОВ ДОСТУПА К ПРОХОЖДЕНИЮ ТЕСТА
@@ -119,6 +119,8 @@ INSERT INTO ISeC_accessCodes (testGroup, code) VALUES ('Группа-1', '111');
 INSERT INTO ISeC_accessCodes (testGroup, code) VALUES ('Группа-2', '222');
 INSERT INTO ISeC_accessCodes (testGroup, code) VALUES ('Группа-3', '333');
 
+DELETE FROM ISeC_accessCodes;
+
 DROP TABLE ISeC_accessCodes;
 
 
@@ -129,6 +131,8 @@ CREATE TABLE ISeC_adminAccounts (
     logins TEXT PRIMARY KEY,
     passwords TEXT
 );
+
+DELETE FROM ISeC_adminAccounts;
 
 DROP TABLE ISeC_adminAccounts;
 

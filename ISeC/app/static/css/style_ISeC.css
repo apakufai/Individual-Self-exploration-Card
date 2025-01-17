@@ -1710,6 +1710,49 @@ main {
    text-align: center;
 }
 
+
+
+/* Кнопки для работы с PDF-файлом */
+.btn_results_PDF {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   background-color: rgba(172, 189, 214, 0);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   font-family: "Bahnschrift";
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   animation: animButtons 1s ease;
+   animation-duration: 1s;
+   height: 60px;
+   width: 400px;
+   margin: 15px auto;
+   outline: none;
+   cursor: pointer;
+}
+
+.btn_results_PDF:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0);
+   cursor: pointer;
+}
+
+.btn_results_PDF:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
 /* ------------------------------------------------ */
 /* ------------------- АНИМАЦИЯ ------------------- */
 /* ------------------------------------------------ */

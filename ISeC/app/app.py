@@ -109,8 +109,8 @@ def set_index_pass():
 
 @app.route('/user_data_input')
 def user_data_input():
-    if 'indexPass' not in session or not session['indexPass']:
-        return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
+    # if 'indexPass' not in session or not session['indexPass']:
+    #     return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
     return render_template('user_data_input.html')
 
 @app.route('/set_UDI_pass', methods=['POST'])
@@ -122,8 +122,8 @@ def set_UDI_pass():
 
 @app.route('/test_1')
 def test_1():
-    if 'UDIPass' not in session or not session['UDIPass']:
-        return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
+    # if 'UDIPass' not in session or not session['UDIPass']:
+    #     return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
 @app.route('/set_test_1_pass', methods=['POST'])
@@ -135,8 +135,8 @@ def set_test_1_pass():
 
 @app.route('/test_2')
 def test_2():
-    if 'test1Pass' not in session or not session['test1Pass']:
-        return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
+    # if 'test1Pass' not in session or not session['test1Pass']:
+    #     return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
     return render_template('test_2.html')
 
 @app.route('/set_test_2_pass', methods=['POST'])
@@ -148,8 +148,8 @@ def set_test_2_pass():
 
 @app.route('/test_3')
 def test_3():
-    if 'test2Pass' not in session or not session['test2Pass']:
-        return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
+    # if 'test2Pass' not in session or not session['test2Pass']:
+    #     return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
     return render_template('test_3.html')
 
 @app.route('/set_test_3_pass', methods=['POST'])
@@ -161,8 +161,8 @@ def set_test_3_pass():
 
 @app.route('/test_4')
 def test_4():
-    if 'test3Pass' not in session or not session['test3Pass']:
-        return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
+    # if 'test3Pass' not in session or not session['test3Pass']:
+    #     return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
     return render_template('test_4.html')
 
 @app.route('/set_test_4_pass', methods=['POST'])
@@ -174,35 +174,68 @@ def set_test_4_pass():
 
 @app.route('/test_5')
 def test_5():
-    if 'test4Pass' not in session or not session['test4Pass']:
-        return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
+    # if 'test4Pass' not in session or not session['test4Pass']:
+    #     return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
     return render_template('test_5.html')
 
 @app.route('/set_test_5_pass', methods=['POST'])
 def set_test_5_pass():
     data = request.get_json()
-    if 'test5Pass' in data and data['test5Pass'] == True:
-        session['test5Pass'] = True
+    # if 'test5Pass' in data and data['test5Pass'] == True:
+    #     session['test5Pass'] = True
     return jsonify(success=True)
 
 @app.route('/test_6')
 def test_6():
-    if 'test5Pass' not in session or not session['test5Pass']:
-        return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
+    # if 'test5Pass' not in session or not session['test5Pass']:
+    #     return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
     return render_template('test_6.html')
 
 @app.route('/set_test_6_pass', methods=['POST'])
 def set_test_6_pass():
     data = request.get_json()
-    if 'test6Pass' in data and data['test6Pass'] == True:
-        session['test6Pass'] = True
+    # if 'test6Pass' in data and data['test6Pass'] == True:
+    #     session['test6Pass'] = True
     return jsonify(success=True)
 
 @app.route('/results')
 def results():
-    if 'test6Pass' not in session or not session['test6Pass']:
-        return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
+    # if 'test6Pass' not in session or not session['test6Pass']:
+    #     return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
     return render_template('results.html')
+
+
+    
+# Функция для отправки электронного письма с прикрепленным PDF-файлом
+def send_email(user_email, pdf_path, pdf_filename):
+    # Настройки SMTP
+    smtp_server = 'smtp.example.com'  # Замените на ваш SMTP-сервер
+    smtp_port = 587  # Обычно 587 для TLS
+    smtp_user = 'your_email@example.com'  # Ваш email
+    smtp_password = 'your_password'  # Ваш пароль
+
+    # Создаем сообщение
+    msg = MIMEMultipart()
+    msg['From'] = smtp_user
+    msg['To'] = user_email
+    msg['Subject'] = 'Ваш PDF-файл'
+
+    # Прикрепляем PDF-файл
+    with open(pdf_path, 'rb') as attachment:
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(attachment.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f'attachment; filename="{pdf_filename}"')
+        msg.attach(part)
+
+    # Отправляем email
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()  # Включаем TLS
+            server.login(smtp_user, smtp_password)
+            server.send_message(msg)
+    except Exception as e:
+        print(f"Ошибка при отправке email: {e}")
 
 
 
@@ -1802,17 +1835,38 @@ def generate_and_download_pdf():
         if not os.path.isfile(pdf_path):
             return "PDF-файл не найден.", 404
 
-        # Отправляем файл
-        response = send_file(pdf_path, as_attachment=True)
-        # Кодируем имя файла в utf-8
-        encoded_filename = urllib.parse.quote(pdf_filename)
-        response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
+        if receiveByEmail and not downloadToPC:
+            send_email(userEmail, pdf_path, pdf_filename)
+            # Запускаем таймер на удаление блокировки и файла через 3 минуты
+            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            return 200, "PDF-файл был только отправлен на почту"
 
-        # Запускаем таймер на удаление блокировки и файла через 3 минуты
-        threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+        if  not receiveByEmail and downloadToPC:
+            response = send_file(pdf_path, as_attachment=True)
+            # Кодируем имя файла в utf-8
+            encoded_filename = urllib.parse.quote(pdf_filename)
+            response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
+            # Запускаем таймер на удаление блокировки и файла через 3 минуты
+            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            return response, 200, "PDF-файл был только скачан"
 
-        # Возвращаем ответ с отправкой файла
-        return response
+        if  receiveByEmail and downloadToPC:
+            send_email(userEmail, pdf_path, pdf_filename)
+            response = send_file(pdf_path, as_attachment=True)
+            # Кодируем имя файла в utf-8
+            encoded_filename = urllib.parse.quote(pdf_filename)
+            response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
+            # Запускаем таймер на удаление блокировки и файла через 3 минуты
+            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            return response, 200, "PDF-файл был отправлен на почту и скачан через браузер"
+
+        # Возвращаем ошибку 404, если ни одна из двух переменных не истинна
+        return 404, "PDF-файл не был отправлен и не был скачан"
+
+
+
+
+
 
 
 

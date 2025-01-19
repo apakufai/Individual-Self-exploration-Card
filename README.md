@@ -1,5 +1,5 @@
 Домконтентлоадер
-- Если в sessionStorage есть changedButton и changedButton != null {
+  Если в sessionStorage есть changedButton и changedButton != null {
   блокировка кнопок
   Окраска нажатой кнопки в синий 
   Ф-ЦИЯ ГЕНЕРАЦИИ PDF

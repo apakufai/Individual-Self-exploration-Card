@@ -41,8 +41,8 @@
 	<main name="descr_index">
 		<img class="logo" src="{{ url_for('static', filename='images/ISeC-file_reverse.svg') }}" alt="ИКС-ФАЙЛ">
 		<!-- ВСПЛЫВАЮЩЕЕ ОКНО ПУСТОГО ПОЛЯ ДЛЯ ВВОДА КОДА -->
-		<div class="popup" id="popup_start_empty">
-			<div class="popup_content">
+		<div class="popup_error" id="popup_error_start_empty">
+			<div class="popup_error_content">
 				<p class="error_title">Ошибка</p>
 				<p>Поле ввода пустое</p>
 				<button class="close_btn" id="closeBtn_start_empty">Закрыть</button>
@@ -50,11 +50,11 @@
 		</div>
 
 		<!-- ВСПЛЫВАЮЩЕЕ ОКНО НЕВЕРНОГО КОДА -->
-		<div class="popup" id="popup_start_error">
-			<div class="popup_content">
+		<div class="popup_error" id="popup_error_start_wrong">
+			<div class="popup_error_content">
 				<p class="error_title">Ошибка</p>
 				<p>Введённый код неверен</p>
-				<button class="close_btn" id="closeBtn_start_error">Закрыть</button>
+				<button class="close_btn" id="closeBtn_start_wrong">Закрыть</button>
 			</div>
 		</div>
 
@@ -91,7 +91,7 @@
 		</div>
 		<div class="low_section">
 			<button id="getCode" class="btn_startpage" type="button">Получить код</button>
-			<input id="inp_code" class="inp_startpage" type="text" required placeholder="Введите код">
+			<input id="inp_code" class="inp_startpage" type="text" required placeholder="Введите код" autocomplete="off">
 			<button id="startTest" class="btn_startpage" type="button">Пройти тест</button>
 		</div>
 
@@ -100,10 +100,10 @@
 			document.addEventListener("DOMContentLoaded", function () {
 
 				// Переменные всплывающего окна
-				const popup_start_empty = document.getElementById('popup_start_empty');
+				const popup_error_start_empty = document.getElementById('popup_error_start_empty');
 				const closeBtn_start_empty = document.getElementById('closeBtn_start_empty');
-				const popup_start_error = document.getElementById('popup_start_error');
-				const closeBtn_start_error = document.getElementById('closeBtn_start_error');
+				const popup_error_start_wrong = document.getElementById('popup_error_start_wrong');
+				const closeBtn_start_wrong = document.getElementById('closeBtn_start_wrong');
 
 				// Переменные и функция перелистывания вперед
 				const nextButton_start = document.getElementById("startTest");
@@ -111,7 +111,7 @@
 					const inputCode = document.getElementById('inp_code').value;
 
 					if (inputCode.length === 0) {  // Если код не введён
-						popup_start_empty.style.display = 'flex'; // Показываем всплывающее окно
+						popup_error_start_empty.style.display = 'flex'; // Показываем всплывающее окно
 					} else {  // Отправляем запрос на сервер для проверки кода
 						const response = await fetch('/check_code', {
 							method: 'POST',
@@ -128,7 +128,7 @@
 							if (data.error === 'connect_error') {
 								alert('Ошибка подключения к базе данных.'); // Сообщение об ошибке подключения
 							} else if (data.error === 'accessCode_not_found') {
-								popup_start_error.style.display = 'flex'; // Показываем всплывающее окно, если код не найден
+								popup_error_start_wrong.style.display = 'flex'; // Показываем всплывающее окно, если код не найден
 							}
 						} else {
 
@@ -201,12 +201,12 @@
 
 					// Закрытие всплывающего окна пустого поля для ввода кода
 					closeBtn_start_empty.addEventListener('click', function () {
-						popup_start_empty.style.display = 'none'; // Скрываем всплывающее окно
+						popup_error_start_empty.style.display = 'none'; // Скрываем всплывающее окно
 					});
 
 					// Закрытие всплывающего окна неверно введённого кода
-					closeBtn_start_error.addEventListener('click', function () {
-						popup_start_error.style.display = 'none'; // Скрываем всплывающее окно
+					closeBtn_start_wrong.addEventListener('click', function () {
+						popup_error_start_wrong.style.display = 'none'; // Скрываем всплывающее окно
 					});
 				});
 			});

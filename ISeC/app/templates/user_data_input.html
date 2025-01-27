@@ -42,8 +42,8 @@
 
 
 		<!-- ВСПЛЫВАЮЩЕЕ ОКНО -->
-		<div class="popup" id="popup_UDI">
-			<div class="popup_content">
+		<div class="popup_error" id="popup_error_UDI">
+			<div class="popup_error_content">
 				<p class="error_title">Ошибка</p>
 				<p>Проверьте введённые данные</p>
 				<button class="close_btn" id="closeBtn_UDI">Закрыть</button>
@@ -79,10 +79,10 @@
 			</div>
 
 			<span class="descr_dataInput_text">Ваше имя</span>
-			<input type="text" class="inp_text" id="user_name" required placeholder="Имя">
+			<input type="text" class="inp_text" id="user_name" required placeholder="Имя" autocomplete="off">
 
 			<span class="descr_dataInput_text">Ваша фамилия</span>
-			<input type="text" class="inp_text" id="user_surname" required placeholder="Фамилия">
+			<input type="text" class="inp_text" id="user_surname" required placeholder="Фамилия" autocomplete="off">
 
 			<span class="descr_dataInput_text">Ваш пол</span>
 			<div class="inp_sex">
@@ -100,7 +100,7 @@
 			<div class="inp_birthyear">
 				<span class="descr_dataInput_text_birthyear">Ваш год рождения</span>
 				<div class="dataInputBirthyearSpace"></div>
-				<input type="text" class="inp_year" id="user_birthyear" placeholder="1900">
+				<input type="text" class="inp_year" id="user_birthyear" required placeholder="1900" autocomplete="off">
 			</div>
 
 			<span class="descr_dataInput_text">Ваша категория</span>
@@ -118,7 +118,7 @@
 			</select>
 
 			<span class="descr_dataInput_text">Ваша эл. почта</span>
-			<input type="email" class="inp_text" id="user_email" required placeholder="Эл. почта">
+			<input type="email" class="inp_text" id="user_email" required placeholder="Эл. почта" autocomplete="off">
 
 			<div class="dataAgreement">
 				<span class="descr_dataInput_text">Я соглашаюсь на обработку введённых данных</span>
@@ -155,7 +155,7 @@
 					});
 
 					// Переменные всплывающего окна
-					const popup_UDI = document.getElementById('popup_UDI');
+					const popup_error_UDI = document.getElementById('popup_error_UDI');
 					const closeBtn_UDI = document.getElementById('closeBtn_UDI');
 					let errorCounter = 0; // Счётчик ошибок
 					const submitButton = document.getElementById('btn_UDI_next'); // Кнопка подтверждения ввода
@@ -260,7 +260,7 @@
 						}
 
 						if (errorCounter > 0) {
-							popup_UDI.style.display = 'flex'; // Показываем всплывающее окно
+							popup_error_UDI.style.display = 'flex'; // Показываем всплывающее окно
 							errorCounter = 0;
 						} else {
 
@@ -300,7 +300,7 @@
 
 					// Закрытие всплывающего окна
 					closeBtn_UDI.addEventListener('click', function () {
-						popup_UDI.style.display = 'none'; // Скрываем всплывающее окно
+						popup_error_UDI.style.display = 'none'; // Скрываем всплывающее окно
 					});
 				}); // Закрывающая скобка для document.addEventListener("DOMContentLoaded")
 			</script>

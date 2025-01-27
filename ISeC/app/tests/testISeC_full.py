@@ -43,7 +43,7 @@ try:
     time.sleep(0.1)
     inputCategory.select_by_value("Собственник малого бизнеса")
     time.sleep(0.1)
-    inputEmail.send_keys("test@mail.ru")
+    inputEmail.send_keys("-")
     time.sleep(0.1)
     inputAgreement.click()
     time.sleep(0.8)
@@ -1485,6 +1485,23 @@ try:
     ans_6_end.click()
     btn_6_end_next = browser.find_element(By.ID, 'end_test_next_6')
     btn_6_end_next.click()
+
+
+# ВЫБОР ВАРИАНТА ПОЛУЧЕНИЯ ИКС-ФАЙЛА
+    time.sleep(0.8)
+
+    btn_PDF_dwnl = browser.find_element(By.ID, 'PDF_dwnl')
+    ans_6_end.click()
+
+    # btn_PDF_send = browser.find_element(By.ID, 'PDF_send')
+    # ans_6_end.click()
+    
+    # btn_PDF_dwnl_and_send = browser.find_element(By.ID, 'PDF_dwnl_and_send')
+    # ans_6_end.click()
+
+    time.sleep(30)
+    # Обновляем страницу
+    browser.refresh()
 
 
 except Exception as e:

@@ -13,6 +13,12 @@ import sqlite3  # Подключение к базе данных
 import secrets  # Генерация секретного ключа
 import urllib.parse  # Для кодирования заголовка
 import hashlib  # Для хеширования данных
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+from email.header import Header
 
 
 app = Flask(__name__)
@@ -20,10 +26,6 @@ CORS(app)  # Разрешить CORS для всех маршрутов
 app.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
 user_locks = {}  # Словарь для хранения блокировок для каждого пользователя
-
-# Словарь для хранения данных (вместо базы данных для простоты)
-data_store = {}
-
 
 
 # Функция подключение к беза данных
@@ -209,31 +211,31 @@ def results():
 # Функция для отправки электронного письма с прикрепленным PDF-файлом
 def send_email(user_email, pdf_path, pdf_filename):
     # Настройки SMTP
-    smtp_server = 'smtp.example.com'  # Замените на ваш SMTP-сервер
-    smtp_port = 587  # Обычно 587 для TLS
-    smtp_user = 'your_email@example.com'  # Ваш email
-    smtp_password = 'your_password'  # Ваш пароль
-
+    smtp_server = 'mail.hosting.reg.ru'  # SMTP-сервер
+    smtp_port = 587  # Порт 587 для TLS - нешифрованное соединение
+    smtp_user = 'isec@smart-skills.pro'  # Ваш email
+    smtp_password = 'ISECSmartSkills2025!'  # Ваш пароль
     # Создаем сообщение
     msg = MIMEMultipart()
     msg['From'] = smtp_user
     msg['To'] = user_email
-    msg['Subject'] = 'Ваш PDF-файл'
-
+    msg['Subject'] = pdf_filename  # Устанавливаем тему письма
+    # Устанавливаем текст тела письма
+    body = "Это автоматическое письмо, на него не нужно отвечать"  # Текст тела письма
+    msg.attach(MIMEText(body, 'plain'))  # Прикрепляем текст к сообщению
     # Прикрепляем PDF-файл
     with open(pdf_path, 'rb') as attachment:
-        part = MIMEBase('application', 'octet-stream')
-        part.set_payload(attachment.read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition', f'attachment; filename="{pdf_filename}"')
-        msg.attach(part)
-
+        part = MIMEBase('application', 'pdf')  # Указываем тип содержимого как PDF
+        part.set_payload(attachment.read())  # Читаем содержимое файла
+        encoders.encode_base64(part)  # Кодируем в base64
+        part.add_header('Content-Disposition', f'attachment; filename="{Header(pdf_filename, "utf-8").encode()}"')  # Указываем имя файла
+        msg.attach(part)  # Прикрепляем часть к сообщению
     # Отправляем email
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()  # Включаем TLS
-            server.login(smtp_user, smtp_password)
-            server.send_message(msg)
+            server.login(smtp_user, smtp_password)  # Аутентификация в почтовом ящике
+            server.send_message(msg)  # Отправляем сообщение
     except Exception as e:
         print(f"Ошибка при отправке email: {e}")
 
@@ -256,11 +258,6 @@ def generate_and_download_pdf():
     os.makedirs(temp_dir, exist_ok=True)  # Создаем папку temp, если она не существует
     pdf_filename = f'ИКС-файл {userId}.pdf'  # Имя файла PDF
     pdf_path = os.path.join(temp_dir, pdf_filename)  # Полный путь к файлу в папке temp
-    
-    # Проверяем, существует ли файл перед генерацией
-    if os.path.isfile(pdf_path):
-        # Если файл существует, отправляем его
-        return send_file(pdf_path, as_attachment=True, download_name=pdf_filename)
 
     # Получаем или создаем блокировку для текущего пользователя
     if userId not in user_locks:
@@ -270,6 +267,7 @@ def generate_and_download_pdf():
 
     # Используем блокировку для предотвращения одновременной генерации
     with user_lock:
+        
         # Проверяем еще раз, существует ли файл, так как другой поток мог его создать
         if os.path.isfile(pdf_path):
             return send_file(pdf_path, as_attachment=True, download_name=pdf_filename)
@@ -283,6 +281,9 @@ def generate_and_download_pdf():
         # Проверяем, существует ли таблица ISeC_results
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='ISeC_results';")
         table_exists = cursor.fetchone()
+
+        receiveByEmail = bool(session.get('receiveByEmail'))
+        downloadToPC = bool(session.get('downloadToPC'))
 
         userGroup = session.get('userGroup')
         
@@ -1831,15 +1832,12 @@ def generate_and_download_pdf():
         conn.commit()
         conn.close()
 
+        print(f"PDF path: {pdf_path}")  # Отладочный вывод
+        print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}")  # Проверка значений сессий
+
         # Проверяем, существует ли файл перед отправкой
         if not os.path.isfile(pdf_path):
-            return "PDF-файл не найден.", 404
-
-        if receiveByEmail and not downloadToPC:
-            send_email(userEmail, pdf_path, pdf_filename)
-            # Запускаем таймер на удаление блокировки и файла через 3 минуты
-            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
-            return 200, "PDF-файл был только отправлен на почту"
+            return jsonify({"message": "PDF-файл не найден."}), 404
 
         if  not receiveByEmail and downloadToPC:
             response = send_file(pdf_path, as_attachment=True)
@@ -1848,7 +1846,13 @@ def generate_and_download_pdf():
             response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
-            return response, 200, "PDF-файл был только скачан"
+            return response  # Возвращаем только response
+
+        if receiveByEmail and not downloadToPC:
+            send_email(userEmail, pdf_path, pdf_filename)
+            # Запускаем таймер на удаление блокировки и файла через 3 минуты
+            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            return '', 200
 
         if  receiveByEmail and downloadToPC:
             send_email(userEmail, pdf_path, pdf_filename)
@@ -1858,10 +1862,10 @@ def generate_and_download_pdf():
             response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
-            return response, 200, "PDF-файл был отправлен на почту и скачан через браузер"
+            return response  # Возвращаем только response
 
         # Возвращаем ошибку 404, если ни одна из двух переменных не истинна
-        return 404, "PDF-файл не был отправлен и не был скачан"
+        return jsonify({"error": "PDF-файл не был отправлен и не был скачан"}), 404
 
 
 
@@ -1911,12 +1915,12 @@ def clear_session():
         session.pop('clearSession', None)
     return jsonify(success=True)
 
-
-
     
+
 # Функция для хеширования пароля
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
 
 
 # Маршрут для авторизации

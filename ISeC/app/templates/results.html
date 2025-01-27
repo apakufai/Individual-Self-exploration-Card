@@ -46,7 +46,8 @@
 			<div class="popup_content_insertEmail">
 				<p class="question_title">Введите электронную почту</p>
 				<p>Куда должен быть отправлен ИКС-файл?</p>
-				<input type="email" class="inp_email" id="user_email" required placeholder="Эл. почта" autocomplete="off">
+				<input type="email" class="inp_email" id="user_email" required placeholder="Эл. почта"
+					autocomplete="off">
 				<div class="insertEmailButtons">
 					<button class="btn_insertEmail" id="btn_cancel">Отмена</button>
 					<button class="btn_insertEmail" id="btn_confirm">Далее</button>
@@ -288,7 +289,6 @@
 					generationBblock.style.opacity = '1';
 
 					// Получаем данные из sessionStorage
-
 					const receiveByEmail = JSON.parse(sessionStorage.getItem('receiveByEmail'));
 					const downloadToPC = JSON.parse(sessionStorage.getItem('downloadToPC'));
 
@@ -472,7 +472,9 @@
 										body: JSON.stringify({ clearSession: true })
 									}).then(response => {
 										if (response.ok) {
-											console.log('Сессия успешно очищена');
+											// Удаляем данные из sessionStorage
+											sessionStorage.clear();
+											console.log('Сессия успешно завершена');
 										} else {
 											console.error('Ошибка при очистке сессии');
 										}
@@ -498,8 +500,7 @@
 							});
 
 					} else {
-						console.error('ISeC_results не найден в sessionStorage или загрузка уже идет');
-						alert('Данные для генерации PDF отсутствуют, или процесс загрузки уже запущен.');
+						console.error('Данные для генерации отсутствуют, или загрузка уже идет');
 					}
 				}
 

@@ -111,8 +111,8 @@ def set_index_pass():
 
 @app.route('/user_data_input')
 def user_data_input():
-    # if 'indexPass' not in session or not session['indexPass']:
-    #     return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
+    if 'indexPass' not in session or not session['indexPass']:
+        return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
     return render_template('user_data_input.html')
 
 @app.route('/set_UDI_pass', methods=['POST'])
@@ -124,8 +124,8 @@ def set_UDI_pass():
 
 @app.route('/test_1')
 def test_1():
-    # if 'UDIPass' not in session or not session['UDIPass']:
-    #     return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
+    if 'UDIPass' not in session or not session['UDIPass']:
+        return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
 @app.route('/set_test_1_pass', methods=['POST'])
@@ -137,8 +137,8 @@ def set_test_1_pass():
 
 @app.route('/test_2')
 def test_2():
-    # if 'test1Pass' not in session or not session['test1Pass']:
-    #     return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
+    if 'test1Pass' not in session or not session['test1Pass']:
+        return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
     return render_template('test_2.html')
 
 @app.route('/set_test_2_pass', methods=['POST'])
@@ -150,8 +150,8 @@ def set_test_2_pass():
 
 @app.route('/test_3')
 def test_3():
-    # if 'test2Pass' not in session or not session['test2Pass']:
-    #     return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
+    if 'test2Pass' not in session or not session['test2Pass']:
+        return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
     return render_template('test_3.html')
 
 @app.route('/set_test_3_pass', methods=['POST'])
@@ -163,8 +163,8 @@ def set_test_3_pass():
 
 @app.route('/test_4')
 def test_4():
-    # if 'test3Pass' not in session or not session['test3Pass']:
-    #     return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
+    if 'test3Pass' not in session or not session['test3Pass']:
+        return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
     return render_template('test_4.html')
 
 @app.route('/set_test_4_pass', methods=['POST'])
@@ -176,34 +176,34 @@ def set_test_4_pass():
 
 @app.route('/test_5')
 def test_5():
-    # if 'test4Pass' not in session or not session['test4Pass']:
-    #     return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
+    if 'test4Pass' not in session or not session['test4Pass']:
+        return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
     return render_template('test_5.html')
 
 @app.route('/set_test_5_pass', methods=['POST'])
 def set_test_5_pass():
     data = request.get_json()
-    # if 'test5Pass' in data and data['test5Pass'] == True:
-    #     session['test5Pass'] = True
+    if 'test5Pass' in data and data['test5Pass'] == True:
+        session['test5Pass'] = True
     return jsonify(success=True)
 
 @app.route('/test_6')
 def test_6():
-    # if 'test5Pass' not in session or not session['test5Pass']:
-    #     return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
+    if 'test5Pass' not in session or not session['test5Pass']:
+        return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
     return render_template('test_6.html')
 
 @app.route('/set_test_6_pass', methods=['POST'])
 def set_test_6_pass():
     data = request.get_json()
-    # if 'test6Pass' in data and data['test6Pass'] == True:
-    #     session['test6Pass'] = True
+    if 'test6Pass' in data and data['test6Pass'] == True:
+        session['test6Pass'] = True
     return jsonify(success=True)
 
 @app.route('/results')
 def results():
-    # if 'test6Pass' not in session or not session['test6Pass']:
-    #     return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
+    if 'test6Pass' not in session or not session['test6Pass']:
+        return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
     return render_template('results.html')
 
 

@@ -32,7 +32,7 @@ try:
     inputEmail = browser.find_element(By.ID, 'user_email') # ЭЛ.ПОЧТА
     inputAgreement = browser.find_element(By.ID, 'user_confirmation') # СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ
 
-    # ВВЕДЕНЫ ВЕРНЫЕ ДАННЫЕ
+# ВВЕДЕНЫ ВЕРНЫЕ ДАННЫЕ
     inputName.send_keys("Анна-Мария")
     time.sleep(0.1)
     inputSurname.send_keys("Мамина-Алексеева")
@@ -1490,14 +1490,28 @@ try:
 # ВЫБОР ВАРИАНТА ПОЛУЧЕНИЯ ИКС-ФАЙЛА
     time.sleep(0.8)
 
-    btn_PDF_dwnl = browser.find_element(By.ID, 'PDF_dwnl')
-    ans_6_end.click()
+    # btn_PDF_dwnl = browser.find_element(By.ID, 'PDF_dwnl')
+    # btn_PDF_dwnl.click()
 
     # btn_PDF_send = browser.find_element(By.ID, 'PDF_send')
-    # ans_6_end.click()
+    # btn_PDF_send.click()
+    # time.sleep(0.8)
+    # inputEmail = browser.find_element(By.ID, 'user_email') # ЭЛ.ПОЧТА
+    # time.sleep(0.1)
+    # inputEmail.send_keys("apakufai@gmail.com")
+    # time.sleep(0.8)
+    # btnConfirm = browser.find_element(By.ID, 'btn_confirm') # КНОПКА ПОДТВЕРЖДЕНИЯ
+    # btnConfirm.click()
     
     # btn_PDF_dwnl_and_send = browser.find_element(By.ID, 'PDF_dwnl_and_send')
-    # ans_6_end.click()
+    # btn_PDF_dwnl_and_send.click()
+    # time.sleep(0.8)
+    # inputEmail = browser.find_element(By.ID, 'user_email') # ЭЛ.ПОЧТА
+    # time.sleep(0.1)
+    # inputEmail.send_keys("apakufai@gmail.com")
+    # time.sleep(0.8)
+    # btnConfirm = browser.find_element(By.ID, 'btn_confirm') # КНОПКА ПОДТВЕРЖДЕНИЯ
+    # btnConfirm.click()
 
     time.sleep(30)
     # Обновляем страницу

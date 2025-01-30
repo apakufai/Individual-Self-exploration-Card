@@ -2,7 +2,6 @@ ISeC/
 ├── app.py                        # Основной файл приложения
 ├── database/                     # Папка для базы данных
 │   ├── ISeC_database.db          # Файл базы данных
-│   └── ISeC_SQL.sql              # SQL-скрипты для работы с базой данных
 ├── pagesPDF/                     # Папка для PDF-страниц
 │   ├── page_1.png                # Шаблон для страницы 1
 │   ├── page_2.png                # Шаблон для страницы 2
@@ -23,7 +22,8 @@ ISeC/
 │   ├── page_17.png               # Шаблон для страницы 17
 ├── static/                       # Папка для статических файлов
 │   ├── css/                      # Папка для CSS-файлов
-│   │   └── style.css             # Основной CSS-файл
+│   │   └── style_adminCab.css    # Дополнительный CSS-файл
+│   │   └── style_ISeC.css        # Основной CSS-файл
 │   ├── fonts/                    # Папка для шрифтов
 │   │   └── Bahnschrift.ttf       # Шрифт Bahnschrift
 │   ├── images/                   # Папка для изображений
@@ -32,7 +32,8 @@ ISeC/
 │   │   ├── ISeC-file_reverse.svg # Логотип ISeC (реверсивный)
 │   │   └── line.svg              # Линейное изображение
 │   └── js/                       # Папка для JavaScript-файлов
-│       └── functions.js          # JavaScript-файл с функциями
+│       └── functions_admin_cab.js          # JavaScript-файл с функциями
+│       └── functions_ISeC.js          # JavaScript-файл с функциями
 ├── templates/                    # Папка для HTML-шаблонов
 │   ├── index.html                # Главная страница
 │   ├── results.html              # Страница результатов

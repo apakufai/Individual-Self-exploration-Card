@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 416 121.5" style="enable-background:new 0 0 416 121.5;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#C64053;}
+	.st1{fill:#FFFFFF;}
+	.st2{fill:#5B7EAD;}
+	.st3{fill:#A6AFB1;}
+</style>
+<polygon class="st0" points="85.6,60.8 99.4,22.7 105.1,7.5 87.9,7.5 71.4,52.8 61.7,52.8 61.7,7.5 60.7,7.5 49,7.5 47.6,7.5 
+	22.5,76.6 22.5,7.5 7.5,7.5 7.5,113.9 20.7,113.9 45.7,45.4 45.7,113.9 45.7,113.9 45.7,114 61.7,114 61.7,68.7 71.4,68.7 87.9,114 
+	105.1,114 99.4,98.8 "/>
+<polygon class="st0" points="129.4,98.8 115.6,60.8 129.4,22.7 151.9,22.7 151.9,7.5 117.9,7.5 98.5,60.8 117.9,114 190.2,114 
+	190.2,98.8 "/>
+<rect x="196.8" y="7.5" class="st1" width="15" height="106.5"/>
+<rect x="161.9" y="7.5" class="st1" width="84.7" height="15"/>
+<rect x="161.9" y="77.2" class="st1" width="84.7" height="15"/>
+<rect x="231.6" y="7.5" class="st1" width="15" height="84.7"/>
+<rect x="161.9" y="7.5" class="st1" width="15" height="84.7"/>
+<path class="st2" d="M378.7,7.5l-21.9,59.8V7.5h-14l-25.2,69.1V7.5h-29.8l-33.4,91.3h-36V114h47.5l7.8-21.3h28.9v21.2h13.2l25-68.5
+	v68.5l0,0v0.1h16l33.4-91.3h3.3v91.2h15V7.5H378.7z M302.6,76.7h-23.1l2.9-8l3-8l13.9-38h3.3L302.6,76.7z"/>
+<polygon class="st0" points="323.9,7.5 323.9,42 336.4,7.5 "/>
+<circle class="st3" cx="204.3" cy="15" r="5"/>
+<circle class="st3" cx="239.1" cy="15" r="5"/>
+<circle class="st3" cx="169.4" cy="15" r="5"/>
+<circle class="st3" cx="204.3" cy="84.7" r="5"/>
+<circle class="st3" cx="239.1" cy="84.7" r="5"/>
+<circle class="st3" cx="169.4" cy="84.7" r="5"/>
+<circle class="st3" cx="169.4" cy="49.8" r="5"/>
+<circle class="st3" cx="239.1" cy="49.8" r="5"/>
+<circle class="st3" cx="204.3" cy="49.8" r="5"/>
+</svg>

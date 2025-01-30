@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Итоги. ИКС-файл</title>
+	<script type="text/javascript"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_ISeC.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+
+</head>
+
+<body>
+
+	<section class="vertical_lines">
+		<img class="line_1" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_2" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_3" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_4" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_5" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_6" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_7" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_8" src="{{ url_for('static', filename='images/line.svg') }}">
+	</section>
+	<section class="horizontal_lines">
+		<img class="line_9" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_10" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_11" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_12" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_13" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_14" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_15" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_16" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_17" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_18" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_19" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_20" src="{{ url_for('static', filename='images/line.svg') }}">
+	</section>
+
+	<main>
+
+		<!-- ВСПЛЫВАЮЩЕЕ ОКНО С ВВОДОМ ЭЛ.ПОЧТЫ -->
+		<div class="popup_insertEmail" id="popup_insertEmail">
+			<div class="popup_content_insertEmail">
+				<p class="question_title">Введите электронную почту</p>
+				<p>Куда должен быть отправлен ИКС-файл?</p>
+				<input type="email" class="inp_email" id="user_email" required placeholder="Эл. почта"
+					autocomplete="off">
+				<div class="insertEmailButtons">
+					<button class="btn_insertEmail" id="btn_cancel">Отмена</button>
+					<button class="btn_insertEmail" id="btn_confirm">Далее</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="descr_test" name="testEnding">
+			<p class="end_test_title">Как Вы хотите получить ИКС-файл?</p>
+
+			<button id="PDF_dwnl" class="btn_results_PDF" type="button">Скачать файл на этот компьютер</button>
+
+			<button id="PDF_send" class="btn_results_PDF" type="button">Отправить файл по эл.почте</button>
+
+			<button id="PDF_dwnl_and_send" class="btn_results_PDF" type="button">Оба варианта</button>
+
+			<div class="generation_block" id="generation_block">
+
+				<div class="generation_indicator" id="generation_indicator">
+
+					<div class="generation_sides"></div>
+
+					<div class="generation_space"></div>
+
+					<p class="generation_text">Создание PDF-файла:</p>
+
+					<div class="generation_space"></div>
+
+					<div class="generation_sides">
+
+						<svg width="40px" height="40px" id="generation_icon" xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 80 80">
+							<defs>
+								<style>
+									@keyframes length_switch {
+
+										0%,
+										100% {
+											stroke-dashoffset: 55;
+										}
+
+										50% {
+											stroke-dashoffset: 110;
+										}
+									}
+
+									#generation_icon {
+										animation: rotate 1.5s linear infinite;
+									}
+
+									@keyframes rotate {
+										from {
+											transform: rotate(0deg);
+										}
+
+										to {
+											transform: rotate(360deg);
+										}
+									}
+								</style>
+							</defs>
+							<path class="generation_icon" d="M40,75A35,35,0,1,1,75,40" />
+						</svg>
+
+						<svg width="40px" height="40px" id="gener_completed_icon" xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 80 80">
+							<path class="gener_completed_icon" d="M5,40 L30,65 L75,15" />
+						</svg>
+
+					</div>
+
+				</div>
+
+				<p class="descr_generation" id="result_message">&emsp;Запишите Ваш id: (userId). Он может понадобиться
+					для обращения в службу поддержки для восстановления ИКС-файла. Если Вы захотите повторно получить
+					свои
+					результаты, отправьте письмо с этим id на почту "isec@smart-skills.pro".
+				</p>
+
+			</div>
+
+		</div>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+
+				// Перенос userId в текст тега <p>
+				const result_message = document.getElementById('result_message');
+				result_message.innerHTML = result_message.innerHTML.replace('userId', sessionStorage.getItem('userId'));
+
+				// Объявление кнопок
+				const btn_PDF_dwnl = document.getElementById("PDF_dwnl");
+				const btn_PDF_send = document.getElementById("PDF_send");
+				const btn_PDF_dwnl_and_send = document.getElementById("PDF_dwnl_and_send");
+
+				// Внесение кнопок в массив
+				const PDF_buttons = [
+					btn_PDF_dwnl,
+					btn_PDF_send,
+					btn_PDF_dwnl_and_send
+				];
+
+				// Блок статуса генерации
+				const generationBblock = document.getElementById('generation_block');
+
+				// Переменные для анимации SVG-иконок
+				const generationSvg = document.getElementById('generation_icon');
+				const completedSvg = document.getElementById('gener_completed_icon');
+				completedSvg.style.display = 'none';
+				completedSvg.style.opacity = '0';
+
+				// Переменные всплывающего окна
+				const popupInsertEmail = document.getElementById("popup_insertEmail");
+				const inputEmail = document.getElementById('user_email'); // Поле ввода эл.почты
+				const btnCancel = document.getElementById('btn_cancel');
+				const btnConfirm = document.getElementById('btn_confirm');
+
+				if (sessionStorage.getItem("changedButton")) {
+					// Устанавливаем свойство disabled для всех кнопок
+					PDF_buttons.forEach(button => {
+						button.disabled = true;
+					});
+					// Получаем id выбранной кнопки из sessionStorage
+					const changedButtonId = sessionStorage.getItem('changedButton');
+					// Находим кнопку по id
+					const changedButton = document.getElementById(changedButtonId);
+					// Изменяем CSS-свойства выбранной кнопки
+					changedButton.style.border = '5px solid #5b7ead';
+					changedButton.style.color = '#5b7ead';
+					changedButton.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
+					// Запускаем функцию генерации PDF
+					generatePDF();
+				}
+
+				btn_PDF_dwnl.addEventListener("click", function () {
+					// Устанавливаем свойство disabled для всех кнопок
+					PDF_buttons.forEach(button => {
+						button.disabled = true;
+					});
+					// Изменяем CSS-свойства выбранной кнопки
+					btn_PDF_dwnl.style.border = '5px solid #5b7ead';
+					btn_PDF_dwnl.style.color = '#5b7ead';
+					btn_PDF_dwnl.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
+					// Устанавливаем значения в sessionStorage
+					sessionStorage.setItem('changedButton', 'PDF_dwnl');
+					sessionStorage.setItem('downloadToPC', 'true');
+					sessionStorage.setItem('receiveByEmail', 'false');
+					// Запускаем функцию генерации PDF
+					generatePDF();
+				});
+
+				btn_PDF_send.addEventListener("click", function () {
+					if (sessionStorage.getItem('userEmail') === '-') {
+						popupInsertEmail.style.display = 'flex'; // Показываем всплывающее окно
+						btnConfirm.addEventListener('click', function () {
+							const emailValue = inputEmail.value.trim();
+							const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+							if (!emailPattern.test(emailValue)) {
+								inputEmail.style.border = '5px solid #e29fa9';
+								inputEmail.value = emailValue;
+							} else {
+								popupInsertEmail.style.display = 'none'; // Скрываем всплывающее окно
+								// Устанавливаем свойство disabled для всех кнопок
+								PDF_buttons.forEach(button => {
+									button.disabled = true;
+								});
+								// Изменяем CSS-свойства выбранной кнопки
+								btn_PDF_send.style.border = '5px solid #5b7ead';
+								btn_PDF_send.style.color = '#5b7ead';
+								btn_PDF_send.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
+								// Устанавливаем значения в sessionStorage
+								sessionStorage.setItem('userEmail', inputEmail.value.trim());
+								sessionStorage.setItem('changedButton', 'PDF_send');
+								sessionStorage.setItem('downloadToPC', 'false');
+								sessionStorage.setItem('receiveByEmail', 'true');
+								// Запускаем функцию генерации PDF
+								generatePDF();
+							}
+						});
+					} else {
+						// Запускаем функцию генерации PDF
+						generatePDF();
+					}
+					// Закрытие всплывающего окна
+					btnCancel.addEventListener('click', function () {
+						popupInsertEmail.style.display = 'none'; // Скрываем всплывающее окно
+						inputEmail.style.border = '5px solid #d3d7d8';
+					});
+				});
+
+				btn_PDF_dwnl_and_send.addEventListener("click", function () {
+					if (sessionStorage.getItem('userEmail') === '-') {
+						popupInsertEmail.style.display = 'flex'; // Показываем всплывающее окно
+						btnConfirm.addEventListener('click', function () {
+							const emailValue = inputEmail.value.trim();
+							const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+							if (!emailPattern.test(emailValue)) {
+								inputEmail.style.border = '5px solid #e29fa9';
+								inputEmail.value = emailValue;
+							} else {
+								popupInsertEmail.style.display = 'none'; // Скрываем всплывающее окно
+								// Устанавливаем свойство disabled для всех кнопок
+								PDF_buttons.forEach(button => {
+									button.disabled = true;
+								});
+								// Изменяем CSS-свойства выбранной кнопки
+								btn_PDF_dwnl_and_send.style.border = '5px solid #5b7ead';
+								btn_PDF_dwnl_and_send.style.color = '#5b7ead';
+								btn_PDF_dwnl_and_send.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
+								// Устанавливаем значения в sessionStorage
+								sessionStorage.setItem('userEmail', inputEmail.value.trim());
+								sessionStorage.setItem('changedButton', 'PDF_dwnl_and_send');
+								sessionStorage.setItem('downloadToPC', 'true');
+								sessionStorage.setItem('receiveByEmail', 'true');
+
+								// Перебираем все ключи в sessionStorage
+								for (let i = 0; i < sessionStorage.length; i++) {
+									const key = sessionStorage.key(i); // Получаем ключ
+									const value = sessionStorage.getItem(key); // Получаем значение по ключу
+									console.log(`${key}: ${value}`); // Выводим ключ и значение в консоль
+								}
+								// Запускаем функцию генерации PDF
+								generatePDF();
+							}
+						});
+					} else {
+						// Запускаем функцию генерации PDF
+						generatePDF();
+					}
+					// Закрытие всплывающего окна
+					btnCancel.addEventListener('click', function () {
+						popupInsertEmail.style.display = 'none'; // Скрываем всплывающее окно
+						inputEmail.style.border = '5px solid #d3d7d8';
+					});
+				});
+
+				function generatePDF() {
+					// Показываем блок статуса генерации
+					generationBblock.style.opacity = '1';
+
+					// Получаем данные из sessionStorage
+					const receiveByEmail = JSON.parse(sessionStorage.getItem('receiveByEmail'));
+					const downloadToPC = JSON.parse(sessionStorage.getItem('downloadToPC'));
+
+					const userGroup = sessionStorage.getItem('userGroup');
+					const userId = sessionStorage.getItem('userId');
+					const userName = sessionStorage.getItem('userName');
+					const userSurname = sessionStorage.getItem('userSurname');
+					const userSex = sessionStorage.getItem('userSex');
+					const userBirthyear = parseInt(sessionStorage.getItem('userBirthyear'), 10);
+					const userCategory = sessionStorage.getItem('userCategory');
+					const userEmail = sessionStorage.getItem('userEmail');
+
+					const adaptation_1 = parseInt(sessionStorage.getItem('adaptation_1'), 10);
+					const compromise_1 = parseInt(sessionStorage.getItem('compromise_1'), 10);
+					const bidding_1 = parseInt(sessionStorage.getItem('bidding_1'), 10);
+					const threat_1 = parseInt(sessionStorage.getItem('threat_1'), 10);
+					const logicArgument_1 = parseInt(sessionStorage.getItem('logicArgument_1'), 10);
+					const emotionsArgument_1 = parseInt(sessionStorage.getItem('emotionsArgument_1'), 10);
+					const adaptationCount_1 = parseFloat(sessionStorage.getItem('adaptationCount_1'));
+					const compromiseCount_1 = parseFloat(sessionStorage.getItem('compromiseCount_1'));
+					const biddingCount_1 = parseFloat(sessionStorage.getItem('biddingCount_1'));
+					const threatCount_1 = parseFloat(sessionStorage.getItem('threatCount_1'));
+					const logicArgumentCount_1 = parseFloat(sessionStorage.getItem('logicArgumentCount_1'));
+					const emotionsArgumentCount_1 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_1'));
+
+					const adaptation_2 = parseInt(sessionStorage.getItem('adaptation_2'), 10);
+					const compromise_2 = parseInt(sessionStorage.getItem('compromise_2'), 10);
+					const threat_2 = parseInt(sessionStorage.getItem('threat_2'), 10);
+					const cooperation_2 = parseInt(sessionStorage.getItem('cooperation_2'), 10);
+					const avoidance_2 = parseInt(sessionStorage.getItem('avoidance_2'), 10);
+					const adaptationCount_2 = parseFloat(sessionStorage.getItem('adaptationCount_2'));
+					const compromiseCount_2 = parseFloat(sessionStorage.getItem('compromiseCount_2'));
+					const threatCount_2 = parseFloat(sessionStorage.getItem('threatCount_2'));
+					const cooperationCount_2 = parseFloat(sessionStorage.getItem('cooperationCount_2'));
+					const avoidanceCount_2 = parseFloat(sessionStorage.getItem('avoidanceCount_2'));
+
+					const adaptation_3 = parseInt(sessionStorage.getItem('adaptation_3'), 10);
+					const threat_3 = parseInt(sessionStorage.getItem('threat_3'), 10);
+					const cooperation_3 = parseInt(sessionStorage.getItem('cooperation_3'), 10);
+					const adaptationCount_3 = parseFloat(sessionStorage.getItem('adaptationCount_3'));
+					const threatCount_3 = parseFloat(sessionStorage.getItem('threatCount_3'));
+					const cooperationCount_3 = parseFloat(sessionStorage.getItem('cooperationCount_3'));
+
+					const understandingOfStyles_4 = parseInt(sessionStorage.getItem('understandingOfStyles_4'), 10);
+					const strengthInstallation_4 = parseInt(sessionStorage.getItem('strengthInstallation_4'), 10);
+					const manipulationInstallation_4 = parseInt(sessionStorage.getItem('manipulationInstallation_4'), 10);
+					const negotiationsInstallation_4 = parseInt(sessionStorage.getItem('negotiationsInstallation_4'), 10);
+					const strengthInstallationCount_4 = parseFloat(sessionStorage.getItem('strengthInstallationCount_4'));
+					const manipulationInstallationCount_4 = parseFloat(sessionStorage.getItem('manipulationInstallationCount_4'));
+					const negotiationsInstallationCount_4 = parseFloat(sessionStorage.getItem('negotiationsInstallationCount_4'));
+
+					const adaptation_5 = parseInt(sessionStorage.getItem('adaptation_5'), 10);
+					const bidding_5 = parseInt(sessionStorage.getItem('bidding_5'), 10);
+					const logicArgument_5 = parseInt(sessionStorage.getItem('logicArgument_5'), 10);
+					const emotionsArgument_5 = parseInt(sessionStorage.getItem('emotionsArgument_5'), 10);
+					const avoidance_5 = parseInt(sessionStorage.getItem('avoidance_5'), 10);
+					const adaptationCount_5 = parseFloat(sessionStorage.getItem('adaptationCount_5'));
+					const biddingCount_5 = parseFloat(sessionStorage.getItem('biddingCount_5'));
+					const logicArgumentCount_5 = parseFloat(sessionStorage.getItem('logicArgumentCount_5'));
+					const emotionsArgumentCount_5 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_5'));
+					const avoidanceCount_5 = parseFloat(sessionStorage.getItem('avoidanceCount_5'));
+
+					const logicArgument_6 = parseInt(sessionStorage.getItem('logicArgument_6'), 10);
+					const emotionsArgument_6 = parseInt(sessionStorage.getItem('emotionsArgument_6'), 10);
+					const logicArgumentCount_6 = parseFloat(sessionStorage.getItem('logicArgumentCount_6'));
+					const emotionsArgumentCount_6 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_6'));
+
+					// Создаем JSON-объект для хранения данных
+					const ISeC_results = {
+
+						downloadToPC: downloadToPC,
+						receiveByEmail: receiveByEmail,
+
+						userGroup: userGroup,
+						userId: userId,
+						userName: userName,
+						userSurname: userSurname,
+						userSex: userSex,
+						userBirthyear: userBirthyear,
+						userCategory: userCategory,
+						userEmail: userEmail,
+
+						adaptation_1: adaptation_1,
+						compromise_1: compromise_1,
+						bidding_1: bidding_1,
+						threat_1: threat_1,
+						logicArgument_1: logicArgument_1,
+						emotionsArgument_1: emotionsArgument_1,
+						adaptationCount_1: adaptationCount_1,
+						compromiseCount_1: compromiseCount_1,
+						biddingCount_1: biddingCount_1,
+						threatCount_1: threatCount_1,
+						logicArgumentCount_1: logicArgumentCount_1,
+						emotionsArgumentCount_1: emotionsArgumentCount_1,
+
+						adaptation_2: adaptation_2,
+						compromise_2: compromise_2,
+						threat_2: threat_2,
+						cooperation_2: cooperation_2,
+						avoidance_2: avoidance_2,
+						adaptationCount_2: adaptationCount_2,
+						compromiseCount_2: compromiseCount_2,
+						threatCount_2: threatCount_2,
+						cooperationCount_2: cooperationCount_2,
+						avoidanceCount_2: avoidanceCount_2,
+
+						adaptation_3: adaptation_3,
+						threat_3: threat_3,
+						cooperation_3: cooperation_3,
+						adaptationCount_3: adaptationCount_3,
+						threatCount_3: threatCount_3,
+						cooperationCount_3: cooperationCount_3,
+
+						understandingOfStyles_4: understandingOfStyles_4,
+						strengthInstallation_4: strengthInstallation_4,
+						manipulationInstallation_4: manipulationInstallation_4,
+						negotiationsInstallation_4: negotiationsInstallation_4,
+						strengthInstallationCount_4: strengthInstallationCount_4,
+						manipulationInstallationCount_4: manipulationInstallationCount_4,
+						negotiationsInstallationCount_4: negotiationsInstallationCount_4,
+
+						adaptation_5: adaptation_5,
+						bidding_5: bidding_5,
+						logicArgument_5: logicArgument_5,
+						emotionsArgument_5: emotionsArgument_5,
+						avoidance_5: avoidance_5,
+						adaptationCount_5: adaptationCount_5,
+						biddingCount_5: biddingCount_5,
+						logicArgumentCount_5: logicArgumentCount_5,
+						emotionsArgumentCount_5: emotionsArgumentCount_5,
+						avoidanceCount_5: avoidanceCount_5,
+
+						logicArgument_6: logicArgument_6,
+						emotionsArgument_6: emotionsArgument_6,
+						logicArgumentCount_6: logicArgumentCount_6,
+						emotionsArgumentCount_6: emotionsArgumentCount_6
+					};
+
+					if (ISeC_results) { // Проверяем, что данные существуют
+
+						fetch('/generate_and_download_pdf', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(ISeC_results)
+						})
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('Ошибка при генерации PDF');
+								}
+								return response.blob();
+							})
+							.then(blob => {
+								if (sessionStorage.getItem('downloadToPC') === 'true') {
+									const url = window.URL.createObjectURL(blob);
+									const a = document.createElement('a');
+									a.style.display = 'none';
+									a.href = url;
+									a.download = `ИКС-файл ${ISeC_results.userId}.pdf`;
+									document.body.appendChild(a);
+									a.click();
+									window.URL.revokeObjectURL(url);
+								}
+
+								// Анимация исчезновения иконки генерации
+								generationSvg.style.transition = 'opacity 0.25s ease-in-out';
+								generationSvg.style.opacity = '0';
+								setTimeout(() => {
+									generationSvg.style.display = 'none';
+								}, 250);
+
+								setTimeout(() => {
+
+									// Очищаем сессию на сервере
+									fetch('/clear_session', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify({ clearSession: true })
+									}).then(response => {
+										if (response.ok) {
+											// Удаляем данные из sessionStorage
+											sessionStorage.clear();
+											console.log('Сессия успешно завершена');
+										} else {
+											console.error('Ошибка при очистке сессии');
+										}
+									});
+
+									// Запускаем анимацию галочки
+									const completedSvgPath = completedSvg.querySelector('path');
+									completedSvgPath.style.strokeDasharray = '200';  // Устанавливаем длину пути
+									completedSvgPath.style.strokeDashoffset = '200'; // Начальная точка
+									completedSvg.style.display = 'flex';
+									completedSvg.style.opacity = '1';
+									setTimeout(() => {
+										completedSvgPath.style.transition = 'stroke-dashoffset 1s ease-out';
+										completedSvgPath.style.strokeDashoffset = '0'; // Рисуем галочку
+									}, 50);
+
+								}, 300);
+							})
+
+							.catch(error => {
+								console.error('Ошибка:', error);
+								// alert('Произошла ошибка. Обратитесь к администратору');
+							});
+
+					} else {
+						console.error('Данные для генерации отсутствуют, или загрузка уже идет');
+					}
+				}
+
+			});
+
+		</script>
+
+	</main>
+
+</body>
+
+</html>

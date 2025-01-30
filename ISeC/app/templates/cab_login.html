@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Администрация. ИКС-файл</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_adminCab.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+<body>
+	<div class="container">
+		<h1>Авторизация</h1>
+		<form id="loginForm" action="{{ url_for('cab_login') }}" method="post" novalidate>
+			<div class="input-group">
+				<label for="adminName">Логин</label>
+				<input type="text" id="adminName" name="adminName" placeholder="">
+			</div>
+			<div class="input-group">
+				<label for="adminPass">Пароль</label>
+				<input type="password" id="adminPass" name="adminPass" placeholder="">
+			</div>
+			<button class="enter_btn" type="submit">Войти</button>
+		</form>
+	</div>
+	<script>
+		document.getElementById('loginForm').addEventListener('submit', function (event) {
+			let valid = true;
+
+			// Сбрасываем плейсхолдеры
+			document.getElementById('adminName').placeholder = '';
+			document.getElementById('adminPass').placeholder = '';
+
+			// Проверка логина
+			const adminName = document.getElementById('adminName').value;
+			if (!adminName) {
+				document.getElementById('adminName').placeholder = 'Пожалуйста, заполните логин.';
+				valid = false;
+			}
+
+			// Проверка пароля
+			const adminPass = document.getElementById('adminPass').value;
+			if (!adminPass) {
+				document.getElementById('adminPass').placeholder = 'Пожалуйста, заполните пароль.';
+				valid = false;
+			}
+
+			// Если форма не валидна, предотвращаем её отправку
+			if (!valid) {
+				event.preventDefault();
+			}
+		});
+	</script>
+</body>
+
+</html>

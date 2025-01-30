@@ -1,0 +1,2267 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Блок 1. ИКС-файл</title>
+    <script type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_ISeC.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+<body>
+
+    <section class="vertical_lines">
+        <img class="line_1" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_2" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_3" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_4" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_5" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_6" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_7" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_8" src="{{ url_for('static', filename='images/line.svg') }}">
+    </section>
+    <section class="horizontal_lines">
+        <img class="line_9" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_10" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_11" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_12" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_13" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_14" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_15" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_16" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_17" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_18" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_19" src="{{ url_for('static', filename='images/line.svg') }}">
+        <img class="line_20" src="{{ url_for('static', filename='images/line.svg') }}">
+    </section>
+
+    <main>
+
+        <!-- ОПИСАНИЕ БЛОКА -->
+
+        <div class="descr_test" name="descr_test_1">
+            <p class="descr_test_title">Блок 1. Определение стиля переговоров<br>
+            </p>
+            <p class="descr_test_text">&emsp;Вам будут предложены 15 пар утверждений. Распределите три балла в каждой
+                паре:<br>
+            </p>
+            <p class="descr_test_text">&emsp;&emsp;3 - вариант приемлем в большинстве случаев<br></p>
+            <p class="descr_test_text">&emsp;&emsp;2 - более приемлем<br></p>
+            <p class="descr_test_text">&emsp;&emsp;1 - менее приемлем<br></p>
+            <p class="descr_test_text">&emsp;&emsp;0 - почти не приемлем<br></p>
+            <p class="descr_test_text">&emsp;Варианты распределения: 3-0, 2-1, 1-2, 0-3.<br>
+            <p class="descr_test_text">&emsp;Не думайте слишком долго! Важна Ваша оперативная реакция.<br>
+            </p>
+            <button id="test_1_start" class="btn_test" type="button">Приступить к выполнению блока</button>
+        </div>
+
+        <script src="{{ url_for('static', filename='js/functions_ISeC.js') }}"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById('test_1_start').addEventListener('click', function () {
+                    flipDescrToQuest('[name="descr_test_1"]', '[name="quest_1_1"]')
+                });
+            });
+        </script>
+
+        <!-- ВСПЛЫВАЮЩЕЕ ОКНО -->
+        <div class="popup_error" id="popup_error_1">
+            <div class="popup_error_content">
+                <p class="error_title">Ошибка</p>
+                <p>Выберите один из вариантов ответа</p>
+                <button class="close_btn" id="closeBtn_1">Закрыть</button>
+            </div>
+        </div>
+
+
+        <!-- ВОПРОС 1 -->
+
+        <div class="quest_1" name="quest_1_1">
+            <p class="quest_1_title">Выбор 1 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«А можем мы, с учетом увеличения объёма сделки,
+                получить
+                уменьшение цены?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Договорились. Люблю понятные решения».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_1_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_top_0" class="inpRadio" name="1_1_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_top_1" class="inpRadio" name="1_1_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_top_2" class="inpRadio" name="1_1_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_top_3" class="inpRadio" name="1_1_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_bottom_0" class="inpRadio" name="1_1_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_bottom_1" class="inpRadio" name="1_1_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_bottom_2" class="inpRadio" name="1_1_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_1_bottom_3" class="inpRadio" name="1_1_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_1_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_1_prev').addEventListener('click', function () {
+                    flipQuestToDescr('[name="quest_1_1"]', '[name="descr_test_1"]');
+                });
+                // Работа с кнопками выбора
+                crossButtonSelection('1_1_top_0', '1_1_top_1', '1_1_top_2', '1_1_top_3', '1_1_bottom_0', '1_1_bottom_1', '1_1_bottom_2', '1_1_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_1 = document.getElementById('popup_error_1');
+                const closeBtn_1_1 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_1 = document.getElementsByName("1_1_top");
+                const nextButton_1_1 = document.getElementById("btn_1_1_next");
+
+                nextButton_1_1.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_1) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_1.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_1"]', '[name="quest_1_2"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_1.addEventListener('click', function () {
+                    popup_1_1.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 2 -->
+
+        <div class="quest_1" name="quest_1_2">
+            <p class="quest_1_title">Выбор 2 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Что, если мы умножим Х на 9 и отнимем 10% в обмен на
+                лучшие
+                условия оплаты и более длительный период контракта с нашей стороны?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«У нас есть ограничения по бюджету. И если мы с Вами
+                не сможем
+                снизить стоимость, мне придётся искать альтернативный вариант оборудования».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button class="btn_nextprev" id="btn_1_2_prev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_top_0" class="inpRadio" name="1_2_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_top_1" class="inpRadio" name="1_2_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_top_2" class="inpRadio" name="1_2_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_top_3" class="inpRadio" name="1_2_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_bottom_0" class="inpRadio" name="1_2_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_bottom_1" class="inpRadio" name="1_2_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_bottom_2" class="inpRadio" name="1_2_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_2_bottom_3" class="inpRadio" name="1_2_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn_nextprev" id="btn_1_2_next">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_2_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_2"]', '[name="quest_1_1"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_2_top_0', '1_2_top_1', '1_2_top_2', '1_2_top_3', '1_2_bottom_0', '1_2_bottom_1', '1_2_bottom_2', '1_2_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_2 = document.getElementById('popup_error_1');
+                const closeBtn_1_2 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_2 = document.getElementsByName("1_2_top");
+                const nextButton_1_2 = document.getElementById("btn_1_2_next");
+
+                nextButton_1_2.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_2) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_2.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_2"]', '[name="quest_1_3"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_2.addEventListener('click', function () {
+                    popup_1_2.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 3 -->
+
+        <div class="quest_1" name="quest_1_3">
+            <p class="quest_1_title">Выбор 3 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Вы говорили, что новые технологии позволили Вам
+                снизить
+                себестоимость поставляемого оборудования и увеличить обороты. На этом фоне снижение цены поставки -
+                логичный шаг для поддержки лояльности клиентов».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Спасибо, что в новых объёмах не выкручиваете нам
+                руки. Хорошая
+                основа доверительного партнёрства».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_3_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_top_0" class="inpRadio" name="1_3_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_top_1" class="inpRadio" name="1_3_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_top_2" class="inpRadio" name="1_3_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_top_3" class="inpRadio" name="1_3_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_bottom_0" class="inpRadio" name="1_3_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_bottom_1" class="inpRadio" name="1_3_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_bottom_2" class="inpRadio" name="1_3_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_3_bottom_3" class="inpRadio" name="1_3_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_3_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_3_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_3"]', '[name="quest_1_2"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_3_top_0', '1_3_top_1', '1_3_top_2', '1_3_top_3', '1_3_bottom_0', '1_3_bottom_1', '1_3_bottom_2', '1_3_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_3 = document.getElementById('popup_error_1');
+                const closeBtn_1_3 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_3 = document.getElementsByName("1_3_top");
+                const nextButton_1_3 = document.getElementById("btn_1_3_next");
+
+                nextButton_1_3.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_3) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_3.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_3"]', '[name="quest_1_4"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_3.addEventListener('click', function () {
+                    popup_1_3.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 4 -->
+
+        <div class="quest_1" name="quest_1_4">
+            <p class="quest_1_title">Выбор 4 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Что, если мы умножим Х на 9 и отнимем 10% в обмен на
+                лучшие
+                условия оплаты и более длительный период контракта с нашей стороны?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«А можем мы, с учетом увеличения объёма сделки,
+                получить скидку,
+                например, 10%?».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_4_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_top_0" class="inpRadio" name="1_4_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_top_1" class="inpRadio" name="1_4_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_top_2" class="inpRadio" name="1_4_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_top_3" class="inpRadio" name="1_4_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_bottom_0" class="inpRadio" name="1_4_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_bottom_1" class="inpRadio" name="1_4_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_bottom_2" class="inpRadio" name="1_4_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_4_bottom_3" class="inpRadio" name="1_4_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_4_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_4_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_4"]', '[name="quest_1_3"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_4_top_0', '1_4_top_1', '1_4_top_2', '1_4_top_3', '1_4_bottom_0', '1_4_bottom_1', '1_4_bottom_2', '1_4_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_4 = document.getElementById('popup_error_1');
+                const closeBtn_1_4 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_4 = document.getElementsByName("1_4_top");
+                const nextButton_1_4 = document.getElementById("btn_1_4_next");
+
+                nextButton_1_4.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_4) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_4.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_4"]', '[name="quest_1_5"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_4.addEventListener('click', function () {
+                    popup_1_4.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 5 -->
+
+        <div class="quest_1" name="quest_1_5">
+            <p class="quest_1_title">Выбор 5 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«У нас есть ограничения по бюджету. И если мы с Вами
+                не сможем
+                снизить стоимость, мне придётся искать альтернативный вариант оборудования».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Вы говорили, что новые технологии позволили Вам
+                снизить
+                себестоимость поставляемого оборудования и увеличить обороты. На этом фоне снижение цены поставки -
+                логичный шаг для поддержки лояльности клиентов».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_5_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_top_0" class="inpRadio" name="1_5_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_top_1" class="inpRadio" name="1_5_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_top_2" class="inpRadio" name="1_5_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_top_3" class="inpRadio" name="1_5_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_bottom_0" class="inpRadio" name="1_5_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_bottom_1" class="inpRadio" name="1_5_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_bottom_2" class="inpRadio" name="1_5_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_5_bottom_3" class="inpRadio" name="1_5_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_5_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_5_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_5"]', '[name="quest_1_4"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_5_top_0', '1_5_top_1', '1_5_top_2', '1_5_top_3', '1_5_bottom_0', '1_5_bottom_1', '1_5_bottom_2', '1_5_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_5 = document.getElementById('popup_error_1');
+                const closeBtn_1_5 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_5 = document.getElementsByName("1_5_top");
+                const nextButton_1_5 = document.getElementById("btn_1_5_next");
+
+                nextButton_1_5.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_5) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_5.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_5"]', '[name="quest_1_6"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_5.addEventListener('click', function () {
+                    popup_1_5.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 6 -->
+
+        <div class="quest_1" name="quest_1_6">
+            <p class="quest_1_title">Выбор 6 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«А можем мы, с учетом увеличения объёма сделки,
+                получить скидку,
+                например, 10%?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Спасибо, что в новых объёмах не выкручиваете нам
+                руки. Хорошая
+                основа доверительного партнёрства».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_6_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_top_0" class="inpRadio" name="1_6_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_top_1" class="inpRadio" name="1_6_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_top_2" class="inpRadio" name="1_6_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_top_3" class="inpRadio" name="1_6_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_bottom_0" class="inpRadio" name="1_6_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_bottom_1" class="inpRadio" name="1_6_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_bottom_2" class="inpRadio" name="1_6_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_6_bottom_3" class="inpRadio" name="1_6_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_6_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_6_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_6"]', '[name="quest_1_5"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_6_top_0', '1_6_top_1', '1_6_top_2', '1_6_top_3', '1_6_bottom_0', '1_6_bottom_1', '1_6_bottom_2', '1_6_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_6 = document.getElementById('popup_error_1');
+                const closeBtn_1_6 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_6 = document.getElementsByName("1_6_top");
+                const nextButton_1_6 = document.getElementById("btn_1_6_next");
+
+                nextButton_1_6.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_6) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_6.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_6"]', '[name="quest_1_7"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_6.addEventListener('click', function () {
+                    popup_1_6.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 7 -->
+
+        <div class="quest_1" name="quest_1_7">
+            <p class="quest_1_title">Выбор 7 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Договорились. Люблю понятные решения».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«У нас есть ограничения по бюджету. И если мы с Вами
+                не сможем
+                снизить стоимость, мне придётся искать альтернативный вариант оборудования».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_7_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_top_0" class="inpRadio" name="1_7_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_top_1" class="inpRadio" name="1_7_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_top_2" class="inpRadio" name="1_7_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_top_3" class="inpRadio" name="1_7_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_bottom_0" class="inpRadio" name="1_7_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_bottom_1" class="inpRadio" name="1_7_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_bottom_2" class="inpRadio" name="1_7_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_7_bottom_3" class="inpRadio" name="1_7_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_7_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_7_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_7"]', '[name="quest_1_6"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_7_top_0', '1_7_top_1', '1_7_top_2', '1_7_top_3', '1_7_bottom_0', '1_7_bottom_1', '1_7_bottom_2', '1_7_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_7 = document.getElementById('popup_error_1');
+                const closeBtn_1_7 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_7 = document.getElementsByName("1_7_top");
+                const nextButton_1_7 = document.getElementById("btn_1_7_next");
+
+                nextButton_1_7.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_7) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_7.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_7"]', '[name="quest_1_8"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_7.addEventListener('click', function () {
+                    popup_1_7.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 8 -->
+
+        <div class="quest_1" name="quest_1_8">
+            <p class="quest_1_title">Выбор 8 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«А можем мы, с учетом увеличения объёма сделки,
+                получить скидку,
+                например, 10%?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Вы говорили, что новые технологии позволили Вам
+                снизить
+                себестоимость поставляемого оборудования и увеличить обороты. На этом фоне снижение цены поставки -
+                логичный шаг для поддержки лояльности клиентов».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_8_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_top_0" class="inpRadio" name="1_8_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_top_1" class="inpRadio" name="1_8_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_top_2" class="inpRadio" name="1_8_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_top_3" class="inpRadio" name="1_8_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_bottom_0" class="inpRadio" name="1_8_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_bottom_1" class="inpRadio" name="1_8_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_bottom_2" class="inpRadio" name="1_8_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_8_bottom_3" class="inpRadio" name="1_8_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_8_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_8_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_8"]', '[name="quest_1_7"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_8_top_0', '1_8_top_1', '1_8_top_2', '1_8_top_3', '1_8_bottom_0', '1_8_bottom_1', '1_8_bottom_2', '1_8_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_8 = document.getElementById('popup_error_1');
+                const closeBtn_1_8 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_8 = document.getElementsByName("1_8_top");
+                const nextButton_1_8 = document.getElementById("btn_1_8_next");
+
+                nextButton_1_8.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_8) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_8.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_8"]', '[name="quest_1_9"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_8.addEventListener('click', function () {
+                    popup_1_8.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 9 -->
+
+        <div class="quest_1" name="quest_1_9">
+            <p class="quest_1_title">Выбор 9 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Договорились. Люблю понятные решения».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Что, если мы умножим Х на 9 и отнимем 10% в обмен на
+                лучшие
+                условия оплаты и более длительный период контракта с нашей стороны?».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_9_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_top_0" class="inpRadio" name="1_9_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_top_1" class="inpRadio" name="1_9_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_top_2" class="inpRadio" name="1_9_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_top_3" class="inpRadio" name="1_9_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_bottom_0" class="inpRadio" name="1_9_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_bottom_1" class="inpRadio" name="1_9_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_bottom_2" class="inpRadio" name="1_9_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_9_bottom_3" class="inpRadio" name="1_9_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_9_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_9_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_9"]', '[name="quest_1_8"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_9_top_0', '1_9_top_1', '1_9_top_2', '1_9_top_3', '1_9_bottom_0', '1_9_bottom_1', '1_9_bottom_2', '1_9_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_9 = document.getElementById('popup_error_1');
+                const closeBtn_1_9 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_9 = document.getElementsByName("1_9_top");
+                const nextButton_1_9 = document.getElementById("btn_1_9_next");
+
+                nextButton_1_9.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_9) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_9.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_9"]', '[name="quest_1_10"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_9.addEventListener('click', function () {
+                    popup_1_9.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 10 -->
+
+        <div class="quest_1" name="quest_1_10">
+            <p class="quest_1_title">Выбор 10 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«У нас есть ограничения по бюджету. И если мы с Вами
+                не сможем
+                снизить стоимость, мне придётся искать альтернативный вариант оборудования».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Спасибо, что в новых объёмах не выкручиваете нам
+                руки. Хорошая
+                основа доверительного партнёрства».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_10_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_top_0" class="inpRadio" name="1_10_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_top_1" class="inpRadio" name="1_10_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_top_2" class="inpRadio" name="1_10_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_top_3" class="inpRadio" name="1_10_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_bottom_0" class="inpRadio" name="1_10_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_bottom_1" class="inpRadio" name="1_10_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_bottom_2" class="inpRadio" name="1_10_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_10_bottom_3" class="inpRadio" name="1_10_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_10_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_10_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_10"]', '[name="quest_1_9"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_10_top_0', '1_10_top_1', '1_10_top_2', '1_10_top_3', '1_10_bottom_0', '1_10_bottom_1', '1_10_bottom_2', '1_10_bottom_3');
+                document.getElementById('1_10_bottom_0').addEventListener('change', function () {
+                    if (this.checked) {
+                        document.getElementById('1_10_top_3').checked = true;
+                    }
+                });
+                // Переменные всплывающего окна
+                const popup_1_10 = document.getElementById('popup_error_1');
+                const closeBtn_1_10 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_10 = document.getElementsByName("1_10_top");
+                const nextButton_1_10 = document.getElementById("btn_1_10_next");
+
+                nextButton_1_10.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_10) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_10.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_10"]', '[name="quest_1_11"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_10.addEventListener('click', function () {
+                    popup_1_10.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 11 -->
+
+        <div class="quest_1" name="quest_1_11">
+            <p class="quest_1_title">Выбор 11 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Договорились. Люблю понятные решения».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Вы говорили, что новые технологии позволили Вам
+                снизить
+                себестоимость поставляемого оборудования и увеличить обороты. На этом фоне снижение цены поставки -
+                логичный шаг для поддержки лояльности клиентов».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_11_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_top_0" class="inpRadio" name="1_11_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_top_1" class="inpRadio" name="1_11_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_top_2" class="inpRadio" name="1_11_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_top_3" class="inpRadio" name="1_11_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_bottom_0" class="inpRadio" name="1_11_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_bottom_1" class="inpRadio" name="1_11_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_bottom_2" class="inpRadio" name="1_11_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_11_bottom_3" class="inpRadio" name="1_11_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_11_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_11_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_11"]', '[name="quest_1_10"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_11_top_0', '1_11_top_1', '1_11_top_2', '1_11_top_3', '1_11_bottom_0', '1_11_bottom_1', '1_11_bottom_2', '1_11_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_11 = document.getElementById('popup_error_1');
+                const closeBtn_1_11 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_11 = document.getElementsByName("1_11_top");
+                const nextButton_1_11 = document.getElementById("btn_1_11_next");
+
+                nextButton_1_11.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_11) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_11.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_11"]', '[name="quest_1_12"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_11.addEventListener('click', function () {
+                    popup_1_11.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 12 -->
+
+        <div class="quest_1" name="quest_1_12">
+            <p class="quest_1_title">Выбор 12 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Спасибо, что в новых объёмах не выкручиваете нам
+                руки. Хорошая
+                основа доверительного партнёрства».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Что, если мы умножим Х на 9 и отнимем 10% в обмен на
+                лучшие
+                условия оплаты и более длительный период контракта с нашей стороны?».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_12_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_top_0" class="inpRadio" name="1_12_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_top_1" class="inpRadio" name="1_12_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_top_2" class="inpRadio" name="1_12_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_top_3" class="inpRadio" name="1_12_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_bottom_0" class="inpRadio" name="1_12_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_bottom_1" class="inpRadio" name="1_12_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_bottom_2" class="inpRadio" name="1_12_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_12_bottom_3" class="inpRadio" name="1_12_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_12_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_12_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_12"]', '[name="quest_1_11"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_12_top_0', '1_12_top_1', '1_12_top_2', '1_12_top_3', '1_12_bottom_0', '1_12_bottom_1', '1_12_bottom_2', '1_12_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_12 = document.getElementById('popup_error_1');
+                const closeBtn_1_12 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_12 = document.getElementsByName("1_12_top");
+                const nextButton_1_12 = document.getElementById("btn_1_12_next");
+
+                nextButton_1_12.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_12) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_12.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_12"]', '[name="quest_1_13"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_12.addEventListener('click', function () {
+                    popup_1_12.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 13 -->
+
+        <div class="quest_1" name="quest_1_13">
+            <p class="quest_1_title">Выбор 13 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«А можем мы, с учетом увеличения объёма сделки,
+                получить скидку,
+                например, 10%?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«У нас есть ограничения по бюджету. И если мы с Вами
+                не сможем
+                снизить стоимость, мне придётся искать альтернативный вариант оборудования».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_13_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_top_0" class="inpRadio" name="1_13_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_top_1" class="inpRadio" name="1_13_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_top_2" class="inpRadio" name="1_13_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_top_3" class="inpRadio" name="1_13_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_bottom_0" class="inpRadio" name="1_13_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_bottom_1" class="inpRadio" name="1_13_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_bottom_2" class="inpRadio" name="1_13_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_13_bottom_3" class="inpRadio" name="1_13_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_13_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_13_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_13"]', '[name="quest_1_12"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_13_top_0', '1_13_top_1', '1_13_top_2', '1_13_top_3', '1_13_bottom_0', '1_13_bottom_1', '1_13_bottom_2', '1_13_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_13 = document.getElementById('popup_error_1');
+                const closeBtn_1_13 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_13 = document.getElementsByName("1_13_top");
+                const nextButton_1_13 = document.getElementById("btn_1_13_next");
+
+                nextButton_1_13.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_13) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_13.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_13"]', '[name="quest_1_14"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_13.addEventListener('click', function () {
+                    popup_1_13.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 14 -->
+
+        <div class="quest_1" name="quest_1_14">
+            <p class="quest_1_title">Выбор 14 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Что, если мы умножим Х на 9 и отнимем 10% в обмен на
+                лучшие
+                условия оплаты и более длительный период контракта с нашей стороны?».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Вы говорили, что новые технологии позволили Вам
+                снизить
+                себестоимость поставляемого оборудования и увеличить обороты. На этом фоне снижение цены поставки -
+                логичный шаг для поддержки лояльности клиентов».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_14_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_top_0" class="inpRadio" name="1_14_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_top_1" class="inpRadio" name="1_14_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_top_2" class="inpRadio" name="1_14_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_top_3" class="inpRadio" name="1_14_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_bottom_0" class="inpRadio" name="1_14_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_bottom_1" class="inpRadio" name="1_14_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_bottom_2" class="inpRadio" name="1_14_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_14_bottom_3" class="inpRadio" name="1_14_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_14_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_14_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_14"]', '[name="quest_1_13"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_14_top_0', '1_14_top_1', '1_14_top_2', '1_14_top_3', '1_14_bottom_0', '1_14_bottom_1', '1_14_bottom_2', '1_14_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_14 = document.getElementById('popup_error_1');
+                const closeBtn_1_14 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_14 = document.getElementsByName("1_14_top");
+                const nextButton_1_14 = document.getElementById("btn_1_14_next");
+
+                nextButton_1_14.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_14) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_14.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_14"]', '[name="quest_1_15"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_14.addEventListener('click', function () {
+                    popup_1_14.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВОПРОС 15 -->
+
+        <div class="quest_1" name="quest_1_15">
+            <p class="quest_1_title">Выбор 15 из 15</p>
+            <p class="quest_1_text">&emsp;Уже год Вы сотрудничаете с компанией «N» в деле поставки оборудования.
+                Качество
+                партнёрства хорошее, но не отличное. Предстоит обсуждение планов на будущий год. Изначально Вы
+                планировали говорить о закупке семи однотипных партий оборудования по цене «Х». И готовы были учитывать
+                возможное повышение цены на 5% за партию (Х+5). Однако, в связи с участием в новом масштабном проекте,
+                Ваши запросы выросли. Речь может идти о поставке 9 партий (на 29% больше). С одной стороны, это даёт
+                возможность убедить поставщика снизить цену, с другой - усилит Вашу зависимость от его
+                продукции. С представителем поставщика у Вас ровные деловые отношения. На встрече после обмена
+                любезностями Вы объясняете, что готовы обсудить увеличение поставки. В ответ партнёр говорит: «Не вижу
+                проблем - цена
+                партии известна, мы просто умножим ее на 9, а не на семь». Что Вы ответите?</p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 1</span>&emsp;«Спасибо, что в новых объёмах не выкручиваете нам
+                руки. Хорошая
+                основа доверительного партнёрства».<br>
+            </p>
+            <p class="quest_1_text">
+                <span class="affirm_1">&emsp;Вариант 2</span>&emsp;«Договорились. Люблю понятные решения».<br>
+            </p>
+            <section class="quest_1_sect">
+                <button id="btn_1_15_prev" class="btn_nextprev">Назад</button>
+                <div class="inpBlock_1">
+                    <div class="inp_top_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 1</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_top_0" class="inpRadio" name="1_15_top"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_top_1" class="inpRadio" name="1_15_top"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_top_2" class="inpRadio" name="1_15_top"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_top_3" class="inpRadio" name="1_15_top"> 3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inp_bottom_1">
+                        <div class="inp_left_1">
+                            <span>Вариант 2</span>
+                        </div>
+                        <div class="inp_right_1">
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_bottom_0" class="inpRadio" name="1_15_bottom"> 0
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_bottom_1" class="inpRadio" name="1_15_bottom"> 1
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_bottom_2" class="inpRadio" name="1_15_bottom"> 2
+                            </div>
+                            <div class="var_inputs">
+                                <input type="radio" id="1_15_bottom_3" class="inpRadio" name="1_15_bottom"> 3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn_1_15_next" class="btn_nextprev">Далее</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('btn_1_15_prev').addEventListener('click', function () {
+                    flipBack('[name="quest_1_15"]', '[name="quest_1_14"]');
+                });
+                // Работа с кнопками выбора
+
+                crossButtonSelection('1_15_top_0', '1_15_top_1', '1_15_top_2', '1_15_top_3', '1_15_bottom_0', '1_15_bottom_1', '1_15_bottom_2', '1_15_bottom_3');
+                // Переменные всплывающего окна
+                const popup_1_15 = document.getElementById('popup_error_1');
+                const closeBtn_1_15 = document.getElementById('closeBtn_1');
+                // Переменные перелистывания вперед
+                const radioTop_1_15 = document.getElementsByName("1_15_top");
+                const nextButton_1_15 = document.getElementById("btn_1_15_next");
+
+                nextButton_1_15.addEventListener("click", function () {
+                    let isChecked = false;
+                    // Проверяем состояние радиокнопок
+                    for (let radio of radioTop_1_15) {
+                        if (radio.checked) {
+                            isChecked = true;
+                            break;
+                        }
+                    }
+                    // Если ни один переключатель не выбран
+                    if (!isChecked) {
+                        popup_1_15.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+                        // Логика перелистывания вперед
+                        flipFront('[name="quest_1_15"]', '[name="end_test_1"]');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_15.addEventListener('click', function () {
+                    popup_1_15.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+
+        <!-- ВСПЛЫВАЮЩЕЕ ОКНО В КОНЦЕ БЛОКА -->
+        <div class="popup_error" id="popup_error_1_end">
+            <div class="popup_error_content">
+                <p class="error_title">Ошибка</p>
+                <p>Подтвердите свой выбор вариантов ответа</p>
+                <button class="close_btn" id="closeBtn_1_end">Закрыть</button>
+            </div>
+        </div>
+
+        <!-- КОНЕЦ БЛОКА -->
+
+        <div class="end_test" name="end_test_1">
+            <p class="end_test_title">Блок 1 пройден<br>
+            </p>
+            <p class="end_test_text">&emsp;Вы завершаете прохождение блока 1. Если у Вас остались сомнения в выборе
+                вариантов
+                ответа, перепроверьте их перед тем, как продолжить тест. После нажатия на кнопку "Продолжить" изменить
+                ответы уже не получится.<br>
+            </p>
+            <section class="end_sect">
+                <button class="btn_nextprev" id="end_test_1_prev">Назад</button>
+                <div class="confirm_answers">
+                    <div></div>
+                    <span>Подтвердить ответы</span>
+                    <input type="checkbox" id="confirm_1_end" class="inpRadio">
+                    <div></div>
+                </div>
+                <button class="btn_continue" id="end_test_next_1" type="button">Продолжить</button>
+            </section>
+
+            <script>
+                // Перелистывание назад
+                document.getElementById('end_test_1_prev').addEventListener('click', function () {
+                    flipBack('[name="end_test_1"]', '[name="quest_1_15"]');
+                });
+                // Переменные всплывающего окна
+                const popup_error_1_end = document.getElementById('popup_error_1_end');
+                const closeBtn_1_end = document.getElementById('closeBtn_1_end');
+                // Переменные перелистывания вперед
+                const nextButton_1_end = document.getElementById("end_test_next_1");
+
+                nextButton_1_end.addEventListener("click", function () {
+                    // Если переключатель не выбран
+                    const checkbox = document.getElementById('confirm_1_end');
+                    if (!checkbox.checked) {
+                        popup_error_1_end.style.display = 'flex'; // Показываем всплывающее окно
+                    } else {
+
+                        // Инициализация переменных
+                        let adaptation = 0; // Приспособление
+                        let compromise = 0; // Компромисс
+                        let bidding = 0; // Торги
+                        let threat = 0; // Угроза
+                        let logicArgument = 0; // Логика как аргумент
+                        let emotionsArgument = 0; // Эмоции как аргумент
+
+                        // Инициализация счётчиков
+                        let adaptationCount = 0; // Приспособление (счёт)
+                        let compromiseCount = 0; // Компромисс (счёт)
+                        let biddingCount = 0; // Торги (счёт)
+                        let threatCount = 0; // Угроза (счёт)
+                        let logicArgumentCount = 0; // Логика как аргумент (счёт)
+                        let emotionsArgumentCount = 0; // Эмоции как аргумент (счёт)
+
+                        // Результаты вопроса 1
+                        const radios_1_1 = document.getElementsByName("1_1_top");
+                        radios_1_1.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_1_top_0":
+                                        compromise += 3;
+                                        compromiseCount += 1; // счёт
+                                        break;
+                                    case "1_1_top_1":
+                                        compromise += 2;
+                                        adaptation += 1;
+                                        adaptationCount += 0.5; // счёт
+                                        compromiseCount += 0.5; // счёт
+                                        break;
+                                    case "1_1_top_2":
+                                        compromise += 1;
+                                        adaptation += 2;
+                                        adaptationCount += 0.5; // счёт
+                                        compromiseCount += 0.5; // счёт
+                                        break;
+                                    case "1_1_top_3":
+                                        adaptation += 3;
+                                        adaptationCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 2
+                        const radios_1_2 = document.getElementsByName("1_2_top");
+                        radios_1_2.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_2_top_0":
+                                        bidding += 3;
+                                        biddingCount += 1; // счёт
+                                        break;
+                                    case "1_2_top_1":
+                                        bidding += 2;
+                                        threat += 1;
+                                        biddingCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_2_top_2":
+                                        bidding += 1;
+                                        threat += 2;
+                                        biddingCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_2_top_3":
+                                        threat += 3;
+                                        threatCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 3
+                        const radios_1_3 = document.getElementsByName("1_3_top");
+                        radios_1_3.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_3_top_0":
+                                        logicArgument += 3;
+                                        logicArgumentCount += 1; // счёт
+                                        break;
+                                    case "1_3_top_1":
+                                        logicArgument += 2;
+                                        emotionsArgument += 1;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_3_top_2":
+                                        logicArgument += 1;
+                                        emotionsArgument += 2;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_3_top_3":
+                                        emotionsArgument += 3;
+                                        emotionsArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 4
+                        const radios_1_4 = document.getElementsByName("1_4_top");
+                        radios_1_4.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_4_top_0":
+                                        bidding += 3;
+                                        biddingCount += 1; // счёт
+                                        break;
+                                    case "1_4_top_1":
+                                        bidding += 2;
+                                        compromise += 1;
+                                        biddingCount += 0.5; // счёт
+                                        compromiseCount += 0.5; // счёт
+                                        break;
+                                    case "1_4_top_2":
+                                        bidding += 1;
+                                        compromise += 2;
+                                        biddingCount += 0.5; // счёт
+                                        compromiseCount += 0.5; // счёт
+                                        break;
+                                    case "1_4_top_3":
+                                        compromise += 3;
+                                        compromiseCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 5
+                        const radios_1_5 = document.getElementsByName("1_5_top");
+                        radios_1_5.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_5_top_0":
+                                        threat += 3;
+                                        threatCount += 1; // счёт
+                                        break;
+                                    case "1_5_top_1":
+                                        threat += 2;
+                                        logicArgument += 1;
+                                        threatCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_5_top_2":
+                                        threat += 1;
+                                        logicArgument += 2;
+                                        threatCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_5_top_3":
+                                        logicArgument += 3;
+                                        logicArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 6
+                        const radios_1_6 = document.getElementsByName("1_6_top");
+                        radios_1_6.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_6_top_0":
+                                        compromise += 3;
+                                        compromiseCount += 1; // счёт
+                                        break;
+                                    case "1_6_top_1":
+                                        compromise += 2;
+                                        emotionsArgument += 1;
+                                        compromiseCount += 0.5; // счёт
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_6_top_2":
+                                        compromise += 1;
+                                        emotionsArgument += 2;
+                                        compromiseCount += 0.5; // счёт
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_6_top_3":
+                                        emotionsArgument += 3;
+                                        emotionsArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 7
+                        const radios_1_7 = document.getElementsByName("1_7_top");
+                        radios_1_7.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_7_top_0":
+                                        adaptation += 3;
+                                        adaptationCount += 1; // счёт
+                                        break;
+                                    case "1_7_top_1":
+                                        adaptation += 2;
+                                        threat += 1;
+                                        adaptationCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_7_top_2":
+                                        adaptation += 1;
+                                        threat += 2;
+                                        adaptationCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_7_top_3":
+                                        threat += 3;
+                                        threatCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 8
+                        const radios_1_8 = document.getElementsByName("1_8_top");
+                        radios_1_8.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_8_top_0":
+                                        compromise += 3;
+                                        compromiseCount += 1; // счёт
+                                        break;
+                                    case "1_8_top_1":
+                                        compromise += 2;
+                                        logicArgument += 1;
+                                        compromiseCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_8_top_2":
+                                        compromise += 1;
+                                        logicArgument += 2;
+                                        compromiseCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_8_top_3":
+                                        logicArgument += 3;
+                                        logicArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 9
+                        const radios_1_9 = document.getElementsByName("1_9_top");
+                        radios_1_9.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_9_top_0":
+                                        adaptation += 3;
+                                        adaptationCount += 1; // счёт
+                                        break;
+                                    case "1_9_top_1":
+                                        adaptation += 2;
+                                        bidding += 1;
+                                        adaptationCount += 0.5; // счёт
+                                        biddingCount += 0.5; // счёт
+                                        break;
+                                    case "1_9_top_2":
+                                        adaptation += 1;
+                                        bidding += 2;
+                                        adaptationCount += 0.5; // счёт
+                                        biddingCount += 0.5; // счёт
+                                        break;
+                                    case "1_9_top_3":
+                                        bidding += 3;
+                                        biddingCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 10
+                        const radios_1_10 = document.getElementsByName("1_10_top");
+                        radios_1_10.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_10_top_0":
+                                        threat += 3;
+                                        threatCount += 1; // счёт
+                                        break;
+                                    case "1_10_top_1":
+                                        threat += 2;
+                                        emotionsArgument += 1;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_10_top_2":
+                                        threat += 1;
+                                        emotionsArgument += 2;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_10_top_3":
+                                        emotionsArgument += 3;
+                                        emotionsArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 11
+                        const radios_1_11 = document.getElementsByName("1_11_top");
+                        radios_1_11.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_11_top_0":
+                                        adaptation += 3;
+                                        adaptationCount += 1; // счёт
+                                        break;
+                                    case "1_11_top_1":
+                                        adaptation += 2;
+                                        logicArgument += 1;
+                                        adaptationCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_11_top_2":
+                                        adaptation += 1;
+                                        logicArgument += 2;
+                                        adaptationCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_11_top_3":
+                                        logicArgument += 3;
+                                        logicArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 12
+                        const radios_1_12 = document.getElementsByName("1_12_top");
+                        radios_1_12.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_12_top_0":
+                                        emotionsArgument += 3;
+                                        emotionsArgumentCount += 1; // счёт
+                                        break;
+                                    case "1_12_top_1":
+                                        emotionsArgument += 2;
+                                        bidding += 1;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        biddingCount += 0.5; // счёт
+                                        break;
+                                    case "1_12_top_2":
+                                        emotionsArgument += 1;
+                                        bidding += 2;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        biddingCount += 0.5; // счёт
+                                        break;
+                                    case "1_12_top_3":
+                                        bidding += 3;
+                                        biddingCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 13
+                        const radios_1_13 = document.getElementsByName("1_13_top");
+                        radios_1_13.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_13_top_0":
+                                        compromise += 3;
+                                        compromiseCount += 1; // счёт
+                                        break;
+                                    case "1_13_top_1":
+                                        compromise += 2;
+                                        threat += 1;
+                                        compromiseCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_13_top_2":
+                                        compromise += 1;
+                                        threat += 2;
+                                        compromiseCount += 0.5; // счёт
+                                        threatCount += 0.5; // счёт
+                                        break;
+                                    case "1_13_top_3":
+                                        threat += 3;
+                                        threatCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 14
+                        const radios_1_14 = document.getElementsByName("1_14_top");
+                        radios_1_14.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_14_top_0":
+                                        bidding += 3;
+                                        biddingCount += 1; // счёт
+                                        break;
+                                    case "1_14_top_1":
+                                        bidding += 2;
+                                        logicArgument += 1;
+                                        biddingCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_14_top_2":
+                                        bidding += 1;
+                                        logicArgument += 2;
+                                        biddingCount += 0.5; // счёт
+                                        logicArgumentCount += 0.5; // счёт
+                                        break;
+                                    case "1_14_top_3":
+                                        logicArgument += 3;
+                                        logicArgumentCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Результаты вопроса 15
+                        const radios_1_15 = document.getElementsByName("1_15_top");
+                        radios_1_15.forEach(radio => {
+                            if (radio.checked) {
+                                switch (radio.id) {
+                                    case "1_15_top_0":
+                                        emotionsArgument += 3;
+                                        emotionsArgumentCount += 1; // счёт
+                                        break;
+                                    case "1_15_top_1":
+                                        emotionsArgument += 2;
+                                        adaptation += 1;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        adaptationCount += 0.5; // счёт
+                                        break;
+                                    case "1_15_top_2":
+                                        emotionsArgument += 1;
+                                        adaptation += 2;
+                                        emotionsArgumentCount += 0.5; // счёт
+                                        adaptationCount += 0.5; // счёт
+                                        break;
+                                    case "1_15_top_3":
+                                        adaptation += 3;
+                                        adaptationCount += 1; // счёт
+                                        break;
+                                }
+                            }
+                        });
+
+                        // Получаем значения из полей ввода и сохраняем их в sessionStorage
+                        sessionStorage.setItem('adaptation_1', adaptation); // Приспособление
+                        sessionStorage.setItem('compromise_1', compromise); // Компромисс
+                        sessionStorage.setItem('bidding_1', bidding); // Торги
+                        sessionStorage.setItem('threat_1', threat); // Угроза
+                        sessionStorage.setItem('logicArgument_1', logicArgument); // Логика как аргумент
+                        sessionStorage.setItem('emotionsArgument_1', emotionsArgument); // Эмоции как аргумент
+
+                        sessionStorage.setItem('adaptationCount_1', adaptationCount); // Приспособление (счёт)
+                        sessionStorage.setItem('compromiseCount_1', compromiseCount); // Компромисс (счёт)
+                        sessionStorage.setItem('biddingCount_1', biddingCount); // Торги (счёт)
+                        sessionStorage.setItem('threatCount_1', threatCount); // Угроза (счёт)
+                        sessionStorage.setItem('logicArgumentCount_1', logicArgumentCount); // Логика как аргумент (счёт)
+                        sessionStorage.setItem('emotionsArgumentCount_1', emotionsArgumentCount); // Эмоции как аргумент (счёт)
+
+                        // Отправляем ключ "test1Pass" со значением "true" на сервер
+                        fetch('/set_test_1_pass', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ test1Pass: true })
+                        });
+
+                        // Переход на другую страницу после окончания анимации при нажатии на кнопку
+                        const lines = document.querySelectorAll('.vertical_lines, .horizontal_lines');
+                        lines.forEach(line => line.classList.add('animBlockDisappear_end'));
+                        nextPage(lines, '[name="end_test_1"]', '/test_2');
+                    }
+                });
+                // Закрытие всплывающего окна
+                closeBtn_1_end.addEventListener('click', function () {
+                    popup_error_1_end.style.display = 'none'; // Скрываем всплывающее окно
+                });
+            </script>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Ввод данных. ИКС-файл</title>
+	<script type="text/javascript"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_ISeC.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+<body>
+
+	<section class="vertical_lines">
+		<img class="line_1" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_2" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_3" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_4" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_5" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_6" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_7" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_8" src="{{ url_for('static', filename='images/line.svg') }}">
+	</section>
+	<section class="horizontal_lines">
+		<img class="line_9" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_10" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_11" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_12" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_13" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_14" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_15" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_16" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_17" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_18" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_19" src="{{ url_for('static', filename='images/line.svg') }}">
+		<img class="line_20" src="{{ url_for('static', filename='images/line.svg') }}">
+	</section>
+
+	<main name="descr_UDI">
+
+
+		<!-- ВСПЛЫВАЮЩЕЕ ОКНО -->
+		<div class="popup_error" id="popup_error_UDI">
+			<div class="popup_error_content">
+				<p class="error_title">Ошибка</p>
+				<p>Проверьте введённые данные</p>
+				<button class="close_btn" id="closeBtn_UDI">Закрыть</button>
+			</div>
+		</div>
+
+
+		<!-- ВСПЛЫВАЮЩЕЕ ОКНО С ПОЛИТИКОЙ ВВОДА ДАННЫХ -->
+		<div class="popup_question" id="popup_UDI_question">
+			<div class="popup_content_question">
+				<p class="question_title">Справка</p>
+				<p class="popup_text_question">&emsp;Информация этой формы нужна для двух целей: корректного оформления
+					Ваших результатов и накопления статистики. Если же Вы хотите остаться инкогнито, поставьте во всех
+					графах
+					знак тире, а графе "год рождения" - число 1900. В этом случае Ваши данные не будут учитываться для
+					накопления статистики по возрасту и профессиональной категории.<br>
+					&emsp;В случае "тире" в графе электронной почты ИКС-файл (Индивидуальную Карту Самоисследования)
+					нужно будет скачать
+					с итоговой страницы в течение 5 минут после прохождения алгоритма. Рекомендуем
+					запомнить (записать) ваш ID (появится там же) на случай, если в будущем Вы захотите
+					восстановить Ваши результаты.
+				</p>
+				<button class="close_btn_question" id="closeBtn_UDI_question">Закрыть</button>
+			</div>
+		</div>
+
+		<div class="descr_dataInput" name="user_data_input">
+
+			<div class="descr_dataInput_header">
+				<div class="descr_dataInput_headerSides"></div>
+				<p class="descr_dataInput_title">Представьтесь</p>
+				<div class="descr_dataInput_headerSides"><button class="btn_question">?</button></div>
+			</div>
+
+			<span class="descr_dataInput_text">Ваше имя</span>
+			<input type="text" class="inp_text" id="user_name" required placeholder="Имя" autocomplete="off">
+
+			<span class="descr_dataInput_text">Ваша фамилия</span>
+			<input type="text" class="inp_text" id="user_surname" required placeholder="Фамилия" autocomplete="off">
+
+			<span class="descr_dataInput_text">Ваш пол</span>
+			<div class="inp_sex">
+				<label class="radiosData">
+					<input type="radio" id="user_sex_male" class="inpRadio_UDI" name="user_sex" required>
+					<span class="sexText">Мужской</span>
+				</label>
+				<div class="dataInputSexSpace"></div>
+				<label class="radiosData">
+					<input type="radio" id="user_sex_female" class="inpRadio_UDI" name="user_sex" required>
+					<span class="sexText">Женский</span>
+				</label>
+			</div>
+
+			<div class="inp_birthyear">
+				<span class="descr_dataInput_text_birthyear">Ваш год рождения</span>
+				<div class="dataInputBirthyearSpace"></div>
+				<input type="text" class="inp_year" id="user_birthyear" required placeholder="1900" autocomplete="off">
+			</div>
+
+			<span class="descr_dataInput_text">Ваша категория</span>
+			<select class="inp_dropdown" id="user_category" required>
+				<option value="Выберите категорию" disabled selected hidden>Выберите категорию</option>
+				<option value="-">-</option>
+				<option value="Специалист">Специалист</option>
+				<option value="Руководитель группы / отдела">Руководитель группы / отдела</option>
+				<option value="Руководитель департамента">Руководитель департамента</option>
+				<option value="Топ-менеджер">Топ-менеджер</option>
+				<option value="Директор">Директор</option>
+				<option value="Собственник малого бизнеса">Собственник малого бизнеса</option>
+				<option value="Собственник среднего бизнеса">Собственник среднего бизнеса</option>
+				<option value="другое">другое</option>
+			</select>
+
+			<span class="descr_dataInput_text">Ваша эл. почта</span>
+			<input type="email" class="inp_text" id="user_email" required placeholder="Эл. почта" autocomplete="off">
+
+			<div class="dataAgreement">
+				<span class="descr_dataInput_text">Я соглашаюсь на обработку введённых данных</span>
+				<div class="dataAgreementSpace"></div>
+				<input type="checkbox" class="inpRadio_UDI" id="user_confirmation">
+			</div>
+
+			<input type="submit" class="btn_sendUserData" id="btn_UDI_next" value="Продолжить">
+
+			<script src="{{ url_for('static', filename='js/functions_ISeC.js') }}"></script>
+			<script>
+				document.addEventListener("DOMContentLoaded", function () {
+					// Изменение цвета текста в поле категории после выбора одной из строк
+					const categoryText = document.getElementById('user_category');
+					categoryText.addEventListener('change', function () {
+						if (categoryText.value !== "Выберите категорию") {
+							categoryText.style.color = '#5b7ead';
+						} else {
+							categoryText.style.color = '#7F7F7F'; // Цвет по умолчанию
+						}
+					});
+
+					// Получение элементов справки
+					const questionButton = document.querySelector('.btn_question');
+					const popup_UDI_question = document.getElementById('popup_UDI_question');
+					const closeButton = document.getElementById('closeBtn_UDI_question');
+					// Обработчик события нажатия на кнопку вопроса
+					questionButton.addEventListener('click', function () {
+						popup_UDI_question.style.display = 'flex'; // Изменяем стиль на 'flex'
+					});
+					// Обработчик события нажатия на кнопку закрытия
+					closeButton.addEventListener('click', function () {
+						popup_UDI_question.style.display = 'none'; // Скрываем всплывающее сообщение
+					});
+
+					// Переменные всплывающего окна
+					const popup_error_UDI = document.getElementById('popup_error_UDI');
+					const closeBtn_UDI = document.getElementById('closeBtn_UDI');
+					let errorCounter = 0; // Счётчик ошибок
+					const submitButton = document.getElementById('btn_UDI_next'); // Кнопка подтверждения ввода
+					const inputName = document.getElementById('user_name'); // Поле ввода имени
+					const inputSurname = document.getElementById('user_surname'); // Поле ввода фамилии
+					const radioSexMale = document.getElementById('user_sex_male'); // Кнопка выбора пола (Муж)
+					const radioSexFemale = document.getElementById('user_sex_female'); // Кнопка выбора пола (Жен)
+					const inputBirthyear = document.getElementById('user_birthyear'); // Поле ввода даты рождения
+					const inputCategory = document.getElementById('user_category'); // Поле выбора категории
+					const inputEmail = document.getElementById('user_email'); // Поле ввода эл.почты
+					const radioConfirmation = document.getElementById('user_confirmation'); // Кнопка подтверждения обработки данных
+
+					submitButton.addEventListener('click', function () {
+						// Проверка имени
+						const nameValue = inputName.value.trim();
+						if (!nameValue || nameValue != nameValue.replace(/[^а-яА-ЯёЁ-]/g, '')) {
+							inputName.style.border = '5px solid #e29fa9';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+							const inputHandlerName = document.getElementById('user_name');
+							inputHandlerName.value = inputName.value.trim();
+							inputHandlerName.value = nameValue.charAt(0).toUpperCase() + nameValue.slice(1);
+						} else {
+							inputName.style.border = '5px solid #ffffff';
+							const inputHandlerName = document.getElementById('user_name');
+							inputHandlerName.value = inputName.value.trim();
+							inputHandlerName.value = nameValue.charAt(0).toUpperCase() + nameValue.slice(1);
+							selectedName = inputName.value.trim();
+						}
+
+						// Проверка фамилии
+						const surnameValue = inputSurname.value.trim();
+						if (!surnameValue || surnameValue != surnameValue.replace(/[^а-яА-ЯёЁ-]/g, '')) {
+							inputSurname.style.border = '5px solid #e29fa9';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+							const inputHandlerSurname = document.getElementById('user_surname');
+							inputHandlerSurname.value = inputSurname.value.trim();
+							inputHandlerSurname.value = surnameValue.charAt(0).toUpperCase() + surnameValue.slice(1);
+						} else {
+							inputSurname.style.border = '5px solid #ffffff';
+							const inputHandlerSurname = document.getElementById('user_surname');
+							inputHandlerSurname.value = inputSurname.value.trim();
+							inputHandlerSurname.value = surnameValue.charAt(0).toUpperCase() + surnameValue.slice(1);
+						}
+
+						// Проверка пола
+						if (!radioSexMale.checked && !radioSexFemale.checked) {
+							radioSexMale.style.webkitBoxShadow = '0px 0px 0px 4px rgba(226, 159, 169, 1)';
+							radioSexFemale.style.webkitBoxShadow = '0px 0px 0px 4px rgba(226, 159, 169, 1)';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+						} else {
+							radioSexMale.style.webkitBoxShadow = '0px 0px 0px 0px rgba(226, 159, 169, 1)';
+							radioSexFemale.style.webkitBoxShadow = '0px 0px 0px 0px rgba(226, 159, 169, 1)';
+							if (radioSexMale.checked) {
+								selectedSex = "Мужской";
+							}
+							if (radioSexFemale.checked) {
+								selectedSex = "Женский";
+							}
+						}
+
+						// Проверка даты рождения
+						const birthyearValue = inputBirthyear.value.trim();
+						const birthyearLocal = new Date().getFullYear();
+						if (!/^\d{4}$/.test(birthyearValue) ||
+							Number(birthyearValue) < 1900 ||
+							Number(birthyearValue) > birthyearLocal) {
+							inputBirthyear.style.border = '5px solid #e29fa9';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+						} else {
+							inputBirthyear.style.border = '5px solid #ffffff';
+						}
+
+						// Проверка категории
+						const categoryValue = inputCategory.value;
+						if (categoryValue === "Выберите категорию") {
+							inputCategory.style.border = '5px solid #e29fa9';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+						} else {
+							inputCategory.style.border = '5px solid #ffffff';
+						}
+
+						// Проверка эл.почты
+						const emailValue = inputEmail.value.trim();
+						const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+						if (!emailPattern.test(emailValue) && emailValue !== '-') {
+							inputEmail.style.border = '5px solid #e29fa9';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+							const inputHandlerEmail = document.getElementById('user_email');
+							inputHandlerEmail.value = inputEmail.value.trim();
+						} else {
+							inputEmail.style.border = '5px solid #ffffff';
+							const inputHandlerEmail = document.getElementById('user_email');
+							inputHandlerEmail.value = inputEmail.value.trim();
+						}
+
+						// Проверка подтверждения обработки введённых данных
+						if (!radioConfirmation.checked) {
+							radioConfirmation.style.webkitBoxShadow = '0px 0px 0px 4px rgba(226, 159, 169, 1)';
+							errorCounter += 1; // Увеличиваем счётчик ошибок
+						} else {
+							radioConfirmation.style.webkitBoxShadow = '0px 0px 0px 0px rgba(226, 159, 169, 1)';
+						}
+
+						if (errorCounter > 0) {
+							popup_error_UDI.style.display = 'flex'; // Показываем всплывающее окно
+							errorCounter = 0;
+						} else {
+
+							// Получаем значения из полей ввода
+							const userName = document.getElementById('user_name').value; // Имя
+							const userSurname = document.getElementById('user_surname').value; // Фамилия
+							const userSexMale = document.getElementById('user_sex_male').checked; // Состояние кнопки пола (муж)
+							const userSexFemale = document.getElementById('user_sex_female').checked; // Состояние кнопки пола (жен)
+							const userSex = userSexMale ? 'Мужской' : userSexFemale ? 'Женский' : 'Не указан'; // Тернарный оператор
+							const userBirthyear = document.getElementById('user_birthyear').value; // Дата рождения
+							const userCategory = document.getElementById('user_category').value; // Категория
+							const userEmail = document.getElementById('user_email').value; // Эл.почта
+
+							// Сохранение данных в sessionStorage
+							sessionStorage.setItem('userName', userName);
+							sessionStorage.setItem('userSurname', userSurname);
+							sessionStorage.setItem('userSex', userSex);
+							sessionStorage.setItem('userBirthyear', userBirthyear);
+							sessionStorage.setItem('userCategory', userCategory);
+							sessionStorage.setItem('userEmail', userEmail);
+
+							// Отправляем ключ "UDIPass" со значением "true" на сервер
+							fetch('/set_UDI_pass', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify({ UDIPass: true })
+							});
+
+							// Переход на другую страницу после окончания анимации при нажатии на кнопку
+							const lines = document.querySelectorAll('.vertical_lines, .horizontal_lines');
+							lines.forEach(line => line.classList.add('animBlockDisappear_end'));
+							nextPage(lines, '[name="user_data_input"]', '/test_1');
+						}
+					}); // Закрывающая скобка для submitButton.addEventListener
+
+					// Закрытие всплывающего окна
+					closeBtn_UDI.addEventListener('click', function () {
+						popup_error_UDI.style.display = 'none'; // Скрываем всплывающее окно
+					});
+				}); // Закрывающая скобка для document.addEventListener("DOMContentLoaded")
+			</script>
+
+		</div>
+
+	</main>
+
+</body>
+
+</html>

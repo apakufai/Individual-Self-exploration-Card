@@ -8,33 +8,35 @@
 	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 </head>
 
-<body>
-	<div class="container">
-		<h1>Авторизация</h1>
+<body class="login_body">
+	<div class="auth_window">
 		<form id="loginForm" action="{{ url_for('cab_login') }}" method="post" novalidate>
 			<div class="input-group">
-				<label for="adminName">Логин</label>
-				<input type="text" id="adminName" name="adminName" placeholder="">
+				<label class="login_label" for="adminLogin">Логин</label>
+				<input class="login_input" type="text" id="adminLogin" name="adminLogin" placeholder="">
 			</div>
 			<div class="input-group">
-				<label for="adminPass">Пароль</label>
-				<input type="password" id="adminPass" name="adminPass" placeholder="">
+				<label class="login_label" for="adminPass">Пароль</label>
+				<input class="login_input" type="password" id="adminPass" name="adminPass" placeholder="">
 			</div>
 			<button class="enter_btn" type="submit">Войти</button>
 		</form>
 	</div>
 	<script>
 		document.getElementById('loginForm').addEventListener('submit', function (event) {
-			let valid = true;
+
+			event.preventDefault(); // Предотвращаем стандартное поведение формы
 
 			// Сбрасываем плейсхолдеры
-			document.getElementById('adminName').placeholder = '';
+			document.getElementById('adminLogin').placeholder = '';
 			document.getElementById('adminPass').placeholder = '';
 
+			let valid = true;
+
 			// Проверка логина
-			const adminName = document.getElementById('adminName').value;
-			if (!adminName) {
-				document.getElementById('adminName').placeholder = 'Пожалуйста, заполните логин.';
+			const adminLogin = document.getElementById('adminLogin').value;
+			if (!adminLogin) {
+				document.getElementById('adminLogin').placeholder = 'Пожалуйста, заполните логин.';
 				valid = false;
 			}
 
@@ -45,9 +47,26 @@
 				valid = false;
 			}
 
-			// Если форма не валидна, предотвращаем её отправку
-			if (!valid) {
-				event.preventDefault();
+			// Если форма валидна, отправляем данные на сервер
+			if (valid) {
+				const formData = new FormData(this);
+				fetch(this.action, {
+					method: 'POST',
+					body: formData
+				})
+					.then(response => response.text())
+					.then(data => {
+						if (data === "userNotFound") {
+							alert("Такой пользователь не найден");
+						} else if (data === "passwordIsWrong") {
+							alert("Введённый пароль неверен");
+						} else if (data === "sucsess") {
+							window.location.href = "/cab_main";
+						}
+					})
+					.catch(error => {
+						console.error('Ошибка:', error);
+					});
 			}
 		});
 	</script>

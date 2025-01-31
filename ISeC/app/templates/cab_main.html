@@ -8,11 +8,19 @@
 	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 </head>
 
-<body>
+<body class="body">
 
-<div>
-	<p>АВТОРИЗАЦИЯ ПРОЙДЕНА!</p>
-</div>
+	<header class="header">
+		<div class="header_ISeC">ИКС-файл. Администраторная</div>
+		<div class="header_admin">
+			<span>
+				Привет, <a href="{{ url_for('index') }}">{{ session['adminName'] }}</a> |
+				<a href="{{ url_for('index') }}">Тест</a> |
+				<a href="{{ url_for('logout') }}">Выйти</a>
+			</span>
+		</div>
+	</header>
+
 
 </body>
 

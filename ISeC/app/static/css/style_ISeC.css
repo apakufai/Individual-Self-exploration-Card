@@ -10,6 +10,7 @@ body {
    background-size: 225px;
    background-position: top;
    background-attachment: fixed;
+   font-family: "Bahnschrift", sans-serif;;
 }
 
 /* Выравнивание бегущих линий по высоте */
@@ -191,7 +192,6 @@ main {
    z-index: 1;
    font-size: 16pt;
    font-weight: lighter;
-   font-family: "Bahnschrift";
 }
 
 .error_title {
@@ -218,7 +218,6 @@ main {
       color 0.2s;
    cursor: pointer;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    z-index: 1;
    outline: none;
    cursor: pointer;
@@ -259,7 +258,6 @@ main {
    z-index: 1;
    font-size: 16pt;
    font-weight: lighter;
-   font-family: "Bahnschrift";
 }
 
 .popup_text_question {
@@ -296,7 +294,6 @@ main {
       color 0.2s;
    cursor: pointer;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    z-index: 1;
    outline: none;
    cursor: pointer;
@@ -330,7 +327,6 @@ main {
 .models_1,
 .models_2 {
    text-align: center;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    animation: animBlock_main_text 1s ease;
 }
@@ -363,7 +359,6 @@ main {
    display: flex;
    justify-content: center;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    animation: animBlock_main_text 1s ease;
    font-weight: lighter;
@@ -372,7 +367,6 @@ main {
 /* Текст последней строки в окне с описанием блока */
 .descr_main_text_lastString {
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    animation: animBlock_main_text 1s ease;
    font-weight: lighter;
@@ -383,7 +377,6 @@ main {
    display: flex;
    justify-content: center;
    margin: 10px 20px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
    animation: animBlock_main_text 1s ease;
@@ -418,7 +411,6 @@ main {
    align-items: center;
    text-indent: 0;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 20pt;
    font-weight: normal;
    text-align: center;
@@ -441,7 +433,6 @@ main {
 /* Текст с вводом данных пользователя */
 .descr_dataInput_text {
    margin: 20px 0 10px 0;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    animation: animBlocks_text 1s ease;
    font-weight: lighter;
@@ -449,7 +440,6 @@ main {
 
 .descr_dataInput_text_birthyear {
    margin: auto 0;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    animation: animBlocks_text 1s ease;
    font-weight: lighter;
@@ -459,7 +449,6 @@ main {
 /* Текст с вводом данных пользователя (мелкий шрифт) */
 .sexText {
    margin-left: 5px;
-   font-family: "Bahnschrift";
    font-size: 12pt;
    animation: animBlocks_text 1s ease;
    font-weight: lighter;
@@ -483,7 +472,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    font-weight: lighter;
    color: #000000;
    animation-duration: 1s;
@@ -566,7 +554,6 @@ main {
 .descr_test_title {
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 20pt;
    font-weight: normal;
    text-align: center;
@@ -577,7 +564,6 @@ main {
 .descr_test_text {
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    animation: animBlocks_text 1s ease;
 }
@@ -589,7 +575,6 @@ main {
    border-radius: 15px;
    background-color: rgba(255, 255, 255, 0);
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #5b7ead;
    animation: animButtons_main 1s ease;
    animation-duration: 1s;
@@ -621,7 +606,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -654,7 +638,6 @@ main {
    border-radius: 15px;
    background-color: rgba(255, 255, 255, 0.85);
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #5b7ead;
    animation: animButtons_main 1s ease;
    animation-duration: 1s;
@@ -677,7 +660,6 @@ main {
    border-radius: 15px;
    background-color: rgba(255, 255, 255, 0);
    font-size: 16pt;
-   font-family: "Bahnschrift";
    font-weight: lighter;
    color: #5b7ead;
    animation: animBlocks_text 1s ease;
@@ -701,7 +683,6 @@ main {
    border-radius: 15px;
    background-color: rgba(255, 255, 255, 0);
    font-size: 16pt;
-   font-family: "Bahnschrift";
    font-weight: lighter;
    color: #5b7ead;
    animation: animBlocks_text 1s ease;
@@ -731,7 +712,6 @@ main {
    border-radius: 15px;
    background-color: rgba(255, 255, 255, 0);
    font-size: 16pt;
-   font-family: "Bahnschrift";
    text-align: left;
    font-weight: lighter;
    color: #7F7F7F;
@@ -763,7 +743,6 @@ main {
       color 0.2s;
    animation: animBlocks_text 1s ease;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -802,7 +781,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -843,7 +821,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -875,7 +852,6 @@ main {
 .inpBlock_3,
 .inpBlock_4,
 .inpBlock_5 {
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
    display: flex;
@@ -1101,7 +1077,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1113,7 +1088,6 @@ main {
    flex-direction: column;
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1128,6 +1102,7 @@ main {
 .quest_1_sect {
    display: flex;
    flex-direction: row;
+   margin-top: 15px;
 }
 
 
@@ -1155,7 +1130,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1167,7 +1141,6 @@ main {
    flex-direction: column;
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1182,6 +1155,7 @@ main {
 .quest_2_sect {
    display: flex;
    flex-direction: row;
+   margin-top: 15px;
 }
 
 
@@ -1209,7 +1183,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1221,7 +1194,6 @@ main {
    flex-direction: column;
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1237,6 +1209,7 @@ main {
 .quest_3_sect {
    display: flex;
    flex-direction: row;
+   margin-top: 15px;
 }
 
 .inpBlock_3 {
@@ -1321,7 +1294,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1333,7 +1305,6 @@ main {
    flex-direction: column;
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1341,7 +1312,6 @@ main {
 .quest_4_dialogue {
    display: flex;
    text-align: left;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1383,7 +1353,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1395,7 +1364,6 @@ main {
    flex-direction: column;
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1411,6 +1379,7 @@ main {
 .quest_5_sect {
    display: flex;
    flex-direction: row;
+   margin-top: 15px;
 }
 
 .inpBlock_5 {
@@ -1473,7 +1442,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1485,7 +1453,6 @@ main {
    flex-direction: column;
    width: 720px;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1500,7 +1467,7 @@ main {
 .quest_6_sect {
    display: flex;
    flex-direction: row;
-   padding-top: 15px;
+   margin-top: 15px;
 }
 
 
@@ -1539,7 +1506,6 @@ main {
    display: grid;
    grid-template-columns: 60px 140px 60px 120px;
    grid-template-rows: 60px 60px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
    margin-left: 10px;
@@ -1574,7 +1540,6 @@ main {
    justify-content: center;
    width: 720px;
    margin: 15px auto 0 auto;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: normal;
    text-align: center;
@@ -1586,7 +1551,6 @@ main {
    width: 720px;
    align-self: center;
    margin: 10px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
 }
@@ -1602,7 +1566,6 @@ main {
    justify-content: center;
    align-items: center;
    height: 30px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    font-weight: lighter;
    margin: auto;
@@ -1637,7 +1600,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -1679,7 +1641,6 @@ main {
    display: flex;
    width: 720px;
    margin: 20px 15px;
-   font-family: "Bahnschrift";
    font-size: 16pt;
    text-align: justify;
    word-wrap: break-word;
@@ -1717,7 +1678,6 @@ main {
    display: flex;
    justify-content: center;
    margin: auto 0;
-   font-family: "Bahnschrift";
    font-size: 18pt;
    font-weight: lighter;
    text-align: center;
@@ -1736,7 +1696,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -1814,7 +1773,6 @@ main {
    z-index: 1;
    font-size: 16pt;
    font-weight: lighter;
-   font-family: "Bahnschrift";
 }
 
 /* Кнопки подтверждения или отмены ввода эл.почты */
@@ -1836,7 +1794,6 @@ main {
       border-color 0.2s,
       color 0.2s;
    font-size: 16pt;
-   font-family: "Bahnschrift";
    color: #7F7F7F;
    justify-content: center;
    align-items: center;
@@ -1870,7 +1827,6 @@ main {
    border-radius: 15px;
    background-color: rgba(255, 255, 255, 0);
    font-size: 16pt;
-   font-family: "Bahnschrift";
    font-weight: lighter;
    color: #5b7ead;
    animation-duration: 1s;

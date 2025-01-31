@@ -114,8 +114,8 @@ def set_index_pass():
 
 @app.route('/user_data_input')
 def user_data_input():
-    if 'indexPass' not in session or not session['indexPass']:
-        return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
+    # if 'indexPass' not in session or not session['indexPass']:
+    #     return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
     return render_template('user_data_input.html')
 
 @app.route('/set_UDI_pass', methods=['POST'])
@@ -127,8 +127,8 @@ def set_UDI_pass():
 
 @app.route('/test_1')
 def test_1():
-    if 'UDIPass' not in session or not session['UDIPass']:
-        return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
+    # if 'UDIPass' not in session or not session['UDIPass']:
+    #     return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
 @app.route('/set_test_1_pass', methods=['POST'])
@@ -140,8 +140,8 @@ def set_test_1_pass():
 
 @app.route('/test_2')
 def test_2():
-    if 'test1Pass' not in session or not session['test1Pass']:
-        return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
+    # if 'test1Pass' not in session or not session['test1Pass']:
+    #     return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
     return render_template('test_2.html')
 
 @app.route('/set_test_2_pass', methods=['POST'])
@@ -153,8 +153,8 @@ def set_test_2_pass():
 
 @app.route('/test_3')
 def test_3():
-    if 'test2Pass' not in session or not session['test2Pass']:
-        return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
+    # if 'test2Pass' not in session or not session['test2Pass']:
+    #     return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
     return render_template('test_3.html')
 
 @app.route('/set_test_3_pass', methods=['POST'])
@@ -166,8 +166,8 @@ def set_test_3_pass():
 
 @app.route('/test_4')
 def test_4():
-    if 'test3Pass' not in session or not session['test3Pass']:
-        return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
+    # if 'test3Pass' not in session or not session['test3Pass']:
+    #     return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
     return render_template('test_4.html')
 
 @app.route('/set_test_4_pass', methods=['POST'])
@@ -179,8 +179,8 @@ def set_test_4_pass():
 
 @app.route('/test_5')
 def test_5():
-    if 'test4Pass' not in session or not session['test4Pass']:
-        return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
+    # if 'test4Pass' not in session or not session['test4Pass']:
+    #     return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
     return render_template('test_5.html')
 
 @app.route('/set_test_5_pass', methods=['POST'])
@@ -192,8 +192,8 @@ def set_test_5_pass():
 
 @app.route('/test_6')
 def test_6():
-    if 'test5Pass' not in session or not session['test5Pass']:
-        return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
+    # if 'test5Pass' not in session or not session['test5Pass']:
+    #     return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
     return render_template('test_6.html')
 
 @app.route('/set_test_6_pass', methods=['POST'])
@@ -205,8 +205,8 @@ def set_test_6_pass():
 
 @app.route('/results')
 def results():
-    if 'test6Pass' not in session or not session['test6Pass']:
-        return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
+    # if 'test6Pass' not in session or not session['test6Pass']:
+    #     return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
     return render_template('results.html')
 
 
@@ -1931,29 +1931,24 @@ def hash_password(password):
 @app.route('/cab_login', methods=['GET', 'POST'])
 def cab_login():
     if request.method == 'POST':
-        adminName = request.form['adminName']
+        adminLogin = request.form['adminLogin']
         adminPass = request.form['adminPass']
         hashed_password = hash_password(adminPass)
-        print("Хешированный пароль:", hashed_password)
-
         # Подключение к базе данных
         conn = get_db_connection()
-
         # Сначала ищем пользователя по логину
         user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', 
-                            (adminName,)).fetchone()
-        if user:     
-            print(f"Пользователь найден")
-
+                            (adminLogin,)).fetchone()
+        if user is None:
+            # Если пользователь не найден
+            return "userNotFound"
         # Затем проверяем, существует ли пользователь и соответствует ли пароль
-        if user and user['password'] == hashed_password:
-            print(f"Пароль верен")
-            session['adminName'] = adminName
-            return redirect(url_for('cab_main'))
-        else:
-            flash('Неверный логин или пароль')
-            print(f"Неверный пароль")
-
+        if user['password'] != hashed_password:
+            # Если пароль неверен
+            return "passwordIsWrong"
+        # Если все проверки пройдены, сохраняем сессию
+        session['adminName'] = user['adminName']
+        return "sucsess"
     return render_template('cab_login.html')
 
 
@@ -1961,7 +1956,7 @@ def cab_login():
 @app.route('/logout')
 def logout():
     session.pop('adminName', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('cab_login'))
 
 
 # Маршрут для страницы администратора
@@ -1972,7 +1967,7 @@ def cab_main():
 
     if request.method == 'POST':
         action = request.form.get('action')
-        adminName = request.form.get('adminName')
+        adminLogin = request.form.get('adminLogin')
         adminPass = request.form.get('adminPass')
 
         conn = get_db_connection()
@@ -1980,11 +1975,11 @@ def cab_main():
         if action == 'add':
             hashed_password = hash_password(password)
             conn.execute('INSERT INTO ISeC_adminAccounts (logins, passwords) VALUES (?, ?)', 
-                         (adminName, hashed_password))
+                         (adminLogin, hashed_password))
             conn.commit()
             flash('Аккаунт успешно добавлен')
         elif action == 'delete':
-            conn.execute('DELETE FROM ISeC_adminAccounts WHERE logins = ?', (adminName,))
+            conn.execute('DELETE FROM ISeC_adminAccounts WHERE logins = ?', (adminLogin,))
             conn.commit()
             flash('Аккаунт успешно удален')
 

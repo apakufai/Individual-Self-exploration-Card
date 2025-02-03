@@ -19,6 +19,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from email.header import Header
+from datetime import datetime
 
 from flask import flash
 
@@ -1947,31 +1948,31 @@ def cab_login():
             # Если пароль неверен
             return "passwordIsWrong"
         # Если все проверки пройдены, сохраняем сессию
+        session['adminLogin'] = user['login']
         session['adminName'] = user['adminName']
         return "sucsess"
+        conn.close()
     return render_template('cab_login.html')
 
 
 # Маршрут для выхода из системы
 @app.route('/logout')
 def logout():
+    session.pop('adminLogin', None)
     session.pop('adminName', None)
     return redirect(url_for('cab_login'))
 
 
-# Маршрут для страницы администратора
-@app.route('/cab_main', methods=['GET', 'POST'])
-def cab_main():
+# Маршрут для главной страницы
+@app.route('/cab_archive', methods=['GET', 'POST'])
+def cab_archive():
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
-
     if request.method == 'POST':
         action = request.form.get('action')
         adminLogin = request.form.get('adminLogin')
         adminPass = request.form.get('adminPass')
-
         conn = get_db_connection()
-
         if action == 'add':
             hashed_password = hash_password(password)
             conn.execute('INSERT INTO ISeC_adminAccounts (logins, passwords) VALUES (?, ?)', 
@@ -1982,10 +1983,90 @@ def cab_main():
             conn.execute('DELETE FROM ISeC_adminAccounts WHERE logins = ?', (adminLogin,))
             conn.commit()
             flash('Аккаунт успешно удален')
-
         conn.close()
+    return render_template('cab_archive.html')
 
-    return render_template('cab_main.html')
+
+# Маршрут для страницы кодов доступа
+@app.route('/cab_codes')
+def cab_codes():
+    if 'adminName' not in session:
+        return redirect(url_for('cab_login'))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Получение данных из таблицы ISeC_accessCodes
+    cursor.execute("SELECT testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil FROM ISeC_accessCodes")
+    access_codes = cursor.fetchall()
+    
+    # Закрытие соединения
+    conn.close()
+    
+    # Преобразование данных в нужный формат
+    codes_list = []
+    for row in access_codes:
+        codes_list.append({
+            'test_group': row[0],
+            'code': row[1],
+            'start_date': f"{row[2]}-{row[3]:02d}-{row[4]:02d}",
+            'end_date': f"{row[5]}-{row[6]:02d}-{row[7]:02d}"
+        })
+    
+    return render_template('cab_codes.html', codes=codes_list)
+
+
+
+
+@app.route('/update_code', methods=['POST'])
+def update_code():
+    if 'adminName' not in session:
+        return redirect(url_for('cab_login'))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Извлечение данных из формы
+    test_group = request.form.get('test_group')
+    code = request.form.get('code')
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+    
+    # Преобразование дат в нужный формат
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+
+    yearFrom, monthFrom, dayFrom = start_date_obj.year, start_date_obj.month, start_date_obj.day
+    yearUntil, monthUntil, dayUntil = end_date_obj.year, end_date_obj.month, end_date_obj.day
+    
+    # Обновление записи в базе данных
+    cursor.execute("""
+        UPDATE ISeC_accessCodes
+        SET code = ?, yearFrom = ?, monthFrom = ?, dayFrom = ?, yearUntil = ?, monthUntil = ?, dayUntil = ?
+        WHERE testGroup = ?
+    """, (code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil, test_group))
+    
+    conn.commit()
+    conn.close()
+    
+    return redirect(url_for('cab_codes'))
+    
+
+@app.route('/delete_code/<test_group>', methods=['POST'])
+def delete_code(test_group):
+    if 'adminName' not in session:
+        return redirect(url_for('cab_login'))
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Удаление записи из базы данных
+    cursor.execute("DELETE FROM ISeC_accessCodes WHERE testGroup = ?", (test_group,))
+    
+    conn.commit()
+    conn.close()
+    
+    return redirect(url_for('cab_codes'))
 
 
 if __name__ == '__main__':

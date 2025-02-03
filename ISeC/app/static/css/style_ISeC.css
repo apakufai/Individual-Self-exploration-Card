@@ -4,6 +4,12 @@
    box-sizing: border-box;
 }
 
+
+
+/* ------------------------------------------------ */
+/* ----------------- ОБЩИЙ ШАБЛОН ----------------- */
+/* ------------------------------------------------ */
+
 body {
    background-image: url("../images/background.svg"), linear-gradient(rgba(20, 36, 64, 1) 0%, rgba(52, 22, 74, 1) 50%, rgba(112, 0, 16, 1) 100%);
    background-repeat: repeat;
@@ -201,7 +207,7 @@ main {
    color: #c64053;
 }
 
-.close_btn {
+.close_btn_error {
    height: 60px;
    width: 180px;
    margin-top: 20px;
@@ -223,92 +229,22 @@ main {
    cursor: pointer;
 }
 
-.close_btn:hover {
+.close_btn_error:hover {
    border: 5px solid #c64053;
    color: #c64053;
    cursor: pointer;
 }
 
-.close_btn:active {
+.close_btn_error:active {
    background-color: #e29fa9;
    cursor: pointer;
 }
 
-/* Всплывающее окно справки */
-.popup_question {
-   display: none;
-   justify-content: center;
-   align-items: center;
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   background-color: rgba(91, 126, 173, 0.25);
-   z-index: 1;
-}
 
-.popup_content_question {
-   width: 700px;
-   background-color: rgba(255, 255, 255, 1);
-   padding: 20px;
-   border: 5px solid #acbdd6;
-   border-radius: 30px;
-   text-align: center;
-   z-index: 1;
-   font-size: 16pt;
-   font-weight: lighter;
-}
 
-.popup_text_question {
-   text-align: left;
-   word-wrap: break-word;
-   /* Перенос длинных слов */
-   overflow-wrap: break-word;
-   /* Совместимость с разными браузерами */
-   hyphens: auto;
-   /* Автоматическое добавление переносов через тире */
-}
-
-.question_title {
-   font-size: 24pt;
-   font-weight: normal;
-   margin-bottom: 10px;
-   color: #5b7ead;
-}
-
-.close_btn_question {
-   height: 60px;
-   width: 180px;
-   margin-top: 20px;
-   padding: 10px 15px;
-   background-color: #ffffff;
-   color: #7f7f7f;
-   border: 5px solid #acbdd6;
-   border-radius: 30px;
-   transition:
-      background-color 0.2s,
-      box-shadow 0.2s,
-      transform 0.2s,
-      border-color 0.2s,
-      color 0.2s;
-   cursor: pointer;
-   font-size: 16pt;
-   z-index: 1;
-   outline: none;
-   cursor: pointer;
-}
-
-.close_btn_question:hover {
-   border: 5px solid #5b7ead;
-   color: #5b7ead;
-   cursor: pointer;
-}
-
-.close_btn_question:active {
-   background-color: #acbdd6;
-   cursor: pointer;
-}
+/* ------------------------------------------------ */
+/* --------------- Главная страница --------------- */
+/* ------------------------------------------------ */
 
 /* Логотип ИКС-файла */
 .logo {
@@ -386,8 +322,210 @@ main {
 .linkSmartSkills {
    text-decoration: none;
    color: #5b7ead;
+   outline: none;
 }
 
+
+/* Окно с описанием блока теста */
+.descr_test {
+   position: static;
+   margin: 50px auto 0 auto;
+   width: 760px;
+   background-color: rgba(255, 255, 255, 0.85);
+   border: 5px solid #ffffff;
+   border-radius: 30px;
+   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
+   text-align: justify;
+   animation: animBlocks 1s ease;
+   font-weight: lighter;
+}
+
+/* Заголовок окна с описанием блоков */
+.descr_test_title {
+   width: 720px;
+   margin: 15px auto 0 auto;
+   font-size: 20pt;
+   font-weight: normal;
+   text-align: center;
+   animation: animBlocks_text 1s ease;
+}
+
+/* Текст окна с описанием блока */
+.descr_test_text {
+   width: 720px;
+   margin: 10px 15px;
+   font-size: 16pt;
+   animation: animBlocks_text 1s ease;
+}
+
+/* Поля ввода кода на главной странице */
+.inp_code {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0);
+   font-size: 16pt;
+   color: #5b7ead;
+   animation: animButtons_main 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 220px;
+   padding: 10px;
+   outline: none;
+}
+
+/* Нижняя секция с кнопками и кодом */
+.low_section {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 30px;
+   margin: 30px auto 0 auto;
+}
+
+/* Кнопки на главной странице */
+.btn_startpage {
+   flex-shrink: 0;
+   border: 5px solid #ffffff;
+   border-radius: 40px;
+   background-color: rgba(255, 255, 255, 0.85);
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   font-size: 16pt;
+   color: #7F7F7F;
+   justify-content: center;
+   align-items: center;
+   animation: animButtons_main 1s ease;
+   animation-duration: 1s;
+   height: 80px;
+   width: 240px;
+   cursor: pointer;
+   outline: none;
+}
+
+.btn_startpage:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(255, 255, 255, 0.85);
+   cursor: pointer;
+}
+
+.btn_startpage:active {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   background-color: rgba(172, 189, 214, 0.85);
+   box-shadow: none;
+   cursor: pointer;
+}
+
+/* Поле ввода кода на главной странице */
+.inp_startpage {
+   display: flex;
+   border: 5px solid #ffffff;
+   border-radius: 15px;
+   background-color: rgba(255, 255, 255, 0.85);
+   font-size: 16pt;
+   color: #5b7ead;
+   animation: animButtons_main 1s ease;
+   animation-duration: 1s;
+   height: 50px;
+   width: 220px;
+   padding: 10px;
+   outline: none;
+}
+
+.inp_startpage::placeholder {
+   color: #7F7F7F;
+   text-align: center;
+   font-weight: lighter;
+}
+
+
+
+/* ------------------------------------------------ */
+/* ------------  Страница ввода данных ------------ */
+/* ------------------------------------------------ */
+
+
+/* Всплывающее окно справки */
+.popup_question {
+   display: none;
+   justify-content: center;
+   align-items: center;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(91, 126, 173, 0.25);
+   z-index: 1;
+}
+
+.popup_content_question {
+   width: 700px;
+   background-color: rgba(255, 255, 255, 1);
+   padding: 20px;
+   border: 5px solid #acbdd6;
+   border-radius: 30px;
+   text-align: center;
+   z-index: 1;
+   font-size: 16pt;
+   font-weight: lighter;
+}
+
+.popup_text_question {
+   text-align: left;
+   word-wrap: break-word;
+   /* Перенос длинных слов */
+   overflow-wrap: break-word;
+   /* Совместимость с разными браузерами */
+   hyphens: auto;
+   /* Автоматическое добавление переносов через тире */
+}
+
+.question_title {
+   font-size: 24pt;
+   font-weight: normal;
+   margin-bottom: 10px;
+   color: #5b7ead;
+}
+
+.close_btn_question {
+   height: 60px;
+   width: 180px;
+   margin-top: 20px;
+   padding: 10px 15px;
+   background-color: #ffffff;
+   color: #7f7f7f;
+   border: 5px solid #acbdd6;
+   border-radius: 30px;
+   transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+   cursor: pointer;
+   font-size: 16pt;
+   z-index: 1;
+   outline: none;
+   cursor: pointer;
+}
+
+.close_btn_question:hover {
+   border: 5px solid #5b7ead;
+   color: #5b7ead;
+   cursor: pointer;
+}
+
+.close_btn_question:active {
+   background-color: #acbdd6;
+   cursor: pointer;
+}
 /* Окно с вводом данных пользователя */
 .descr_dataInput {
    display: flex;
@@ -475,6 +613,7 @@ main {
    font-weight: lighter;
    color: #000000;
    animation-duration: 1s;
+   outline: none;
    cursor: pointer;
 }
 
@@ -536,123 +675,6 @@ main {
    margin: 20px 0 10px 0;
 }
 
-/* Окно с описанием блока теста */
-.descr_test {
-   position: static;
-   margin: 50px auto 0 auto;
-   width: 760px;
-   background-color: rgba(255, 255, 255, 0.85);
-   border: 5px solid #ffffff;
-   border-radius: 30px;
-   box-shadow: 0px 0px 20px 20px rgba(255, 255, 255, 0.7);
-   text-align: justify;
-   animation: animBlocks 1s ease;
-   font-weight: lighter;
-}
-
-/* Заголовок окна с описанием блоков */
-.descr_test_title {
-   width: 720px;
-   margin: 15px auto 0 auto;
-   font-size: 20pt;
-   font-weight: normal;
-   text-align: center;
-   animation: animBlocks_text 1s ease;
-}
-
-/* Текст окна с описанием блока */
-.descr_test_text {
-   width: 720px;
-   margin: 10px 15px;
-   font-size: 16pt;
-   animation: animBlocks_text 1s ease;
-}
-
-/* Поля ввода кода на главной странице */
-.inp_code {
-   display: flex;
-   border: 5px solid #ffffff;
-   border-radius: 15px;
-   background-color: rgba(255, 255, 255, 0);
-   font-size: 16pt;
-   color: #5b7ead;
-   animation: animButtons_main 1s ease;
-   animation-duration: 1s;
-   height: 50px;
-   width: 220px;
-   padding: 10px;
-   outline: none;
-}
-
-/* Нижняя секция с кнопками и кодом */
-.low_section {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   gap: 30px;
-   margin: 30px auto 0 auto;
-}
-
-/* Кнопки на главной странице */
-.btn_startpage {
-   flex-shrink: 0;
-   border: 5px solid #ffffff;
-   border-radius: 40px;
-   background-color: rgba(255, 255, 255, 0.85);
-   transition:
-      background-color 0.2s,
-      box-shadow 0.2s,
-      transform 0.2s,
-      border-color 0.2s,
-      color 0.2s;
-   font-size: 16pt;
-   color: #7F7F7F;
-   justify-content: center;
-   align-items: center;
-   animation: animButtons_main 1s ease;
-   animation-duration: 1s;
-   height: 80px;
-   width: 240px;
-   cursor: pointer;
-}
-
-.btn_startpage:hover {
-   border: 5px solid #5b7ead;
-   color: #5b7ead;
-   background-color: rgba(255, 255, 255, 0.85);
-   cursor: pointer;
-}
-
-.btn_startpage:active {
-   border: 5px solid #5b7ead;
-   color: #5b7ead;
-   background-color: rgba(172, 189, 214, 0.85);
-   box-shadow: none;
-   cursor: pointer;
-}
-
-/* Поле ввода кода на главной странице */
-.inp_startpage {
-   display: flex;
-   border: 5px solid #ffffff;
-   border-radius: 15px;
-   background-color: rgba(255, 255, 255, 0.85);
-   font-size: 16pt;
-   color: #5b7ead;
-   animation: animButtons_main 1s ease;
-   animation-duration: 1s;
-   height: 50px;
-   width: 220px;
-   padding: 10px;
-   outline: none;
-}
-
-.inp_startpage::placeholder {
-   color: #7F7F7F;
-   text-align: center;
-   font-weight: lighter;
-}
-
 /* Поля ввода текста на странице данных пользователя */
 .inp_text {
    display: flex;
@@ -666,7 +688,7 @@ main {
    animation-duration: 1s;
    height: 50px;
    width: 500px;
-   padding: 10px;
+   padding-left: 10px;
    outline: none;
 }
 
@@ -719,7 +741,7 @@ main {
    animation-duration: 1s;
    height: 50px;
    width: 500px;
-   padding: 10px;
+   padding-left: 10px;
    outline: none;
    cursor: pointer;
 }

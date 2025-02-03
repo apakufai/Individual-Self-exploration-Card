@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Администрация. ИКС-файл</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_adminCab.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+<body>
+
+	<header class="header">
+		<div class="header_ISeC">ИКС-файл. Администраторная</div>
+		<div class="header_admin">
+			<span>
+				Привет, <a href="{{ url_for('index') }}">{{ session['adminName'] }}</a> |
+				<a href="{{ url_for('index') }}">Тест</a> |
+				<a href="{{ url_for('logout') }}">Выйти</a>
+			</span>
+		</div>
+	</header>
+
+	<main class="main">
+		<div class="side_menu">
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+				Архив
+			</button>
+
+			<button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+				Коды доступа
+			</button>
+
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+				Анализ по вопросам
+			</button>
+
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+				Выборки (excel)
+			</button>
+
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+				Администраторы
+			</button>
+
+			<a class="btn_sidelink" href="http://127.0.0.1:5000/cab_admins">
+				<span>Администраторы</span>
+			</a>
+		</div>
+
+		<div class="central_codes">
+
+			<table>
+				<thead>
+					<tr class="entrycode_head">
+						<th>Название группы</th>
+						<th>Код доступа</th>
+						<th>Начало действия</th>
+						<th>Конец действия</th>
+						<th>Действия</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for code in codes %}
+					<tr class="entrycode_block">
+						<td>
+							<form action="{{ url_for('update_code') }}" method="POST" style="display:inline;">
+								<input type="text" name="test_group" value="{{ code.test_group }}">
+								<input type="text" name="code" value="{{ code.code }}">
+								<input type="date" name="start_date" value="{{ code.start_date }}">
+								<input type="date" name="end_date" value="{{ code.end_date }}">
+								<button type="submit">Сохранить</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			
+			<script>
+				function confirmDelete(testGroup) {
+					if (confirm(`Удалить группу ${testGroup}?`)) {
+						window.location.href = `/delete_code/${testGroup}`;
+					}
+				}
+			</script>
+			
+
+		</div>
+
+
+
+
+
+	</main>
+
+
+</body>
+
+</html>

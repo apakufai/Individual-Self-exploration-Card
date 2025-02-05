@@ -111,8 +111,9 @@ DROP TABLE ISeC_results;
 -- ТАБЛИЦА КОДОВ ДОСТУПА К ПРОХОЖДЕНИЮ ТЕСТА
 
 CREATE TABLE ISeC_accessCodes (
+    codeId TEXT PRIMARY KEY,
     creationDate TEXT DEFAULT (datetime('now', '+3 hours')),
-    testGroup TEXT PRIMARY KEY,
+    testGroup TEXT,
     code TEXT UNIQUE,
     yearFrom INTEGER,
     monthFrom INTEGER,
@@ -123,14 +124,14 @@ CREATE TABLE ISeC_accessCodes (
 );
 
 INSERT INTO ISeC_accessCodes
-(testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
-VALUES ('Группа-1', '111', 2025, 1, 1, 2030, 1, 1);
+(codeId, testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
+VALUES ('code_0000', 'Группа-1', '111', 2025, 1, 1, 2030, 1, 1);
 INSERT INTO ISeC_accessCodes
-(testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
-VALUES ('Группа-2', '222', 2025, 1, 1, 2030, 1, 1);
+(codeId, testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
+VALUES ('code_0001', 'Группа-2', '222', 2025, 1, 1, 2030, 1, 1);
 INSERT INTO ISeC_accessCodes
-(testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
-VALUES ('Группа-3', '333', 2025, 1, 1, 2030, 1, 1);
+(codeId, testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
+VALUES ('code_0002', 'Группа-3', '333', 2025, 1, 1, 2030, 1, 1);
 
 DELETE FROM ISeC_accessCodes;
 

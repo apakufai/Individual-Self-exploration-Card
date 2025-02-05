@@ -112,26 +112,21 @@ DROP TABLE ISeC_results;
 
 CREATE TABLE ISeC_accessCodes (
     codeId TEXT PRIMARY KEY,
-    creationDate TEXT DEFAULT (datetime('now', '+3 hours')),
     testGroup TEXT,
     code TEXT UNIQUE,
-    yearFrom INTEGER,
-    monthFrom INTEGER,
-    dayFrom INTEGER,
-    yearUntil INTEGER,
-    monthUntil INTEGER,
-    dayUntil INTEGER
+    dateFrom TEXT,
+    dateUntil TEXT
 );
 
 INSERT INTO ISeC_accessCodes
-(codeId, testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
-VALUES ('code_0000', 'Группа-1', '111', 2025, 1, 1, 2030, 1, 1);
+(codeId, testGroup, code, dateFrom, dateUntil)
+VALUES ('code_0000', 'Группа-1', '111', '2025-1-1', '2030-1-1');
 INSERT INTO ISeC_accessCodes
-(codeId, testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
-VALUES ('code_0001', 'Группа-2', '222', 2025, 1, 1, 2030, 1, 1);
+(codeId, testGroup, code, dateFrom, dateUntil)
+VALUES ('code_0001', 'Группа-2', '222', '2025-1-1', '2030-1-1');
 INSERT INTO ISeC_accessCodes
-(codeId, testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil)
-VALUES ('code_0002', 'Группа-3', '333', 2025, 1, 1, 2030, 1, 1);
+(codeId, testGroup, code, dateFrom, dateUntil)
+VALUES ('code_0002', 'Группа-3', '333', '2025-1-1', '2030-1-1');
 
 DELETE FROM ISeC_accessCodes;
 

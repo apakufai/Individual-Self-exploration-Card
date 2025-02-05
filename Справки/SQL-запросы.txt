@@ -111,7 +111,7 @@ DROP TABLE ISeC_results;
 -- ТАБЛИЦА КОДОВ ДОСТУПА К ПРОХОЖДЕНИЮ ТЕСТА
 
 CREATE TABLE ISeC_accessCodes (
-    creationDate TEXT DEFAULT (datetime('now')),
+    creationDate TEXT DEFAULT (datetime('now', '+3 hours')),
     testGroup TEXT PRIMARY KEY,
     code TEXT UNIQUE,
     yearFrom INTEGER,

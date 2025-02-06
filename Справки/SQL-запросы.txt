@@ -120,13 +120,13 @@ CREATE TABLE ISeC_accessCodes (
 
 INSERT INTO ISeC_accessCodes
 (codeId, testGroup, code, dateFrom, dateUntil)
-VALUES ('code_0000', 'Группа-1', '111', '2025-1-1', '2030-1-1');
+VALUES ('code_0000', '01.01.2020 Группа-1', '111', '2025-1-1', '2030-1-1');
 INSERT INTO ISeC_accessCodes
 (codeId, testGroup, code, dateFrom, dateUntil)
-VALUES ('code_0001', 'Группа-2', '222', '2025-1-1', '2030-1-1');
+VALUES ('code_0001', '01.01.2020 Группа-2', '222', '2025-1-1', '2030-1-1');
 INSERT INTO ISeC_accessCodes
 (codeId, testGroup, code, dateFrom, dateUntil)
-VALUES ('code_0002', 'Группа-3', '333', '2025-1-1', '2030-1-1');
+VALUES ('code_0002', '01.01.2020 Группа-3', '333', '2025-1-1', '2030-1-1');
 
 DELETE FROM ISeC_accessCodes;
 

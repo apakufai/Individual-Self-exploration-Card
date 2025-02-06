@@ -118,9 +118,7 @@
 							},
 							body: JSON.stringify({ code: inputCode })
 						});
-
 						const data = await response.json();
-
 						if (data.error) {
 							// Обработка ошибок
 							if (data.error === 'connect_error') {
@@ -129,58 +127,14 @@
 								popup_error_start_wrong.style.display = 'flex'; // Показываем всплывающее окно, если код не найден
 							}
 						} else {
-
 							// Получаем значения из полей ввода
 							const userGroup = data.testGroup // Выводим testGroup
 							sessionStorage.setItem('userGroup', userGroup); // Сохраняем userGroup в sessionStorage
-
-							// Генерация id
-							
-							async function generateUniqueId() {
-								let isIdFree = false; // Счётчик проверки на существование id в базе
-								let IdToCheck; // Объявляем переменную для ID
-
-								do {
-									IdToCheck = generateRandomID(8); // Сгенерированный id
-									// Отправляем запрос на сервер для проверки id
-									const response = await fetch('/check_id', {
-										method: 'POST',
-										headers: {
-											'Content-Type': 'application/json'
-										},
-										body: JSON.stringify({ userId: IdToCheck }) // Передаем JSON
-									});
-									const data = await response.json();
-									if (data.error === 'connect_error') {
-										alert('Ошибка подключения к базе данных.'); // Сообщение об ошибке подключения
-										return null; // Выход из функции при ошибке
-									}
-									if (data.found) {
-									} else {
-										isIdFree = true; // ID свободен
-									}
-								} while (!isIdFree);
-
-								return IdToCheck; // Возвращаем уникальный ID
-							}
-
-							// Генерация случайного id
-							function generateRandomID(length) {
-								let result = '';
-								const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-								const charactersLength = characters.length;
-								for (let i = 0; i < length; i++) {
-									result += characters.charAt(Math.floor(Math.random() * charactersLength));
-								}
-								return result;
-							}
-
-							// Вызов функции и присвоение результата переменной userId
+							// Вызов функции генерации уникального Id и присвоение результата переменной userId
 							generateUniqueId().then(id => {
 								userId = id;
 								sessionStorage.setItem('userId', userId);  // Сохранение id в sessionStorage
 							});
-
 							// Отправляем ключ "indexPass" со значением "true" на сервер
 							fetch('/set_index_pass', {
 								method: 'POST',

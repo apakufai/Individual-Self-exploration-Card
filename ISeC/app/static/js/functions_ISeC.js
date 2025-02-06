@@ -83,6 +83,46 @@ function flipBack(fromBlock, toBlock) {
     });
 }
 
+// Генерация случайного id
+function generateRandomID(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+// Проверка существования id в базе данных
+async function generateUniqueId() {
+    let isIdFree = false; // Счётчик проверки на существование id в базе
+    let IdToCheck; // Объявляем переменную для ID
+
+    do {
+        IdToCheck = generateRandomID(8); // Сгенерированный id
+        // Отправляем запрос на сервер для проверки id
+        const response = await fetch('/check_id', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId: IdToCheck }) // Передаем JSON
+        });
+        const data = await response.json();
+        if (data.error === 'connect_error') {
+            alert('Ошибка подключения к базе данных.'); // Сообщение об ошибке подключения
+            return null; // Выход из функции при ошибке
+        }
+        if (data.found) {
+        } else {
+            isIdFree = true; // ID свободен
+        }
+    } while (!isIdFree);
+
+    return IdToCheck; // Возвращаем уникальный ID
+}
+
 // Работа с кнопками выбора (блоки 1 и 2)
 function crossButtonSelection(top_0, top_1, top_2, top_3, bottom_0, bottom_1, bottom_2, bottom_3) {
     document.getElementById(top_0).addEventListener('change', function () {

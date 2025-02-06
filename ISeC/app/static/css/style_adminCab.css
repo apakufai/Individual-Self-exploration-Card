@@ -68,7 +68,6 @@
 
 body {
    font-family: Arial, sans-serif;
-   color: #ffffff;
    background-color: #ffffff;
 }
 
@@ -79,6 +78,7 @@ body {
    justify-content: space-between;
    align-items: center;
    padding: 0 10px;
+   color: #ffffff;
    background-color: #142440;
 }
 
@@ -185,8 +185,6 @@ a:hover {
    padding: 10px;
 }
 
-
-
 /* ------------------------------------------------ */
 /* ----------- ГЛАВНАЯ СТРАНИЦА (АРХИВ) ----------- */
 /* ------------------------------------------------ */
@@ -230,51 +228,78 @@ a:hover {
 /* ------------ СТРАНИЦА КОДОВ ДОСТУПА ------------ */
 /* ------------------------------------------------ */
 
-.entrycode_head {
-   display: flex;
-   flex-direction: row;
-   color: black;
-   border-top: none;
-   border: 2px solid #5b7ead;
-}
 
-.entrycode_block {
-   display: flex;
-   flex-direction: row;
-   color: black;
-   border-top: none;
-   border-right: 2px solid #5b7ead;
+.entrycode_head,
+.entrycode_block_create td {
    border-bottom: 2px solid #5b7ead;
-   border-left: 2px solid #5b7ead;
 }
-table {
-    width: 100%; /* Устанавливает ширину таблицы */
-    border-collapse: collapse; /* Убирает двойные границы */
+.entrycode_block_create td {
+   padding: 10px 5px;
 }
 
-th, td {
-    border: 1px solid #e00d0d; /* Границы ячеек */
-    padding: 8px; /* Отступы внутри ячеек */
-    text-align: left; /* Выравнивание текста по левому краю */
+
+.entrycode_head * {
+padding-bottom: 5px;
 }
 
-th {
-    background-color: #f2f2f2; /* Цвет фона заголовков */
+.entrycode_block td {
+   padding-top: 10px; /* Добавляет отступ сверху ячеек */
 }
 
-/* Задаем ширину для каждого столбца */
-th:nth-child(1), td:nth-child(1) {
-    width: 30%; /* Ширина для Название группы */
+.central_codes * {
+   border-collapse: collapse; /* Убирает двойные границы */
+   font-size: 14pt;
 }
 
-th:nth-child(2), td:nth-child(2) {
-    width: 20%; /* Ширина для Код доступа */
+.central_codes table {
+margin: 20px 0 0 20px;
 }
 
-th:nth-child(3), td:nth-child(3) {
-    width: 25%; /* Ширина для Начало действия */
+.entrycode_head_th_0 {
+   width: 120px;
+}
+.entrycode_block_td_0 {
+   padding: 0 5px;
+   text-align: center;
 }
 
-th:nth-child(4), td:nth-child(4) {
-    width: 25%; /* Ширина для Конец действия */
+.entrycode_head_th_1,
+.entrycode_block_td_1 input {
+   width: 180px;
+}
+.entrycode_block_td_1 {
+   padding: 0 5px;
+}
+
+.entrycode_head_th_2,
+.entrycode_block_td_2 input {
+   width: 180px;
+}
+.entrycode_block_td_2 {
+   padding: 0 5px;
+}
+
+.entrycode_head_th_3,
+.entrycode_block_td_3 input {
+   width: 150px;
+}
+.entrycode_block_td_3 {
+   padding: 0 5px;
+}
+
+.entrycode_head_th_4,
+.entrycode_block_td_4 input {
+   width: 150px;
+}
+.entrycode_block_td_4 {
+   padding: 0 5px;
+}
+
+.entrycode_block_td_5 {
+   text-align: center;
+   padding: 0 5px;
+   width: 180px;
+}
+.entrycode_block_td_5 button {
+   width: 120px;
 }

@@ -1,146 +1,175 @@
-// Переход на другую страницу
-function nextPage(constToHide, fromBlock, toPage) {
-    const from = document.querySelector(fromBlock);
-    from.classList.add('animBlockDisappear_end');
-    from.addEventListener('animationend', function handler() {
-        from.style.display = 'none';
-        from.classList.remove('animBlockDisappear_end');
-        constToHide.forEach(obj => {
-            obj.style.display = 'none'; // Скрываем каждый элемент
+
+
+// Генерация случайного id
+function cab_generateRandomID(prefix, length) {
+    let result = prefix;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+// Проверка существования id в базе данных
+async function cab_generateUniqueId() {
+    let isIdFree = false; // Счётчик проверки на существование id в базе
+    let IdToCheck; // Объявляем переменную для ID
+
+    do {
+        IdToCheck = cab_generateRandomID("code_", 4); // Сгенерированный id
+        // Отправляем запрос на сервер для проверки id
+        const response = await fetch('/check_id', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId: IdToCheck }) // Передаем JSON
         });
-        // Переход на новую страницу после окончания анимации
-        window.location.href = toPage;
-        from.removeEventListener('animationend', handler);
-    });
+        const data = await response.json();
+        if (data.error === 'connect_error') {
+            alert('Ошибка подключения к базе данных.'); // Сообщение об ошибке подключения
+            return null; // Выход из функции при ошибке
+        }
+        if (data.found) {
+        } else {
+            isIdFree = true; // ID свободен
+        }
+    } while (!isIdFree);
+
+    return IdToCheck; // Возвращаем уникальный ID
 }
 
-// Переход от описания блока к тестовым вопросам
-function flipDescrToQuest(fromBlock, toBlock) {
-    const from = document.querySelector(fromBlock);
-    const to = document.querySelector(toBlock);
-    from.classList.add('animBlockDisappear_next');
-    from.addEventListener('animationend', function handler() {
-        from.style.display = 'none';
-        from.classList.remove('animBlockDisappear_next'); // Удаляем класс анимации
-        to.style.display = 'block';
-        to.classList.add('animBlockAppear_next');
-        to.addEventListener('animationend', function appearHandler() {
-            to.classList.remove('animBlockAppear_next'); // Удаляем класс анимации
-            to.removeEventListener('animationend', appearHandler);
+// Функция проверки данных на валидность
+async function validateInputs(codeId, testGroup, testGroupPart2, code, startDate, endDate) {
+    let hasErrors = false;
+    let errorList = [];
+
+    // Проверка на пустое название группы
+    if (!testGroupPart2) {
+        hasErrors = true;
+        errorList.push("Название группы не должно быть пустым");
+    }
+
+    // Проверка на существование группы и кода в базе данных
+    try {
+        const response = await fetch('/check_code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({codeId: codeId, group: testGroup, code: code }),
         });
-        from.removeEventListener('animationend', handler);
-    });
+
+        if (!response.ok) {
+            throw new Error('Ошибка сети');
+        }
+
+        const checkResult = await response.json();
+
+        if (checkResult.isGroupInDB) {
+            hasErrors = true;
+            errorList.push("Такая группа уже существует");
+        }
+        if (checkResult.isCodeInDB) {
+            hasErrors = true;
+            errorList.push("Поле кода доступа уже существует");
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        hasErrors = true;
+        errorList.push("Ошибка проверки данных в базе");
+    }
+
+    // Проверка на пустой код
+    if (!code) {
+        hasErrors = true;
+        errorList.push("Поле кода доступа не должно быть пустым");
+    }
+
+    // Проверка на корректность дат
+    if (new Date(startDate) > new Date(endDate)) {
+        hasErrors = true;
+        errorList.push("Дата ОТ позднее, чем дата ДО");
+    }
+
+    if (new Date(endDate) < new Date()) {
+        hasErrors = true;
+        errorList.push("Дата ДО уже прошла");
+    }
+
+    // Возвращаем результат проверки и список ошибок
+    return { hasErrors, errorList };
 }
 
-// Перелистывание вперед между блоками на одной странице
-function flipFront(fromBlock, toBlock) {
-    const from = document.querySelector(fromBlock);
-    const to = document.querySelector(toBlock);
-    from.classList.add('animBlockDisappear_next');
-    from.addEventListener('animationend', function handler() {
-        from.style.display = 'none';
-        from.classList.remove('animBlockDisappear_next');
-        to.style.display = 'block';
-        to.classList.add('animBlockAppear_next');
-        to.addEventListener('animationend', function appearHandler() {
-            to.classList.remove('animBlockAppear_next');
-            to.removeEventListener('animationend', appearHandler);
-        });
-        from.removeEventListener('animationend', handler);
-    });
+// Изменение строк таблицы кодов доступа
+async function updateCode(button) {
+    const row = button.closest('tr');
+    const codeId = button.getAttribute('code_id');
+    const testGroupPart1 = row.querySelector('.entrycode_block_td_0').textContent.trim();
+    const testGroupPart2 = row.querySelector('input[name="test_group"]').value.trim();
+    const testGroup = `${testGroupPart1} ${testGroupPart2}`;
+    const code = row.querySelector('input[name="code"]').value;
+    const startDate = row.querySelector('input[name="start_date"]').value;
+    const endDate = row.querySelector('input[name="end_date"]').value;
+
+    // Ожидание результата проверки вводимых данных
+    const { hasErrors, errorList } = await validateInputs(codeId, testGroup, testGroupPart2, code, startDate, endDate);
+
+    if (hasErrors) {
+        alert(errorList.join('\n'));  // Выводим ошибки
+    } else {
+        if (confirmUpdate(testGroup)) {
+            fetch(`/update_code/${codeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    test_group: testGroup,
+                    code: code,
+                    start_date: startDate,
+                    end_date: endDate
+                }),
+                credentials: 'same-origin'  // Защита запросов от CSRF-атак
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при обновлении');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                });
+        }
+    }
 }
 
-// Перелистывание назад от первого вопроса блока к описанию блока
-function flipQuestToDescr(fromBlock, toBlock) {
-    const from = document.querySelector(fromBlock);
-    const to = document.querySelector(toBlock);
-    from.classList.add('animBlockDisappear_prev');
-    from.addEventListener('animationend', function handler() {
-        from.style.display = 'none';
-        from.classList.remove('animBlockDisappear_prev'); // Удаляем класс анимации
-        to.style.display = 'block'; // Просто показываем элемент без анимации
-        from.removeEventListener('animationend', handler);
-    });
+
+// Удаление строк таблицы кодов доступа
+function deleteCode(button) {
+    const codeId = button.getAttribute('code_id');
+    const testGroup = button.getAttribute('test_group');
+
+    if (confirmDelete(testGroup)) {
+        fetch(`/delete_code/${codeId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'  // Защита запросов от CSRF-атак
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Ошибка при удалении');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    }
 }
-
-
-// Перелистывание назад между блоками на одной странице
-
-function flipBack(fromBlock, toBlock) {
-    const from = document.querySelector(fromBlock);
-    const to = document.querySelector(toBlock);
-    from.classList.add('animBlockDisappear_prev');
-    from.addEventListener('animationend', function handler() {
-        from.style.display = 'none';
-        from.classList.remove('animBlockDisappear_prev'); // Удаляем класс анимации
-        to.style.display = 'block';
-        to.classList.add('animBlockAppear_prev'); // Добавляем класс анимации для появления
-        to.addEventListener('animationend', function appearHandler() {
-            to.classList.remove('animBlockAppear_prev'); // Удаляем класс анимации
-            to.removeEventListener('animationend', appearHandler);
-        });
-        from.removeEventListener('animationend', handler);
-    });
-}
-
-// Работа с кнопками выбора (блоки 1 и 2)
-function crossButtonSelection(top_0, top_1, top_2, top_3, bottom_0, bottom_1, bottom_2, bottom_3) {
-    document.getElementById(top_0).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(bottom_3).checked = true;
-        }
-    });
-    document.getElementById(top_1).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(bottom_2).checked = true;
-        }
-    });
-    document.getElementById(top_2).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(bottom_1).checked = true;
-        }
-    });
-    document.getElementById(top_3).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(bottom_0).checked = true;
-        }
-    });
-    document.getElementById(bottom_3).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(top_0).checked = true;
-        }
-    });
-    document.getElementById(bottom_2).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(top_1).checked = true;
-        }
-    });
-    document.getElementById(bottom_1).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(top_2).checked = true;
-        }
-    });
-    document.getElementById(bottom_0).addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById(top_3).checked = true;
-        }
-    });
-}
-
-// Работа с ползунками (блоки 3 и 5)
-function threeSliders(slide1, slide2, slide3) {
-    const value1 = parseInt(document.getElementById(slide1).querySelector('.slider').value, 10);
-    const value2 = parseInt(document.getElementById(slide2).querySelector('.slider').value, 10);
-    const value3 = parseInt(document.getElementById(slide3).querySelector('.slider').value, 10);
-    return [value1, value2, value3];
-}
-
-// Работа с ползунками (блок 6)
-function fourSliders(slide1, slide2, slide3, slide4) {
-    const value1 = parseInt(document.getElementById(slide1).querySelector('.slider_6').value, 10);
-    const value2 = parseInt(document.getElementById(slide2).querySelector('.slider_6').value, 10);
-    const value3 = parseInt(document.getElementById(slide3).querySelector('.slider_6').value, 10);
-    const value4 = parseInt(document.getElementById(slide4).querySelector('.slider_6').value, 10);
-    return [value1, value2, value3, value4];
-}
-

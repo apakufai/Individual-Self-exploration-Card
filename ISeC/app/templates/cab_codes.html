@@ -4,6 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Администрация. ИКС-файл</title>
+	<script type="text/javascript"></script>
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_adminCab.css') }}">
 	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 </head>
@@ -43,9 +44,6 @@
 				Администраторы
 			</button>
 
-			<a class="btn_sidelink" href="http://127.0.0.1:5000/cab_admins">
-				<span>Администраторы</span>
-			</a>
 		</div>
 
 		<div class="central_codes">
@@ -53,38 +51,85 @@
 			<table>
 				<thead>
 					<tr class="entrycode_head">
-						<th>Название группы</th>
-						<th>Код доступа</th>
-						<th>Начало действия</th>
-						<th>Конец действия</th>
-						<th>Действия</th>
+						<th class="entrycode_head_th_0">
+							<p>Дата</p>
+						</th>
+						<th class="entrycode_head_th_1">
+							<p>Название группы</p>
+						</th>
+						<th class="entrycode_head_th_2">
+							<p>Код доступа</p>
+						</th>
+						<th class="entrycode_head_th_3">
+							<p>Начало</p>
+						</th>
+						<th class="entrycode_head_th_4">
+							<p>Конец</p>
+						</th>
+						<th colspan="2" class="entrycode_head_th_5">
+							<p>Действия</p>
+						</th>
 					</tr>
 				</thead>
+
 				<tbody>
-					{% for code in codes %}
+
+					<tr class="entrycode_block_create">
+						<td class="entrycode_block_td_0">
+						</td>
+						<td class="entrycode_block_td_1">
+							<input type="text" name="test_group">
+						</td>
+						<td class="entrycode_block_td_2">
+							<input type="text" name="code">
+						</td>
+						<td class="entrycode_block_td_3">
+							<input type="date" name="start_date">
+						</td>
+						<td class="entrycode_block_td_4">
+							<input type="date" name="end_date">
+						</td>
+						<td class="entrycode_block_td_5">
+							<button>Создать</button>
+						</td>
+					</tr>
+
+					{% for accessRow in accessRows %}
 					<tr class="entrycode_block">
-						<td>
-							<form action="{{ url_for('update_code') }}" method="POST" style="display:inline;">
-								<input type="text" name="test_group" value="{{ code.test_group }}">
-								<input type="text" name="code" value="{{ code.code }}">
-								<input type="date" name="start_date" value="{{ code.start_date }}">
-								<input type="date" name="end_date" value="{{ code.end_date }}">
-								<button type="submit">Сохранить</button>
-							</form>
+						<td class="entrycode_block_td_0">
+							{{ accessRow.test_group[:10] }}
+						</td>
+						<td class="entrycode_block_td_1">
+							<input type="text" name="test_group" value="{{ accessRow.test_group[11:] }}">
+						</td>
+						<td class="entrycode_block_td_2">
+							<input type="text" name="code" value="{{ accessRow.code }}">
+						</td>
+						<td class="entrycode_block_td_3">
+							<input type="date" name="start_date" value="{{ accessRow.start_date }}">
+						</td>
+						<td class="entrycode_block_td_4">
+							<input type="date" name="end_date" value="{{ accessRow.end_date }}">
+						</td>
+						<td class="entrycode_block_td_5">
+							<button class="updateAccessCode" code_id="{{ accessRow.code_id }}" onclick="updateCode(this)">Сохранить</button>
+							<button class="removeAccessCode" code_id="{{ accessRow.code_id }}" test_group="{{ accessRow.test_group }}" onclick="deleteCode(this)">Удалить</button>
 						</td>
 					</tr>
 					{% endfor %}
 				</tbody>
 			</table>
-			
+
+			<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 			<script>
+				function confirmUpdate(testGroup) {
+					return confirm(`Сохранить изменения?`);
+				}
 				function confirmDelete(testGroup) {
-					if (confirm(`Удалить группу ${testGroup}?`)) {
-						window.location.href = `/delete_code/${testGroup}`;
-					}
+					return confirm(`Удалить группу ${testGroup}?`);
 				}
 			</script>
-			
+
 
 		</div>
 

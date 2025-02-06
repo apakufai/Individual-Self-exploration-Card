@@ -155,7 +155,7 @@
 					// Переменные всплывающего окна
 					const popup_error_UDI = document.getElementById('popup_error_UDI');
 					const closeBtn_UDI = document.getElementById('closeBtn_UDI');
-					let errorCounter = 0; // Счётчик ошибок
+					let hasErrors = false; // Счётчик ошибок
 					const submitButton = document.getElementById('btn_UDI_next'); // Кнопка подтверждения ввода
 					const inputName = document.getElementById('user_name'); // Поле ввода имени
 					const inputSurname = document.getElementById('user_surname'); // Поле ввода фамилии
@@ -171,7 +171,7 @@
 						const nameValue = inputName.value.trim();
 						if (!nameValue || nameValue != nameValue.replace(/[^а-яА-ЯёЁ-]/g, '')) {
 							inputName.style.border = '5px solid #e29fa9';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 							const inputHandlerName = document.getElementById('user_name');
 							inputHandlerName.value = inputName.value.trim();
 							inputHandlerName.value = nameValue.charAt(0).toUpperCase() + nameValue.slice(1);
@@ -187,7 +187,7 @@
 						const surnameValue = inputSurname.value.trim();
 						if (!surnameValue || surnameValue != surnameValue.replace(/[^а-яА-ЯёЁ-]/g, '')) {
 							inputSurname.style.border = '5px solid #e29fa9';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 							const inputHandlerSurname = document.getElementById('user_surname');
 							inputHandlerSurname.value = inputSurname.value.trim();
 							inputHandlerSurname.value = surnameValue.charAt(0).toUpperCase() + surnameValue.slice(1);
@@ -202,7 +202,7 @@
 						if (!radioSexMale.checked && !radioSexFemale.checked) {
 							radioSexMale.style.webkitBoxShadow = '0px 0px 0px 4px rgba(226, 159, 169, 1)';
 							radioSexFemale.style.webkitBoxShadow = '0px 0px 0px 4px rgba(226, 159, 169, 1)';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 						} else {
 							radioSexMale.style.webkitBoxShadow = '0px 0px 0px 0px rgba(226, 159, 169, 1)';
 							radioSexFemale.style.webkitBoxShadow = '0px 0px 0px 0px rgba(226, 159, 169, 1)';
@@ -221,7 +221,7 @@
 							Number(birthyearValue) < 1900 ||
 							Number(birthyearValue) > birthyearLocal) {
 							inputBirthyear.style.border = '5px solid #e29fa9';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 						} else {
 							inputBirthyear.style.border = '5px solid #ffffff';
 						}
@@ -230,7 +230,7 @@
 						const categoryValue = inputCategory.value;
 						if (categoryValue === "Выберите категорию") {
 							inputCategory.style.border = '5px solid #e29fa9';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 						} else {
 							inputCategory.style.border = '5px solid #ffffff';
 						}
@@ -240,7 +240,7 @@
 						const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 						if (!emailPattern.test(emailValue) && emailValue !== '-') {
 							inputEmail.style.border = '5px solid #e29fa9';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 							const inputHandlerEmail = document.getElementById('user_email');
 							inputHandlerEmail.value = inputEmail.value.trim();
 						} else {
@@ -252,14 +252,14 @@
 						// Проверка подтверждения обработки введённых данных
 						if (!radioConfirmation.checked) {
 							radioConfirmation.style.webkitBoxShadow = '0px 0px 0px 4px rgba(226, 159, 169, 1)';
-							errorCounter += 1; // Увеличиваем счётчик ошибок
+							hasErrors = true; // Меняется флаг ошибок
 						} else {
 							radioConfirmation.style.webkitBoxShadow = '0px 0px 0px 0px rgba(226, 159, 169, 1)';
 						}
 
-						if (errorCounter > 0) {
+						if (hasErrors === true) {
 							popup_error_UDI.style.display = 'flex'; // Показываем всплывающее окно
-							errorCounter = 0;
+							hasErrors = false;
 						} else {
 
 							// Получаем значения из полей ввода

@@ -32,6 +32,14 @@ app.secret_key = secrets.token_hex(16)  # Генерирует 32-значный
 user_locks = {}  # Словарь для хранения блокировок для каждого пользователя
 
 
+
+# Отображение фавикона
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
+
+
+
 # Функция подключение к беза данных
 def get_db_connection():
     try:
@@ -49,21 +57,114 @@ def get_db_connection():
 
 
 
-# Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
-@app.route('/check_code', methods=['POST'])
-def check_code():
-    input_code = request.json.get('code')  # Получаем код из запроса
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
-    cursor = conn.cursor()
-    cursor.execute('SELECT testGroup FROM ISeC_accessCodes WHERE code = ?', (input_code,))
-    result = cursor.fetchone()
-    conn.close()
-    if result:
-        return jsonify({'testGroup': result['testGroup']})  # Возвращаем testGroup
-    else:
-        return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
+# Маршруты переходов для страниц
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/set_index_pass', methods=['POST'])
+def set_index_pass():
+    data = request.get_json()
+    if 'indexPass' in data and data['indexPass'] == True:
+        session['indexPass'] = True
+    return jsonify(success=True)
+
+@app.route('/user_data_input')
+def user_data_input():
+    if 'indexPass' not in session or not session['indexPass']:
+        return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
+    return render_template('user_data_input.html')
+
+@app.route('/set_UDI_pass', methods=['POST'])
+def set_UDI_pass():
+    data = request.get_json()
+    if 'UDIPass' in data and data['UDIPass'] == True:
+        session['UDIPass'] = True
+    return jsonify(success=True)
+
+@app.route('/test_1')
+def test_1():
+    if 'UDIPass' not in session or not session['UDIPass']:
+        return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
+    return render_template('test_1.html')
+
+@app.route('/set_test_1_pass', methods=['POST'])
+def set_test_1_pass():
+    data = request.get_json()
+    if 'test1Pass' in data and data['test1Pass'] == True:
+        session['test1Pass'] = True
+    return jsonify(success=True)
+
+@app.route('/test_2')
+def test_2():
+    if 'test1Pass' not in session or not session['test1Pass']:
+        return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
+    return render_template('test_2.html')
+
+@app.route('/set_test_2_pass', methods=['POST'])
+def set_test_2_pass():
+    data = request.get_json()
+    if 'test2Pass' in data and data['test2Pass'] == True:
+        session['test2Pass'] = True
+    return jsonify(success=True)
+
+@app.route('/test_3')
+def test_3():
+    if 'test2Pass' not in session or not session['test2Pass']:
+        return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
+    return render_template('test_3.html')
+
+@app.route('/set_test_3_pass', methods=['POST'])
+def set_test_3_pass():
+    data = request.get_json()
+    if 'test3Pass' in data and data['test3Pass'] == True:
+        session['test3Pass'] = True
+    return jsonify(success=True)
+
+@app.route('/test_4')
+def test_4():
+    if 'test3Pass' not in session or not session['test3Pass']:
+        return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
+    return render_template('test_4.html')
+
+@app.route('/set_test_4_pass', methods=['POST'])
+def set_test_4_pass():
+    data = request.get_json()
+    if 'test4Pass' in data and data['test4Pass'] == True:
+        session['test4Pass'] = True
+    return jsonify(success=True)
+
+@app.route('/test_5')
+def test_5():
+    if 'test4Pass' not in session or not session['test4Pass']:
+        return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
+    return render_template('test_5.html')
+
+@app.route('/set_test_5_pass', methods=['POST'])
+def set_test_5_pass():
+    data = request.get_json()
+    if 'test5Pass' in data and data['test5Pass'] == True:
+        session['test5Pass'] = True
+    return jsonify(success=True)
+
+@app.route('/test_6')
+def test_6():
+    if 'test5Pass' not in session or not session['test5Pass']:
+        return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
+    return render_template('test_6.html')
+
+@app.route('/set_test_6_pass', methods=['POST'])
+def set_test_6_pass():
+    data = request.get_json()
+    if 'test6Pass' in data and data['test6Pass'] == True:
+        session['test6Pass'] = True
+    return jsonify(success=True)
+
+@app.route('/results')
+def results():
+    if 'test6Pass' not in session or not session['test6Pass']:
+        return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
+    return render_template('results.html')
 
 
 
@@ -91,124 +192,6 @@ def check_id():
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
     finally:
         conn.close()
-
-
-
-# Отображение фавикона
-@app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
-
-
-
-# Маршруты переходов для страниц
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/set_index_pass', methods=['POST'])
-def set_index_pass():
-    data = request.get_json()
-    if 'indexPass' in data and data['indexPass'] == True:
-        session['indexPass'] = True
-    return jsonify(success=True)
-
-@app.route('/user_data_input')
-def user_data_input():
-    # if 'indexPass' not in session or not session['indexPass']:
-    #     return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
-    return render_template('user_data_input.html')
-
-@app.route('/set_UDI_pass', methods=['POST'])
-def set_UDI_pass():
-    data = request.get_json()
-    if 'UDIPass' in data and data['UDIPass'] == True:
-        session['UDIPass'] = True
-    return jsonify(success=True)
-
-@app.route('/test_1')
-def test_1():
-    # if 'UDIPass' not in session or not session['UDIPass']:
-    #     return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
-    return render_template('test_1.html')
-
-@app.route('/set_test_1_pass', methods=['POST'])
-def set_test_1_pass():
-    data = request.get_json()
-    if 'test1Pass' in data and data['test1Pass'] == True:
-        session['test1Pass'] = True
-    return jsonify(success=True)
-
-@app.route('/test_2')
-def test_2():
-    # if 'test1Pass' not in session or not session['test1Pass']:
-    #     return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
-    return render_template('test_2.html')
-
-@app.route('/set_test_2_pass', methods=['POST'])
-def set_test_2_pass():
-    data = request.get_json()
-    if 'test2Pass' in data and data['test2Pass'] == True:
-        session['test2Pass'] = True
-    return jsonify(success=True)
-
-@app.route('/test_3')
-def test_3():
-    # if 'test2Pass' not in session or not session['test2Pass']:
-    #     return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
-    return render_template('test_3.html')
-
-@app.route('/set_test_3_pass', methods=['POST'])
-def set_test_3_pass():
-    data = request.get_json()
-    if 'test3Pass' in data and data['test3Pass'] == True:
-        session['test3Pass'] = True
-    return jsonify(success=True)
-
-@app.route('/test_4')
-def test_4():
-    # if 'test3Pass' not in session or not session['test3Pass']:
-    #     return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
-    return render_template('test_4.html')
-
-@app.route('/set_test_4_pass', methods=['POST'])
-def set_test_4_pass():
-    data = request.get_json()
-    if 'test4Pass' in data and data['test4Pass'] == True:
-        session['test4Pass'] = True
-    return jsonify(success=True)
-
-@app.route('/test_5')
-def test_5():
-    # if 'test4Pass' not in session or not session['test4Pass']:
-    #     return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
-    return render_template('test_5.html')
-
-@app.route('/set_test_5_pass', methods=['POST'])
-def set_test_5_pass():
-    data = request.get_json()
-    if 'test5Pass' in data and data['test5Pass'] == True:
-        session['test5Pass'] = True
-    return jsonify(success=True)
-
-@app.route('/test_6')
-def test_6():
-    # if 'test5Pass' not in session or not session['test5Pass']:
-    #     return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
-    return render_template('test_6.html')
-
-@app.route('/set_test_6_pass', methods=['POST'])
-def set_test_6_pass():
-    data = request.get_json()
-    if 'test6Pass' in data and data['test6Pass'] == True:
-        session['test6Pass'] = True
-    return jsonify(success=True)
-
-@app.route('/results')
-def results():
-    # if 'test6Pass' not in session or not session['test6Pass']:
-    #     return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
-    return render_template('results.html')
 
 
     
@@ -1918,11 +1901,9 @@ def clear_session():
 
 
 
-
-
-
-
-
+# ------------------------------------------------
+# ------------ КАБИНЕТ АДМИНИСТРАТОРА ------------
+# ------------------------------------------------
 
 # Функция для хеширования пароля
 def hash_password(password):
@@ -1954,13 +1935,13 @@ def cab_login():
         conn.close()
     return render_template('cab_login.html')
 
-
 # Маршрут для выхода из системы
 @app.route('/logout')
 def logout():
     session.pop('adminLogin', None)
     session.pop('adminName', None)
     return redirect(url_for('cab_login'))
+
 
 
 # Маршрут для главной страницы
@@ -1987,85 +1968,95 @@ def cab_archive():
     return render_template('cab_archive.html')
 
 
+
 # Маршрут для страницы кодов доступа
 @app.route('/cab_codes')
 def cab_codes():
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
-    
     conn = get_db_connection()
     cursor = conn.cursor()
-    
     # Получение данных из таблицы ISeC_accessCodes
-    cursor.execute("SELECT testGroup, code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil FROM ISeC_accessCodes")
+    cursor.execute("SELECT codeId, testGroup, code, dateFrom, dateUntil FROM ISeC_accessCodes")
     access_codes = cursor.fetchall()
-    
     # Закрытие соединения
     conn.close()
-    
     # Преобразование данных в нужный формат
     codes_list = []
     for row in access_codes:
         codes_list.append({
-            'test_group': row[0],
-            'code': row[1],
-            'start_date': f"{row[2]}-{row[3]:02d}-{row[4]:02d}",
-            'end_date': f"{row[5]}-{row[6]:02d}-{row[7]:02d}"
+            'code_id': row[0],
+            'test_group': row[1],
+            'code': row[2],
+            'start_date': datetime.strptime(row[3], '%Y-%m-%d').date().strftime('%Y-%m-%d'),
+            'end_date': datetime.strptime(row[4], '%Y-%m-%d').date().strftime('%Y-%m-%d')
         })
+    return render_template('cab_codes.html', accessRows=codes_list)
     
-    return render_template('cab_codes.html', codes=codes_list)
+# Функция проверки существования кодов доступа в базе данных
+@app.route('/check_code', methods=['POST'])
+def check_code():
+    isGroupInDB = False  # Проверка на наличие группы в базе данных
+    isCodeInDB = False    # Проверка на наличие кода доступа в базе данных
+    input_codeId = request.json.get('codeId')  # Получаем ID кода из запроса
+    input_group = request.json.get('group')  # Получаем группу из запроса
+    input_code = request.json.get('code')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    try:
+        # Проверка на существование группы, исключая текущий codeId
+        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
+        result = cursor.fetchone()
+        if result:
+            isGroupInDB = True
+        # Проверка на существование кода, исключая текущий codeId
+        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE code = ? AND codeId != ?', (input_code, input_codeId))
+        result = cursor.fetchone()
+        if result:
+            isCodeInDB = True
+    finally:
+        conn.close()
+    return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
+# Функция создания нового кода доступа
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
-@app.route('/update_code', methods=['POST'])
-def update_code():
+# Функция обновления кодов доступа в базе данных
+@app.route('/update_code/<code_id>', methods=['POST'])
+def update_code(code_id):
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
-    
+    # Получение данных из JSON
+    data = request.get_json()
+    test_group = data.get('test_group')
+    code = data.get('code')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    # Извлечение данных из формы
-    test_group = request.form.get('test_group')
-    code = request.form.get('code')
-    start_date = request.form.get('start_date')
-    end_date = request.form.get('end_date')
-    
-    # Преобразование дат в нужный формат
-    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
-    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
-
-    yearFrom, monthFrom, dayFrom = start_date_obj.year, start_date_obj.month, start_date_obj.day
-    yearUntil, monthUntil, dayUntil = end_date_obj.year, end_date_obj.month, end_date_obj.day
-    
     # Обновление записи в базе данных
     cursor.execute("""
         UPDATE ISeC_accessCodes
-        SET code = ?, yearFrom = ?, monthFrom = ?, dayFrom = ?, yearUntil = ?, monthUntil = ?, dayUntil = ?
-        WHERE testGroup = ?
-    """, (code, yearFrom, monthFrom, dayFrom, yearUntil, monthUntil, dayUntil, test_group))
-    
+        SET testGroup = ?, code = ?, dateFrom = ?, dateUntil = ?
+        WHERE codeId = ?
+    """, (test_group, code, start_date, end_date, code_id))
     conn.commit()
     conn.close()
-    
     return redirect(url_for('cab_codes'))
-    
 
-@app.route('/delete_code/<test_group>', methods=['POST'])
-def delete_code(test_group):
+# Функция удаления кодов доступа
+@app.route('/delete_code/<code_id>', methods=['POST'])
+def delete_code(code_id):
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
-    
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    # Удаление записи из базы данных
-    cursor.execute("DELETE FROM ISeC_accessCodes WHERE testGroup = ?", (test_group,))
-    
+    # Удаление записи из базы данных по code_id
+    cursor.execute("DELETE FROM ISeC_accessCodes WHERE codeId = ?", (code_id,))
     conn.commit()
     conn.close()
-    
     return redirect(url_for('cab_codes'))
 
 

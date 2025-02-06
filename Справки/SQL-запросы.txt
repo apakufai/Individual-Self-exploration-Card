@@ -112,7 +112,7 @@ DROP TABLE ISeC_results;
 
 CREATE TABLE ISeC_accessCodes (
     codeId TEXT PRIMARY KEY,
-    testGroup TEXT,
+    testGroup TEXT UNIQUE,
     code TEXT UNIQUE,
     dateFrom TEXT,
     dateUntil TEXT

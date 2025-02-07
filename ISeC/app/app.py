@@ -271,6 +271,7 @@ def generate_and_download_pdf():
 
         receiveByEmail = bool(session.get('receiveByEmail'))
         downloadToPC = bool(session.get('downloadToPC'))
+        insertData = bool(session.get('insertData'))
 
         userGroup = session.get('userGroup')
         
@@ -1778,8 +1779,7 @@ def generate_and_download_pdf():
 
         if exists:
             print("Данные уже существуют в базе")  # Выводим сообщение в консоль, если запись уже существует
-        else:
-
+        elif insertData:
             # SQL-запрос для вставки данных
             sql = '''INSERT INTO ISeC_results (
                 userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
@@ -1820,7 +1820,7 @@ def generate_and_download_pdf():
         conn.close()
 
         print(f"PDF path: {pdf_path}")  # Отладочный вывод
-        print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}")  # Проверка значений сессий
+        print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
 
         # Проверяем, существует ли файл перед отправкой
         if not os.path.isfile(pdf_path):

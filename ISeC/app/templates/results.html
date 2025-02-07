@@ -177,7 +177,7 @@
 					changedButton.style.color = '#5b7ead';
 					changedButton.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
 					// Запускаем функцию генерации PDF
-					generatePDF();
+					generatePDF(true);
 				}
 
 				btn_PDF_dwnl.addEventListener("click", function () {
@@ -194,7 +194,7 @@
 					sessionStorage.setItem('downloadToPC', 'true');
 					sessionStorage.setItem('receiveByEmail', 'false');
 					// Запускаем функцию генерации PDF
-					generatePDF();
+					generatePDF(true);
 				});
 
 				btn_PDF_send.addEventListener("click", function () {
@@ -222,12 +222,12 @@
 								sessionStorage.setItem('downloadToPC', 'false');
 								sessionStorage.setItem('receiveByEmail', 'true');
 								// Запускаем функцию генерации PDF
-								generatePDF();
+								generatePDF(true);
 							}
 						});
 					} else {
 						// Запускаем функцию генерации PDF
-						generatePDF();
+						generatePDF(true);
 					}
 					// Закрытие всплывающего окна
 					btnCancel.addEventListener('click', function () {
@@ -268,12 +268,12 @@
 									console.log(`${key}: ${value}`); // Выводим ключ и значение в консоль
 								}
 								// Запускаем функцию генерации PDF
-								generatePDF();
+								generatePDF(true);
 							}
 						});
 					} else {
 						// Запускаем функцию генерации PDF
-						generatePDF();
+						generatePDF(true);
 					}
 					// Закрытие всплывающего окна
 					btnCancel.addEventListener('click', function () {
@@ -282,13 +282,14 @@
 					});
 				});
 
-				function generatePDF() {
+				function generatePDF(insertDataIntoDB) {
 					// Показываем блок статуса генерации
 					generationBblock.style.opacity = '1';
 
 					// Получаем данные из sessionStorage
 					const receiveByEmail = JSON.parse(sessionStorage.getItem('receiveByEmail'));
 					const downloadToPC = JSON.parse(sessionStorage.getItem('downloadToPC'));
+					const insertData = insertDataIntoDB;
 
 					const userGroup = sessionStorage.getItem('userGroup');
 					const userId = sessionStorage.getItem('userId');
@@ -359,6 +360,7 @@
 
 						downloadToPC: downloadToPC,
 						receiveByEmail: receiveByEmail,
+						insertData: insertData,
 
 						userGroup: userGroup,
 						userId: userId,

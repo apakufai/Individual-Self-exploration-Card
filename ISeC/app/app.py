@@ -169,8 +169,8 @@ def results():
 
 
 # Функция проверки существования id в базе (нужна для исключения дубликатов)
-@app.route('/check_id', methods=['POST'])
-def check_id():
+@app.route('/check_user_id', methods=['POST'])
+def check_user_id():
     input_id = request.json.get('userId')  # Получаем код из запроса
     conn = get_db_connection()
     if conn is None:
@@ -1993,35 +1993,130 @@ def cab_codes():
         })
     return render_template('cab_codes.html', accessRows=codes_list)
     
-# Функция проверки существования кодов доступа в базе данных
+# Функция проверки существования кодов доступа в базе данных перед созданием/обновлением
 @app.route('/check_code', methods=['POST'])
 def check_code():
+    action = request.json.get('action')  # Операция
     isGroupInDB = False  # Проверка на наличие группы в базе данных
     isCodeInDB = False    # Проверка на наличие кода доступа в базе данных
     input_codeId = request.json.get('codeId')  # Получаем ID кода из запроса
-    input_group = request.json.get('group')  # Получаем группу из запроса
+    input_group = request.json.get('testGroup')  # Получаем группу из запроса
     input_code = request.json.get('code')  # Получаем код из запроса
     conn = get_db_connection()
     if conn is None:
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
-        # Проверка на существование группы, исключая текущий codeId
-        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
-        result = cursor.fetchone()
-        if result:
-            isGroupInDB = True
-        # Проверка на существование кода, исключая текущий codeId
-        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE code = ? AND codeId != ?', (input_code, input_codeId))
-        result = cursor.fetchone()
-        if result:
-            isCodeInDB = True
+        if action == "create":
+            # Проверка на существование группы, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ?', (input_group,))
+            result = cursor.fetchone()
+            if result:
+                isGroupInDB = True
+            # Проверка на существование кода, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = ?', (input_code,))
+            result = cursor.fetchone()
+            if result:
+                isCodeInDB = True
+
+        elif action == "update":
+            # Проверка на существование группы, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
+            result = cursor.fetchone()
+            if result:
+                isGroupInDB = True
+            # Проверка на существование кода, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = ? AND codeId != ?', (input_code, input_codeId))
+            result = cursor.fetchone()
+            if result:
+                isCodeInDB = True
     finally:
-        conn.close()
+        conn.close()  # Закрываем соединение в любом случае
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
+# Функция проверки существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
+@app.route('/check_code_id', methods=['POST'])
+def check_code_id():
+    input_id = request.json.get('codeId')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE codeId = ?', (input_id,))
+        result = cursor.fetchone()
+        
+        if result:
+            return jsonify({'found': True})  # Если id найден
+        else:
+            return jsonify({'found': False})  # Если id не найден
+            
+    except sqlite3.OperationalError as e:
+        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
+            return jsonify({'found': False})  # Если таблица не существует
+        else:
+            return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
+    finally:
+        conn.close()
+
+# Функция проверки существования логина администратора в базе (нужна для исключения дубликатов)
+@app.route('/check_admin_login', methods=['POST'])
+def check_admin_login():
+    input_id = request.json.get('adminId')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT userId FROM ISeC_adminAccounts WHERE login = ?', (input_id,))
+        result = cursor.fetchone()
+        
+        if result:
+            return jsonify({'found': True})  # Если id найден
+        else:
+            return jsonify({'found': False})  # Если id не найден
+            
+    except sqlite3.OperationalError as e:
+        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
+            return jsonify({'found': False})  # Если таблица не существует
+        else:
+            return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
+    finally:
+        conn.close()
+
 # Функция создания нового кода доступа
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@app.route('/create_code', methods=['POST'])
+def create_code():
+    if 'adminName' not in session:
+        return redirect(url_for('cab_login'))
+    # Получение данных из JSON
+    data = request.get_json()
+
+    if not data:
+        return jsonify({'error': 'no_data'}), 400  # Возвращаем статус 400, если нет данных
+
+    code_id = data.get('code_id')
+    test_group = data.get('test_group')
+    code = data.get('code')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    if not all([code_id, test_group, code, start_date, end_date]):
+        return jsonify({'error': 'missing_fields'}), 400  # Возвращаем статус 400, если поля отсутствуют
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Внесение записи в базу данных
+    try:
+        cursor.execute("""
+            INSERT INTO ISeC_accessCodes
+            (codeId, testGroup, code, dateFrom, dateUntil)
+            VALUES (?, ?, ?, ?, ?);
+        """, (code_id, test_group, code, start_date, end_date))
+        conn.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
+    finally:
+        conn.close()
+    return redirect(url_for('cab_codes'))
 
 # Функция обновления кодов доступа в базе данных
 @app.route('/update_code/<code_id>', methods=['POST'])
@@ -2037,13 +2132,17 @@ def update_code(code_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     # Обновление записи в базе данных
-    cursor.execute("""
-        UPDATE ISeC_accessCodes
-        SET testGroup = ?, code = ?, dateFrom = ?, dateUntil = ?
-        WHERE codeId = ?
-    """, (test_group, code, start_date, end_date, code_id))
-    conn.commit()
-    conn.close()
+    try:
+        cursor.execute("""
+            UPDATE ISeC_accessCodes
+            SET testGroup = ?, code = ?, dateFrom = ?, dateUntil = ?
+            WHERE codeId = ?
+        """, (test_group, code, start_date, end_date, code_id))
+        conn.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
+    finally:
+        conn.close()
     return redirect(url_for('cab_codes'))
 
 # Функция удаления кодов доступа

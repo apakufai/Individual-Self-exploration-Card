@@ -94,7 +94,7 @@ function generateRandomID(length) {
     return result;
 }
 
-// Проверка существования id в базе данных
+// Создание id с проверкой на наличие в базе данных
 async function generateUniqueId() {
     let isIdFree = false; // Счётчик проверки на существование id в базе
     let IdToCheck; // Объявляем переменную для ID
@@ -102,7 +102,7 @@ async function generateUniqueId() {
     do {
         IdToCheck = generateRandomID(8); // Сгенерированный id
         // Отправляем запрос на сервер для проверки id
-        const response = await fetch('/check_id', {
+        const response = await fetch('/check_user_id', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -90,7 +90,7 @@
 							<input type="date" name="end_date">
 						</td>
 						<td class="entrycode_block_td_5">
-							<button>Создать</button>
+							<button onclick="createCode(this)">Создать</button>
 						</td>
 					</tr>
 
@@ -112,8 +112,8 @@
 							<input type="date" name="end_date" value="{{ accessRow.end_date }}">
 						</td>
 						<td class="entrycode_block_td_5">
-							<button class="updateAccessCode" code_id="{{ accessRow.code_id }}" onclick="updateCode(this)">Сохранить</button>
-							<button class="removeAccessCode" code_id="{{ accessRow.code_id }}" test_group="{{ accessRow.test_group }}" onclick="deleteCode(this)">Удалить</button>
+							<button code_id="{{ accessRow.code_id }}" onclick="updateCode(this)">Сохранить</button>
+							<button code_id="{{ accessRow.code_id }}" test_group="{{ accessRow.test_group }}" onclick="deleteCode(this)">Удалить</button>
 						</td>
 					</tr>
 					{% endfor %}

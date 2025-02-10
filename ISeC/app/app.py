@@ -62,6 +62,26 @@ def get_db_connection():
 def index():
     return render_template('index.html')
 
+
+
+# Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
+@app.route('/check_code', methods=['POST'])
+def check_code():
+    input_code = request.json.get('code')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    cursor.execute('SELECT testGroup FROM ISeC_accessCodes WHERE code = ?', (input_code,))
+    result = cursor.fetchone()
+    conn.close()
+    if result:
+        return jsonify({'testGroup': result['testGroup']})  # Возвращаем testGroup
+    else:
+        return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
+
+
+
 @app.route('/set_index_pass', methods=['POST'])
 def set_index_pass():
     data = request.get_json()
@@ -1932,8 +1952,8 @@ def cab_login():
     return render_template('cab_login.html')
 
 # Маршрут для выхода из системы
-@app.route('/logout')
-def logout():
+@app.route('/cab_logout')
+def cab_logout():
     session.pop('adminLogin', None)
     session.pop('adminName', None)
     return redirect(url_for('cab_login'))
@@ -1990,8 +2010,8 @@ def cab_codes():
     return render_template('cab_codes.html', accessRows=codes_list)
     
 # Функция проверки существования кодов доступа в базе данных перед созданием/обновлением
-@app.route('/check_code', methods=['POST'])
-def check_code():
+@app.route('/cab_check_code', methods=['POST'])
+def cab_check_code():
     action = request.json.get('action')  # Операция
     isGroupInDB = False  # Проверка на наличие группы в базе данных
     isCodeInDB = False    # Проверка на наличие кода доступа в базе данных
@@ -2031,8 +2051,8 @@ def check_code():
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
 # Функция проверки существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/check_code_id', methods=['POST'])
-def check_code_id():
+@app.route('/cab_check_code_id', methods=['POST'])
+def cab_check_code_id():
     input_id = request.json.get('codeId')  # Получаем код из запроса
     conn = get_db_connection()
     if conn is None:
@@ -2056,8 +2076,8 @@ def check_code_id():
         conn.close()
 
 # Функция проверки существования логина администратора в базе (нужна для исключения дубликатов)
-@app.route('/check_admin_login', methods=['POST'])
-def check_admin_login():
+@app.route('/cab_check_admin_login', methods=['POST'])
+def cab_check_admin_login():
     input_id = request.json.get('adminId')  # Получаем код из запроса
     conn = get_db_connection()
     if conn is None:
@@ -2081,7 +2101,7 @@ def check_admin_login():
         conn.close()
 
 # Функция создания нового кода доступа
-@app.route('/create_code', methods=['POST'])
+@app.route('/cab_create_code', methods=['POST'])
 def create_code():
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
@@ -2115,8 +2135,8 @@ def create_code():
     return redirect(url_for('cab_codes'))
 
 # Функция обновления кодов доступа в базе данных
-@app.route('/update_code/<code_id>', methods=['POST'])
-def update_code(code_id):
+@app.route('/cab_update_code/<code_id>', methods=['POST'])
+def cab_update_code(code_id):
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
     # Получение данных из JSON
@@ -2142,8 +2162,8 @@ def update_code(code_id):
     return redirect(url_for('cab_codes'))
 
 # Функция удаления кодов доступа
-@app.route('/delete_code/<code_id>', methods=['POST'])
-def delete_code(code_id):
+@app.route('/cab_delete_code/<code_id>', methods=['POST'])
+def cab_delete_code(code_id):
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
     conn = get_db_connection()

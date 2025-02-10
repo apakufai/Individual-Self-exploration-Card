@@ -17,7 +17,7 @@ async function cab_generateUniqueCodeId() {
     do {
         IdToCheck = cab_generateRandomID("code_", 4); // Сгенерированный id
         // Отправляем запрос на сервер для проверки id
-        const response = await fetch('/check_code_id', {
+        const response = await fetch('/cab_check_code_id', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ async function createCode(button) {
     if (hasErrors) {
         alert(errorList.join('\n'));  // Выводим ошибки
     } else {
-        fetch('/create_code', {
+        fetch('/cab_create_code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ async function updateCode(button) {
         alert(errorList.join('\n'));  // Выводим ошибки
     } else {
         if (confirmUpdate(testGroup)) {
-            fetch(`/update_code/${codeId}`, {
+            fetch(`/cab_update_code/${codeId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -143,7 +143,7 @@ async function validateInputs(action, codeId, testGroup, testGroupPart2, code, s
     }
     // Проверка на существование группы и кода в базе данных
     try {
-        const response = await fetch('/check_code', {
+        const response = await fetch('/cab_check_code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ function deleteCode(button) {
     const testGroup = button.getAttribute('test_group');
 
     if (confirmDelete(testGroup)) {
-        fetch(`/delete_code/${codeId}`, {
+        fetch(`/cab_delete_code/${codeId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -240,7 +240,7 @@ async function cab_generateUniqueAdminId() {
     do {
         loginToCheck = cab_generateRandomID("admin_", 4); // Сгенерированный id
         // Отправляем запрос на сервер для проверки id
-        const response = await fetch('/check_admin_login', {
+        const response = await fetch('/cab_check_admin_login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

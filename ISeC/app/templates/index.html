@@ -56,6 +56,24 @@
 			</div>
 		</div>
 
+		<!-- ВСПЛЫВАЮЩЕЕ ОКНО ДАТЫ (ДАТА НЕ НАЧАЛАСЬ) -->
+		<div class="popup_error" id="popup_error_start_dateBefore">
+			<div class="popup_error_content">
+				<p class="error_title">Ошибка</p>
+				<p>Код ещё не действителен</p>
+				<button class="close_btn_error" id="closeBtn_start_dateBefore">Закрыть</button>
+			</div>
+		</div>
+
+		<!-- ВСПЛЫВАЮЩЕЕ ОКНО ДАТЫ (ДАТА ЗАКОНЧИЛАСЬ) -->
+		<div class="popup_error" id="popup_error_start_dateAfter">
+			<div class="popup_error_content">
+				<p class="error_title">Ошибка</p>
+				<p>Код уже не действителен</p>
+				<button class="close_btn_error" id="closeBtn_start_dateAfter">Закрыть</button>
+			</div>
+		</div>
+
 		<!-- НАЧАЛЬНЫЙ ЭКРАН -->
 
 		<div class="descr_main">
@@ -102,6 +120,10 @@
 				const closeBtn_start_empty = document.getElementById('closeBtn_start_empty');
 				const popup_error_start_wrong = document.getElementById('popup_error_start_wrong');
 				const closeBtn_start_wrong = document.getElementById('closeBtn_start_wrong');
+				const popup_error_start_dateBefore = document.getElementById('popup_error_start_dateBefore');
+				const closeBtn_start_dateBefore = document.getElementById('closeBtn_start_dateBefore');
+				const popup_error_start_dateAfter = document.getElementById('popup_error_start_dateAfter');
+				const closeBtn_start_dateAfter = document.getElementById('closeBtn_start_dateAfter');
 
 				// Переменные и функция перелистывания вперед
 				const nextButton_start = document.getElementById("startTest");

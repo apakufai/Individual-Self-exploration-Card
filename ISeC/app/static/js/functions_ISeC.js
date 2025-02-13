@@ -63,9 +63,7 @@ function flipQuestToDescr(fromBlock, toBlock) {
     });
 }
 
-
 // Перелистывание назад между блоками на одной странице
-
 function flipBack(fromBlock, toBlock) {
     const from = document.querySelector(fromBlock);
     const to = document.querySelector(toBlock);

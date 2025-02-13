@@ -107,7 +107,8 @@
 		</div>
 		<div class="low_section">
 			<button id="getCode" class="btn_startpage" type="button">Получить код</button>
-			<input id="inp_code" class="inp_startpage" type="text" required placeholder="Введите код" autocomplete="off">
+			<input id="inp_code" class="inp_startpage" type="text" required placeholder="Введите код"
+				autocomplete="off">
 			<button id="startTest" class="btn_startpage" type="button">Пройти тест</button>
 		</div>
 
@@ -127,12 +128,16 @@
 
 				// Переменные и функция перелистывания вперед
 				const nextButton_start = document.getElementById("startTest");
+
+				const inputHandlerCode = document.getElementById('inp_code');
+
 				nextButton_start.addEventListener("click", async function () {
-					const inputCode = document.getElementById('inp_code').value;
+					const inputCode = inputHandlerCode.value.trim();
 
 					if (inputCode.length === 0) {  // Если код не введён
 						popup_error_start_empty.style.display = 'flex'; // Показываем всплывающее окно
 					} else {  // Отправляем запрос на сервер для проверки кода
+						inputHandlerCode.value = inputCode;
 						const response = await fetch('/check_code', {
 							method: 'POST',
 							headers: {
@@ -147,6 +152,10 @@
 								alert('Ошибка подключения к базе данных.'); // Сообщение об ошибке подключения
 							} else if (data.error === 'accessCode_not_found') {
 								popup_error_start_wrong.style.display = 'flex'; // Показываем всплывающее окно, если код не найден
+							} else if (data.error === 'today_is_before_dateFrom') {
+								popup_error_start_dateBefore.style.display = 'flex'; // Показываем всплывающее окно, если сегодняшняя дата раньше начала действия кода доступа
+							} else if (data.error === 'today_is_after_dateUntil') {
+								popup_error_start_dateAfter.style.display = 'flex'; // Показываем всплывающее окно, если сегодняшняя дата позднее окончания действия кода доступа
 							}
 						} else {
 							// Получаем значения из полей ввода
@@ -172,12 +181,18 @@
 							nextPage(lines, '[name="descr_index"]', '/user_data_input');
 						}
 					};
-
 					// Закрытие всплывающего окна пустого поля для ввода кода
 					closeBtn_start_empty.addEventListener('click', function () {
 						popup_error_start_empty.style.display = 'none'; // Скрываем всплывающее окно
 					});
-
+					// Закрытие всплывающего окна ненаступившего срока действия
+					closeBtn_start_dateBefore.addEventListener('click', function () {
+						popup_error_start_dateBefore.style.display = 'none'; // Скрываем всплывающее окно
+					});
+					// Закрытие всплывающего окна истекшего срока действия
+					closeBtn_start_dateAfter.addEventListener('click', function () {
+						popup_error_start_dateAfter.style.display = 'none'; // Скрываем всплывающее окно
+					});
 					// Закрытие всплывающего окна неверно введённого кода
 					closeBtn_start_wrong.addEventListener('click', function () {
 						popup_error_start_wrong.style.display = 'none'; // Скрываем всплывающее окно

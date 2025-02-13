@@ -49,7 +49,7 @@ async function createCode(button) {
     const testGroupPart1 = `${day}.${month}.${year}`; // Форматируем дату в "DD.MM.YYYY"
     const testGroupPart2 = row.querySelector('input[name="test_group"]').value.trim();
     const testGroup = `${testGroupPart1} ${testGroupPart2}`;
-    const code = row.querySelector('input[name="code"]').value;
+    const code = row.querySelector('input[name="code"]').value.trim();
     const startDate = row.querySelector('input[name="start_date"]').value;
     const endDate = row.querySelector('input[name="end_date"]').value;
     // Ожидание результата проверки вводимых данных
@@ -88,7 +88,7 @@ async function createCode(button) {
 async function updateCode(button) {
     const row = button.closest('tr');
     const codeId = button.getAttribute('code_id');
-    const testGroupPart1 = row.querySelector('.entrycode_block_td_0').textContent.trim();
+    const testGroupPart1 = row.querySelector('.entrycode_block_td_0').textContent;
     const testGroupPart2 = row.querySelector('input[name="test_group"]').value.trim();
     const testGroup = `${testGroupPart1} ${testGroupPart2}`;
     const code = row.querySelector('input[name="code"]').value.trim();

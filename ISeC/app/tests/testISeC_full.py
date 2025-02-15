@@ -14,7 +14,7 @@ try:
 # ВВОД КОДА
     time.sleep(1.5)
     inputCode = browser.find_element(By.ID, 'inp_code') # ОКНО ВВОДА КОДА
-    inputCode.send_keys("111")
+    inputCode.send_keys("asdasd")
     time.sleep(0.8)
     btn_main_start = browser.find_element(By.ID, 'startTest') # КНОПКА "ПРОЙТИ ТЕСТ"
     btn_main_start.click()

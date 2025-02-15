@@ -48,7 +48,7 @@ async function createCode(button) {
     const year = currentDate.getFullYear();
     const testGroupPart1 = `${day}.${month}.${year}`; // Форматируем дату в "DD.MM.YYYY"
     const testGroupPart2 = row.querySelector('input[name="test_group"]').value.trim();
-    const testGroup = `${testGroupPart1} ${testGroupPart2}`;
+    const testGroup = `${testGroupPart1} ${testGroupPart2}`.trim();
     const code = row.querySelector('input[name="code"]').value.trim();
     const startDate = row.querySelector('input[name="start_date"]').value;
     const endDate = row.querySelector('input[name="end_date"]').value;

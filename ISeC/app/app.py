@@ -2186,5 +2186,87 @@ def cab_delete_code(code_id):
     return redirect(url_for('cab_codes'))
 
 
+
+# Маршрут для получения данных пользователя по userId
+@app.route('/get_respondent_data', methods=['POST'])
+def get_respondent_data():
+    data = request.get_json()
+    user_id = data.get('userId')
+
+    conn = get_db_connection()
+    respondent_data = conn.execute('SELECT * FROM ISeC_results WHERE userId = ?', (user_id,)).fetchone()
+    conn.close()
+
+    if respondent_data:
+        return jsonify({
+            'userId': respondent_data['userId'],
+            'userGroup': respondent_data['userGroup'],
+            'userName': respondent_data['userName'],
+            'userSurname': respondent_data['userSurname'],
+            'userSex': respondent_data['userSex'],
+            'userBirthyear': respondent_data['userBirthyear'],
+            'userCategory': respondent_data['userCategory'],
+            'userEmail': respondent_data['userEmail'],
+
+            'adaptation_1': respondent_data['adaptation_1'],
+            'compromise_1': respondent_data['compromise_1'],
+            'bidding_1': respondent_data['bidding_1'],
+            'threat_1': respondent_data['threat_1'],
+            'logicArgument_1': respondent_data['logicArgument_1'],
+            'emotionsArgument_1': respondent_data['emotionsArgument_1'],
+            'adaptationCount_1': respondent_data['adaptationCount_1'],
+            'compromiseCount_1': respondent_data['compromiseCount_1'],
+            'biddingCount_1': respondent_data['biddingCount_1'],
+            'threatCount_1': respondent_data['threatCount_1'],
+            'logicArgumentCount_1': respondent_data['logicArgumentCount_1'],
+            'emotionsArgumentCount_1': respondent_data['emotionsArgumentCount_1'],
+
+            'adaptation_2': respondent_data['adaptation_2'],
+            'compromise_2': respondent_data['compromise_2'],
+            'threat_2': respondent_data['threat_2'],
+            'cooperation_2': respondent_data['cooperation_2'],
+            'avoidance_2': respondent_data['avoidance_2'],
+            'adaptationCount_2': respondent_data['adaptationCount_2'],
+            'compromiseCount_2': respondent_data['compromiseCount_2'],
+            'threatCount_2': respondent_data['threatCount_2'],
+            'cooperationCount_2': respondent_data['cooperationCount_2'],
+            'avoidanceCount_2': respondent_data['avoidanceCount_2'],
+
+            'adaptation_3': respondent_data['adaptation_3'],
+            'threat_3': respondent_data['threat_3'],
+            'cooperation_3': respondent_data['cooperation_3'],
+            'adaptationCount_3': respondent_data['adaptationCount_3'],
+            'threatCount_3': respondent_data['threatCount_3'],
+            'cooperationCount_3': respondent_data['cooperationCount_3'],
+
+            'understandingOfStyles_4': respondent_data['understandingOfStyles_4'],
+            'strengthInstallation_4': respondent_data['strengthInstallation_4'],
+            'manipulationInstallation_4': respondent_data['manipulationInstallation_4'],
+            'negotiationsInstallation_4': respondent_data['negotiationsInstallation_4'],
+            'strengthInstallationCount_4': respondent_data['strengthInstallationCount_4'],
+            'manipulationInstallationCount_4': respondent_data['manipulationInstallationCount_4'],
+            'negotiationsInstallationCount_4': respondent_data['negotiationsInstallationCount_4'],
+
+            'adaptation_5': respondent_data['adaptation_5'],
+            'bidding_5': respondent_data['bidding_5'],
+            'logicArgument_5': respondent_data['logicArgument_5'],
+            'emotionsArgument_5': respondent_data['emotionsArgument_5'],
+            'avoidance_5': respondent_data['avoidance_5'],
+            'adaptationCount_5': respondent_data['adaptationCount_5'],
+            'biddingCount_5': respondent_data['biddingCount_5'],
+            'logicArgumentCount_5': respondent_data['logicArgumentCount_5'],
+            'emotionsArgumentCount_5': respondent_data['emotionsArgumentCount_5'],
+            'avoidanceCount_5': respondent_data['avoidanceCount_5'],
+            
+            'logicArgument_6': respondent_data['logicArgument_6'],
+            'emotionsArgument_6': respondent_data['emotionsArgument_6'],
+            'logicArgumentCount_6': respondent_data['logicArgumentCount_6'],
+            'emotionsArgumentCount_6': respondent_data['emotionsArgumentCount_6']
+        }), 200
+    else:
+        return jsonify({"error": "Данные не найдены"}), 404
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

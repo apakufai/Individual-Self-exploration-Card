@@ -27,33 +27,190 @@
 			<button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
 				Архив
 			</button>
-			
+
 			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
 				Коды доступа
 			</button>
-			
+
 			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
 				Анализ по вопросам
 			</button>
-			
+
 			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
 				Выборки (excel)
 			</button>
-			
+
 			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
 				Администраторы
 			</button>
-	
+
 		</div>
-	
+
 		<div class="central_archive">
 
-			<input type="text" class="inp_text" id="user_id" required placeholder="ID респондента" autocomplete="off">
+			<input type="text" class="inp_text" id="respondent_id" required placeholder="ID респондента"
+				autocomplete="off">
 
-			<input type="email" class="inp_text" id="user_email" required placeholder="Эл. почта" autocomplete="off">
+			<input type="email" class="inp_text" id="email_to_send" required placeholder="Эл. почта" autocomplete="off">
 
 			<button id="gener_and_send_PDF" class="btn_startgen" type="button">Запустить генерацию</button>
 		</div>
+
+
+		<script>
+
+			document.addEventListener('DOMContentLoaded', function () {
+				document.getElementById('gener_and_send_PDF').addEventListener('click', function () {
+					const respondentId = document.getElementById('respondent_id').value;
+					const emailToSend = document.getElementById('email_to_send').value;
+
+					if (!respondentId) {
+						alert("Введите ID респондента");
+						return;
+					}
+
+					if (!emailToSend) {
+						alert("Введите e-mail для отправки");
+						return;
+					}
+
+					// Отправка данных на сервер
+					fetch('/get_respondent_data', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ userId: respondentId })
+					})
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Ошибка при получении данных респондента');
+							}
+							return response.json();
+						})
+						.then(respondentData => {
+
+							// Создаем JSON-объект для хранения данных
+							const ISeC_results = {
+
+								downloadToPC: true,  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+								receiveByEmail: false,  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+								insertData: false,
+
+								userGroup: respondentData.userGroup,
+								userId: respondentId,
+								userName: respondentData.userName,
+								userSurname: respondentData.userSurname,
+								userSex: respondentData.userSex,
+								userBirthyear: respondentData.userBirthyear,
+								userCategory: respondentData.userCategory,
+								userEmail: respondentData.userEmail,
+
+								adaptation_1: respondentData.adaptation_1,
+								compromise_1: respondentData.compromise_1,
+								bidding_1: respondentData.bidding_1,
+								threat_1: respondentData.threat_1,
+								logicArgument_1: respondentData.logicArgument_1,
+								emotionsArgument_1: respondentData.emotionsArgument_1,
+								adaptationCount_1: respondentData.adaptationCount_1,
+								compromiseCount_1: respondentData.compromiseCount_1,
+								biddingCount_1: respondentData.biddingCount_1,
+								threatCount_1: respondentData.threatCount_1,
+								logicArgumentCount_1: respondentData.logicArgumentCount_1,
+								emotionsArgumentCount_1: respondentData.emotionsArgumentCount_1,
+
+								adaptation_2: respondentData.adaptation_2,
+								compromise_2: respondentData.compromise_2,
+								threat_2: respondentData.threat_2,
+								cooperation_2: respondentData.cooperation_2,
+								avoidance_2: respondentData.avoidance_2,
+								adaptationCount_2: respondentData.adaptationCount_2,
+								compromiseCount_2: respondentData.compromiseCount_2,
+								threatCount_2: respondentData.threatCount_2,
+								cooperationCount_2: respondentData.cooperationCount_2,
+								avoidanceCount_2: respondentData.avoidanceCount_2,
+
+								adaptation_3: respondentData.adaptation_3,
+								threat_3: respondentData.threat_3,
+								cooperation_3: respondentData.cooperation_3,
+								adaptationCount_3: respondentData.adaptationCount_3,
+								threatCount_3: respondentData.threatCount_3,
+								cooperationCount_3: respondentData.cooperationCount_3,
+
+								understandingOfStyles_4: respondentData.understandingOfStyles_4,
+								strengthInstallation_4: respondentData.strengthInstallation_4,
+								manipulationInstallation_4: respondentData.manipulationInstallation_4,
+								negotiationsInstallation_4: respondentData.negotiationsInstallation_4,
+								strengthInstallationCount_4: respondentData.strengthInstallationCount_4,
+								manipulationInstallationCount_4: respondentData.manipulationInstallationCount_4,
+								negotiationsInstallationCount_4: respondentData.negotiationsInstallationCount_4,
+
+								adaptation_5: respondentData.adaptation_5,
+								bidding_5: respondentData.bidding_5,
+								logicArgument_5: respondentData.logicArgument_5,
+								emotionsArgument_5: respondentData.emotionsArgument_5,
+								avoidance_5: respondentData.avoidance_5,
+								adaptationCount_5: respondentData.adaptationCount_5,
+								biddingCount_5: respondentData.biddingCount_5,
+								logicArgumentCount_5: respondentData.logicArgumentCount_5,
+								emotionsArgumentCount_5: respondentData.emotionsArgumentCount_5,
+								avoidanceCount_5: respondentData.avoidanceCount_5,
+
+								logicArgument_6: respondentData.logicArgument_6,
+								emotionsArgument_6: respondentData.emotionsArgument_6,
+								logicArgumentCount_6: respondentData.logicArgumentCount_6,
+								emotionsArgumentCount_6: respondentData.emotionsArgumentCount_6
+							};
+
+							if (ISeC_results) { // Проверяем, что данные существуют
+
+								// Успешное завершение генерации PDF
+								alert("Генерация и отправка запущены успешно");
+								// Очистка полей ввода
+								document.getElementById('respondent_id').value = '';
+								document.getElementById('email_to_send').value = '';
+								
+								fetch('/generate_and_download_pdf', {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify(ISeC_results)
+								})
+									.then(response => {
+										if (!response.ok) {
+											throw new Error('Ошибка при генерации PDF');
+										}
+										return response.blob();
+									})
+									.then(blob => {
+										// Создаем URL для Blob
+										const url = window.URL.createObjectURL(blob);
+										// Создаем ссылку для скачивания
+										const a = document.createElement('a');
+										a.href = url;
+										a.download = `ИКС-файл ${respondentId}.pdf`;
+										document.body.appendChild(a);
+										a.click();
+										document.body.removeChild(a);
+										window.URL.revokeObjectURL(url);
+									})
+									.catch(error => {
+										console.error('Ошибка:', error);
+										alert('Произошла ошибка. Обратитесь к администратору');
+									});
+							} else {
+								console.error('Данные для генерации отсутствуют, или загрузка уже идет');
+							}
+						})
+						.catch(error => {
+							console.error('Ошибка при получении данных респондента:', error);
+							alert('Ошибка при получении данных респондента. Обратитесь к администратору.');
+						});
+				});
+			});
+		</script>
+
 	</main>
 
 

@@ -1853,7 +1853,7 @@ def generate_and_download_pdf():
         if not os.path.isfile(pdf_path):
             return jsonify({"message": "PDF-файл не найден."}), 404
 
-        if  not receiveByEmail and downloadToPC:
+        if  insertData and not receiveByEmail and downloadToPC:
             response = send_file(pdf_path, as_attachment=True)
             # Кодируем имя файла в utf-8
             encoded_filename = urllib.parse.quote(pdf_filename)
@@ -1862,13 +1862,13 @@ def generate_and_download_pdf():
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
             return response  # Возвращаем только response
 
-        if receiveByEmail and not downloadToPC:
+        if  insertData and receiveByEmail and not downloadToPC:
             send_email(userEmail, pdf_path, pdf_filename)
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
             return '', 200
 
-        if  receiveByEmail and downloadToPC:
+        if  insertData and receiveByEmail and downloadToPC:
             send_email(userEmail, pdf_path, pdf_filename)
             response = send_file(pdf_path, as_attachment=True)
             # Кодируем имя файла в utf-8
@@ -1877,6 +1877,14 @@ def generate_and_download_pdf():
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
             return response  # Возвращаем только response
+
+        if  not insertData and receiveByEmail and not downloadToPC:
+            emailToSend = str(ISeC_results_array.get('emailToSend'))
+            print(f"emailToSend: {emailToSend}")  # Отладочный вывод
+            send_email(emailToSend, pdf_path, pdf_filename)
+            # Запускаем таймер на удаление блокировки и файла через 3 минуты
+            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            return '', 200
 
         # Возвращаем ошибку 404, если ни одна из двух переменных не истинна
         return jsonify({"error": "PDF-файл не был отправлен и не был скачан"}), 404
@@ -2018,7 +2026,23 @@ def cab_codes():
             'start_date': datetime.strptime(row[3], '%Y-%m-%d').date().strftime('%Y-%m-%d'),
             'end_date': datetime.strptime(row[4], '%Y-%m-%d').date().strftime('%Y-%m-%d')
         })
-    return render_template('cab_codes.html', accessRows=codes_list)
+
+    # Функция для сортировки
+    def sort_key(item):
+        # Извлекаем дату из первых 10 символов строки 'test_group'
+        date_str = item['test_group'][:10]  # Берем первые 10 символов
+        group_name_str = item['test_group'][11:]  # От 10 до последнего символа
+        date_parts = date_str.split('.')  # Разбиваем по точкам
+        formatted_date = f"{date_parts[2]}{date_parts[1]}{date_parts[0]}"  # YYYYMMDD
+        return (formatted_date, group_name_str)  # Сначала по дате, потом по имени группы
+
+    # Сортировки
+    sorted_codes_list = sorted(codes_list, key=sort_key)
+    sorted_codes_list.sort(key=lambda x: x['test_group'][:10], reverse=True)
+
+    # Возврат отсортированного списка
+    return render_template('cab_codes.html', accessRows=sorted_codes_list)
+
     
 # Функция проверки существования кодов доступа в базе данных перед созданием/обновлением
 @app.route('/cab_check_code', methods=['POST'])
@@ -2145,7 +2169,7 @@ def create_code():
         conn.close()
     return redirect(url_for('cab_codes'))
 
-# Функция обновления кодов доступа в базе данных
+# Функция изменения кодов доступа в базе данных
 @app.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
     if 'adminName' not in session:

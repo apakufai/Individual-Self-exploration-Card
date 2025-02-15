@@ -61,8 +61,8 @@
 
 			document.addEventListener('DOMContentLoaded', function () {
 				document.getElementById('gener_and_send_PDF').addEventListener('click', function () {
-					const respondentId = document.getElementById('respondent_id').value;
-					const emailToSend = document.getElementById('email_to_send').value;
+					const respondentId = document.getElementById('respondent_id').value.trim();
+					const emailToSend = document.getElementById('email_to_send').value.trim();
 
 					if (!respondentId) {
 						alert("Введите ID респондента");
@@ -93,9 +93,10 @@
 							// Создаем JSON-объект для хранения данных
 							const ISeC_results = {
 
-								downloadToPC: true,  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-								receiveByEmail: false,  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+								downloadToPC: false,
+								receiveByEmail: true,
 								insertData: false,
+								emailToSend: emailToSend,
 
 								userGroup: respondentData.userGroup,
 								userId: respondentId,
@@ -169,7 +170,7 @@
 								// Очистка полей ввода
 								document.getElementById('respondent_id').value = '';
 								document.getElementById('email_to_send').value = '';
-								
+
 								fetch('/generate_and_download_pdf', {
 									method: 'POST',
 									headers: {
@@ -179,21 +180,9 @@
 								})
 									.then(response => {
 										if (!response.ok) {
-											throw new Error('Ошибка при генерации PDF');
+											throw new Error('Ошибка при генерации и отправке PDF');
 										}
 										return response.blob();
-									})
-									.then(blob => {
-										// Создаем URL для Blob
-										const url = window.URL.createObjectURL(blob);
-										// Создаем ссылку для скачивания
-										const a = document.createElement('a');
-										a.href = url;
-										a.download = `ИКС-файл ${respondentId}.pdf`;
-										document.body.appendChild(a);
-										a.click();
-										document.body.removeChild(a);
-										window.URL.revokeObjectURL(url);
 									})
 									.catch(error => {
 										console.error('Ошибка:', error);

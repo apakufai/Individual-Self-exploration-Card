@@ -88,7 +88,7 @@ async function createCode(button) {
 async function updateCode(button) {
     const row = button.closest('tr');
     const codeId = button.getAttribute('code_id');
-    const testGroupPart1 = row.querySelector('.entrycode_block_td_0').textContent;
+    const testGroupPart1 = row.querySelector('.entrycode_block_td_0').textContent.trim();
     const testGroupPart2 = row.querySelector('input[name="test_group"]').value.trim();
     const testGroup = `${testGroupPart1} ${testGroupPart2}`;
     const code = row.querySelector('input[name="code"]').value.trim();

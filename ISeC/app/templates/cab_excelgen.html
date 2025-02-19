@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Администрация. ИКС-файл</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_adminCab.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+
+
+<body>
+
+	<header class="header">
+		<div class="header_ISeC">ИКС-файл. Администраторная</div>
+		<div class="header_admin">
+			<span>
+				Привет, <a href="{{ url_for('index') }}">{{ session['adminName'] }}</a> |
+				<a href="{{ url_for('index') }}">Тест</a> |
+				<a href="{{ url_for('cab_logout') }}">Выйти</a>
+			</span>
+		</div>
+	</header>
+
+	<main class="main">
+		<div class="side_menu">
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+				Архив
+			</button>
+
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+				Коды доступа
+			</button>
+
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+				Анализ по вопросам
+			</button>
+
+			<button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+				Выборки (excel)
+			</button>
+
+			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+				Администраторы
+			</button>
+
+		</div>
+
+		<div class="central_codes">
+
+			<table>
+				<thead>
+					<tr class="conditions_head">
+						<th class="conditions_head_th_0">
+							<p>Группа</p>
+						</th>
+						<th class="conditions_head_th_1">
+							<p>Категория</p>
+						</th>
+						<th class="conditions_head_th_2">
+							<p>Пол</p>
+						</th>
+						<th class="conditions_head_th_3">
+							<p>Г.р.</p>
+						</th>
+						<th class="conditions_head_th_4">
+						</th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					<tr class="conditions_block">
+
+						<td class="conditions_block_td_0">
+
+							<div name="group_fullname">
+								{% for group in groups %}
+								<div class="group-item {% if loop.index > 10 %}hidden_groups{% endif %}">
+									<input type="checkbox" id="group_{{ loop.index }}" name="group_checkbox"
+										value="{{ group }}">
+									<label for="group_{{ loop.index }}">{{ group }}</label>
+								</div>
+								{% endfor %}
+							</div>
+							<button id="show_all_groups"
+								class="{% if groups|length <= 10 %}hidden-button{% endif %}">Показать все
+								группы</button>
+
+						</td>
+
+						<td class="conditions_block_td_1">
+							<div name="category">
+								{% for category in categories %}
+								<div>
+									<input type="checkbox" id="category_{{ loop.index }}" name="category_checkbox"
+										value="{{ category }}">
+									<label for="category_{{ loop.index }}">{{ category }}</label>
+								</div>
+								{% endfor %}
+							</div>
+						</td>
+
+
+						<td class="conditions_block_td_2">
+							<div class="excelgen_inputs">
+								<div>
+									<input type="radio" name="sex" id="sex_both">
+									<label for="sex_both">Оба</label>
+								</div>
+								<div>
+									<input type="radio" name="sex" value="Мужской" id="sex_male">
+									<label for="sex_both">Муж</label>
+								</div>
+								<div>
+									<input type="radio" name="sex" value="Женский" id="sex_female">
+									<label for="sex_both">Жен</label>
+								</div>
+							</div>
+						</td>
+
+						<td class="conditions_block_td_3">
+							<div>
+								<input type="text" id="yearFrom" placeholder="от">
+							</div>
+							<div>
+								<input type="text" id="yearUntil" placeholder="до">
+							</div>
+						</td>
+
+						<td class="conditions_block_td_4">
+							<button id="start_excelgen">Создать</button>
+						</td>
+
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
+			<script>
+
+				document.getElementById('show_all_groups').addEventListener('click', function () {
+					// Получаем все элементы с классом group-item
+					const groups = document.querySelectorAll('.group-item.hidden_groups');
+					// Показываем все скрытые элементы
+					groups.forEach(function (group) {
+						group.classList.remove('hidden_groups');
+					});
+					// Скрываем кнопку после нажатия
+					this.classList.add('hidden-button');
+				});
+
+
+				document.getElementById('start_excelgen').addEventListener('click', function () {
+					const selectedGroups = Array.from(document.querySelectorAll('input[name="group_checkbox"]:checked')).map(el => el.value);
+					const selectedCategories = Array.from(document.querySelectorAll('input[name="category_checkbox"]:checked')).map(el => el.value);
+					const selectedSex = document.querySelector('input[name="sex"]:checked')?.value || null;
+					const yearFrom = parseInt(document.getElementById('yearFrom').value, 10);
+					const yearUntil = parseInt(document.getElementById('yearUntil').value, 10);
+
+					// Проверяем, что yearFrom не больше yearUntil
+					if (yearFrom > yearUntil) {
+						alert("Год ОТ больше года ДО");
+						return; // Прерываем выполнение функции
+					}
+
+					fetch('/generate_query', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ groups: selectedGroups, categories: selectedCategories, sex: selectedSex, yearFrom, yearUntil })
+					})
+						.then(response => {
+							if (response.ok) {
+								return response.blob().then(blob => {
+									const contentDisposition = response.headers.get('Content-Disposition');
+									const originalFilename = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)?.[1]?.replace(/['"]/g, '') || 'download.xlsx';
+									const filename = `Запрос${originalFilename}`;
+
+									const url = window.URL.createObjectURL(blob);
+									const a = document.createElement('a');
+									a.style.display = 'none';
+									a.href = url;
+									a.download = filename;
+									document.body.appendChild(a);
+									a.click();
+									window.URL.revokeObjectURL(url);
+								});
+							} else if (response.status === 404) {
+								return response.json().then(data => {
+									alert(data.error); // Показываем сообщение об ошибке
+								});
+							} else {
+								throw new Error('Network response was not ok.');
+							}
+						})
+						.catch(console.error);
+				});
+
+
+			</script>
+
+		</div>
+
+
+
+
+
+		<script>
+
+		</script>
+
+	</main>
+
+</body>
+
+</html>

@@ -228,36 +228,39 @@ a:hover {
 /* ------------ СТРАНИЦА КОДОВ ДОСТУПА ------------ */
 /* ------------------------------------------------ */
 
-
 .entrycode_head,
 .entrycode_block_create td {
    border-bottom: 2px solid #5b7ead;
 }
+
 .entrycode_block_create td {
    padding: 10px 5px;
 }
 
 
 .entrycode_head * {
-padding-bottom: 5px;
+   padding-bottom: 5px;
 }
 
 .entrycode_block td {
-   padding-top: 10px; /* Добавляет отступ сверху ячеек */
+   padding-top: 10px;
+   /* Добавляет отступ сверху ячеек */
 }
 
 .central_codes * {
-   border-collapse: collapse; /* Убирает двойные границы */
+   border-collapse: collapse;
+   /* Убирает двойные границы */
    font-size: 14pt;
 }
 
 .central_codes table {
-margin: 20px 0 0 20px;
+   margin: 20px 0 0 20px;
 }
 
 .entrycode_head_th_0 {
    width: 120px;
 }
+
 .entrycode_block_td_0 {
    padding: 0 5px;
    text-align: center;
@@ -267,6 +270,7 @@ margin: 20px 0 0 20px;
 .entrycode_block_td_1 input {
    width: 180px;
 }
+
 .entrycode_block_td_1 {
    padding: 0 5px;
 }
@@ -275,6 +279,7 @@ margin: 20px 0 0 20px;
 .entrycode_block_td_2 input {
    width: 180px;
 }
+
 .entrycode_block_td_2 {
    padding: 0 5px;
 }
@@ -283,6 +288,7 @@ margin: 20px 0 0 20px;
 .entrycode_block_td_3 input {
    width: 150px;
 }
+
 .entrycode_block_td_3 {
    padding: 0 5px;
 }
@@ -291,6 +297,7 @@ margin: 20px 0 0 20px;
 .entrycode_block_td_4 input {
    width: 150px;
 }
+
 .entrycode_block_td_4 {
    padding: 0 5px;
 }
@@ -300,6 +307,61 @@ margin: 20px 0 0 20px;
    padding: 0 5px;
    width: 180px;
 }
+
 .entrycode_block_td_5 button {
    width: 120px;
+}
+
+
+
+/* ------------------------------------------------ */
+/* ------------ СТРАНИЦА КОДОВ ДОСТУПА ------------ */
+/* ------------------------------------------------ */
+
+
+
+
+
+.conditions_block_td_3 * {
+   width: 70px;
+   margin-top: 7px;
+   text-align: center;
+}
+
+.conditions_block_td_4 * {
+   margin-top: 14px;
+}
+
+.conditions_block {
+   vertical-align: top;
+}
+
+.conditions_head {
+   border-bottom: 2px solid #5b7ead;
+}
+
+.conditions_head * {
+   padding-bottom: 5px;
+}
+
+.conditions_head th,
+.conditions_block_td_0,
+.conditions_block_td_1,
+.conditions_block_td_2,
+.conditions_block_td_3 {
+   padding-right: 30px;
+}
+
+.conditions_block_td_0 *,
+.conditions_block_td_1 *,
+.conditions_block_td_2 * {
+   margin-top: 10px;
+}
+
+.hidden_groups {
+   display: none;
+}
+
+.hidden-button {
+   display: none;
 }

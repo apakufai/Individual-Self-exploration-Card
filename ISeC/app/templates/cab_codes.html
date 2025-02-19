@@ -75,7 +75,7 @@
 				<tbody>
 
 					<tr class="entrycode_block_create">
-						<td class="entrycode_block_td_0">
+						<td class="entrycode_block_td_0" id="entrycode_block_td_0">
 						</td>
 						<td class="entrycode_block_td_1">
 							<input type="text" name="test_group">
@@ -113,7 +113,8 @@
 						</td>
 						<td class="entrycode_block_td_5">
 							<button code_id="{{ accessRow.code_id }}" onclick="updateCode(this)">Сохранить</button>
-							<button code_id="{{ accessRow.code_id }}" test_group="{{ accessRow.test_group }}" onclick="deleteCode(this)">Удалить</button>
+							<button code_id="{{ accessRow.code_id }}" test_group="{{ accessRow.test_group }}"
+								onclick="deleteCode(this)">Удалить</button>
 						</td>
 					</tr>
 					{% endfor %}
@@ -122,6 +123,19 @@
 
 			<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 			<script>
+
+				document.addEventListener('DOMContentLoaded', function () {  // Для отображения сегодняшней даты
+					const today = new Date();
+					const day = String(today.getDate()).padStart(2, '0');
+					const month = String(today.getMonth() + 1).padStart(2, '0'); // Январь - 0
+					const year = today.getFullYear();
+					// Форматирование даты
+					const formattedDate = `${day}.${month}.${year}`;
+					// Заполнение ячейки датой
+					const dateCell = document.getElementById('entrycode_block_td_0');
+					dateCell.textContent = formattedDate;
+				});
+
 				function confirmUpdate(testGroup) {
 					return confirm(`Сохранить изменения?`);
 				}
@@ -130,15 +144,9 @@
 				}
 			</script>
 
-
 		</div>
 
-
-
-
-
 	</main>
-
 
 </body>
 

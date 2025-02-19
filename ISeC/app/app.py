@@ -2344,6 +2344,12 @@ def sort_groups_by_date(groups):
 # Маршрут для страницы выборок
 @app.route('/generate_query', methods=['POST'])
 def generate_query():
+    
+    # Проверяем, существует ли директория 'temp', и если нет, создаем её
+    directory = 'temp'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     data = request.get_json()
     conn = get_db_connection()
     cursor = conn.cursor()

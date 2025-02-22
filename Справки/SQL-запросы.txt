@@ -501,16 +501,22 @@ INSERT INTO ISeC_results (
     userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
     adaptation_1, compromise_1, bidding_1, threat_1, logicArgument_1, emotionsArgument_1,
     adaptationCount_1, compromiseCount_1, biddingCount_1, threatCount_1, logicArgumentCount_1, emotionsArgumentCount_1,
+
     adaptation_2, compromise_2, threat_2, cooperation_2, avoidance_2,
     adaptationCount_2, compromiseCount_2, threatCount_2, cooperationCount_2, avoidanceCount_2,
+
     adaptation_3, threat_3, cooperation_3,
     adaptationCount_3, threatCount_3, cooperationCount_3,
+
     understandingOfStyles_4, strengthInstallation_4, manipulationInstallation_4, negotiationsInstallation_4,
     strengthInstallationCount_4, manipulationInstallationCount_4, negotiationsInstallationCount_4,
+
     adaptation_5, bidding_5, logicArgument_5, emotionsArgument_5, avoidance_5,
     adaptationCount_5, biddingCount_5, logicArgumentCount_5, emotionsArgumentCount_5, avoidanceCount_5,
+
     logicArgument_6, emotionsArgument_6,
-    logicArgumentCount_6, emotionsArgumentCount_6
+    logicArgumentCount_6, emotionsArgumentCount_6,
+
 ) VALUES (
     '12re1', 'Группа-2', 'Анна-Мария', 'Мамина-Алексеева', 'Женский', 1900, '-', '-',
 

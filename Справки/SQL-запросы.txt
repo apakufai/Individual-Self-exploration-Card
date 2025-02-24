@@ -24,80 +24,21 @@ CREATE TABLE ISeC_results (
     logicArgumentCount_1 REAL,
     emotionsArgumentCount_1 REAL,
 
-    b1_q1_vTop1 INTEGER,
-    b1_q1_vTop2 INTEGER,
-    b1_q1_vTop3 INTEGER,
-    b1_q1_vTop4 INTEGER,
-    
-    b1_q2_vTop1 INTEGER,
-    b1_q2_vTop2 INTEGER,
-    b1_q2_vTop3 INTEGER,
-    b1_q2_vTop4 INTEGER,
-    
-    b1_q3_vTop1 INTEGER,
-    b1_q3_vTop2 INTEGER,
-    b1_q3_vTop3 INTEGER,
-    b1_q3_vTop4 INTEGER,
-    
-    b1_q4_vTop1 INTEGER,
-    b1_q4_vTop2 INTEGER,
-    b1_q4_vTop3 INTEGER,
-    b1_q4_vTop4 INTEGER,
-    
-    b1_q5_vTop1 INTEGER,
-    b1_q5_vTop2 INTEGER,
-    b1_q5_vTop3 INTEGER,
-    b1_q5_vTop4 INTEGER,
-    
-    b1_q6_vTop1 INTEGER,
-    b1_q6_vTop2 INTEGER,
-    b1_q6_vTop3 INTEGER,
-    b1_q6_vTop4 INTEGER,
-    
-    b1_q7_vTop1 INTEGER,
-    b1_q7_vTop2 INTEGER,
-    b1_q7_vTop3 INTEGER,
-    b1_q7_vTop4 INTEGER,
-    
-    b1_q8_vTop1 INTEGER,
-    b1_q8_vTop2 INTEGER,
-    b1_q8_vTop3 INTEGER,
-    b1_q8_vTop4 INTEGER,
-    
-    b1_q9_vTop1 INTEGER,
-    b1_q9_vTop2 INTEGER,
-    b1_q9_vTop3 INTEGER,
-    b1_q9_vTop4 INTEGER,
-    
-    b1_q10_vTop1 INTEGER,
-    b1_q10_vTop2 INTEGER,
-    b1_q10_vTop3 INTEGER,
-    b1_q10_vTop4 INTEGER,
-    
-    b1_q11_vTop1 INTEGER,
-    b1_q11_vTop2 INTEGER,
-    b1_q11_vTop3 INTEGER,
-    b1_q11_vTop4 INTEGER,
-    
-    b1_q12_vTop1 INTEGER,
-    b1_q12_vTop2 INTEGER,
-    b1_q12_vTop3 INTEGER,
-    b1_q12_vTop4 INTEGER,
-    
-    b1_q13_vTop1 INTEGER,
-    b1_q13_vTop2 INTEGER,
-    b1_q13_vTop3 INTEGER,
-    b1_q13_vTop4 INTEGER,
-    
-    b1_q14_vTop1 INTEGER,
-    b1_q14_vTop2 INTEGER,
-    b1_q14_vTop3 INTEGER,
-    b1_q14_vTop4 INTEGER,
-    
-    b1_q15_vTop1 INTEGER,
-    b1_q15_vTop2 INTEGER,
-    b1_q15_vTop3 INTEGER,
-    b1_q15_vTop4 INTEGER,
+    b1_q1_top INTEGER,
+    b1_q2_top INTEGER,
+    b1_q3_top INTEGER,
+    b1_q4_top INTEGER,
+    b1_q5_top INTEGER,
+    b1_q6_top INTEGER,
+    b1_q7_top INTEGER,
+    b1_q8_top INTEGER,
+    b1_q9_top INTEGER,
+    b1_q10_top INTEGER,
+    b1_q11_top INTEGER,
+    b1_q12_top INTEGER,
+    b1_q13_top INTEGER,
+    b1_q14_top INTEGER,
+    b1_q15_top INTEGER,
 
     adaptation_2 INTEGER,
     compromise_2 INTEGER,
@@ -111,155 +52,36 @@ CREATE TABLE ISeC_results (
     cooperationCount_2 REAL,
     avoidanceCount_2 REAL,
 
-    b2_q1_vTop1 INTEGER,
-    b2_q1_vTop2 INTEGER,
-    b2_q1_vTop3 INTEGER,
-    b2_q1_vTop4 INTEGER,
-
-    b2_q2_vTop1 INTEGER,
-    b2_q2_vTop2 INTEGER,
-    b2_q2_vTop3 INTEGER,
-    b2_q2_vTop4 INTEGER,
-
-    b2_q3_vTop1 INTEGER,
-    b2_q3_vTop2 INTEGER,
-    b2_q3_vTop3 INTEGER,
-    b2_q3_vTop4 INTEGER,
-
-    b2_q4_vTop1 INTEGER,
-    b2_q4_vTop2 INTEGER,
-    b2_q4_vTop3 INTEGER,
-    b2_q4_vTop4 INTEGER,
-
-    b2_q5_vTop1 INTEGER,
-    b2_q5_vTop2 INTEGER,
-    b2_q5_vTop3 INTEGER,
-    b2_q5_vTop4 INTEGER,
-
-    b2_q6_vTop1 INTEGER,
-    b2_q6_vTop2 INTEGER,
-    b2_q6_vTop3 INTEGER,
-    b2_q6_vTop4 INTEGER,
-
-    b2_q7_vTop1 INTEGER,
-    b2_q7_vTop2 INTEGER,
-    b2_q7_vTop3 INTEGER,
-    b2_q7_vTop4 INTEGER,
-
-    b2_q8_vTop1 INTEGER,
-    b2_q8_vTop2 INTEGER,
-    b2_q8_vTop3 INTEGER,
-    b2_q8_vTop4 INTEGER,
-
-    b2_q9_vTop1 INTEGER,
-    b2_q9_vTop2 INTEGER,
-    b2_q9_vTop3 INTEGER,
-    b2_q9_vTop4 INTEGER,
-
-    b2_q10_vTop1 INTEGER,
-    b2_q10_vTop2 INTEGER,
-    b2_q10_vTop3 INTEGER,
-    b2_q10_vTop4 INTEGER,
-
-    b2_q11_vTop1 INTEGER,
-    b2_q11_vTop2 INTEGER,
-    b2_q11_vTop3 INTEGER,
-    b2_q11_vTop4 INTEGER,
-
-    b2_q12_vTop1 INTEGER,
-    b2_q12_vTop2 INTEGER,
-    b2_q12_vTop3 INTEGER,
-    b2_q12_vTop4 INTEGER,
-
-    b2_q13_vTop1 INTEGER,
-    b2_q13_vTop2 INTEGER,
-    b2_q13_vTop3 INTEGER,
-    b2_q13_vTop4 INTEGER,
-
-    b2_q14_vTop1 INTEGER,
-    b2_q14_vTop2 INTEGER,
-    b2_q14_vTop3 INTEGER,
-    b2_q14_vTop4 INTEGER,
-
-    b2_q15_vTop1 INTEGER,
-    b2_q15_vTop2 INTEGER,
-    b2_q15_vTop3 INTEGER,
-    b2_q15_vTop4 INTEGER,
-
-    b2_q16_vTop1 INTEGER,
-    b2_q16_vTop2 INTEGER,
-    b2_q16_vTop3 INTEGER,
-    b2_q16_vTop4 INTEGER,
-
-    b2_q17_vTop1 INTEGER,
-    b2_q17_vTop2 INTEGER,
-    b2_q17_vTop3 INTEGER,
-    b2_q17_vTop4 INTEGER,
-
-    b2_q18_vTop1 INTEGER,
-    b2_q18_vTop2 INTEGER,
-    b2_q18_vTop3 INTEGER,
-    b2_q18_vTop4 INTEGER,
-
-    b2_q19_vTop1 INTEGER,
-    b2_q19_vTop2 INTEGER,
-    b2_q19_vTop3 INTEGER,
-    b2_q19_vTop4 INTEGER,
-
-    b2_q20_vTop1 INTEGER,
-    b2_q20_vTop2 INTEGER,
-    b2_q20_vTop3 INTEGER,
-    b2_q20_vTop4 INTEGER,
-
-    b2_q21_vTop1 INTEGER,
-    b2_q21_vTop2 INTEGER,
-    b2_q21_vTop3 INTEGER,
-    b2_q21_vTop4 INTEGER,
-
-    b2_q22_vTop1 INTEGER,
-    b2_q22_vTop2 INTEGER,
-    b2_q22_vTop3 INTEGER,
-    b2_q22_vTop4 INTEGER,
-
-    b2_q23_vTop1 INTEGER,
-    b2_q23_vTop2 INTEGER,
-    b2_q23_vTop3 INTEGER,
-    b2_q23_vTop4 INTEGER,
-
-    b2_q24_vTop1 INTEGER,
-    b2_q24_vTop2 INTEGER,
-    b2_q24_vTop3 INTEGER,
-    b2_q24_vTop4 INTEGER,
-
-    b2_q25_vTop1 INTEGER,
-    b2_q25_vTop2 INTEGER,
-    b2_q25_vTop3 INTEGER,
-    b2_q25_vTop4 INTEGER,
-
-    b2_q26_vTop1 INTEGER,
-    b2_q26_vTop2 INTEGER,
-    b2_q26_vTop3 INTEGER,
-    b2_q26_vTop4 INTEGER,
-
-    b2_q27_vTop1 INTEGER,
-    b2_q27_vTop2 INTEGER,
-    b2_q27_vTop3 INTEGER,
-    b2_q27_vTop4 INTEGER,
-
-    b2_q28_vTop1 INTEGER,
-    b2_q28_vTop2 INTEGER,
-    b2_q28_vTop3 INTEGER,
-    b2_q28_vTop4 INTEGER,
-
-    b2_q29_vTop1 INTEGER,
-    b2_q29_vTop2 INTEGER,
-    b2_q29_vTop3 INTEGER,
-    b2_q29_vTop4 INTEGER,
-
-    b2_q30_vTop1 INTEGER,
-    b2_q30_vTop2 INTEGER,
-    b2_q30_vTop3 INTEGER,
-    b2_q30_vTop4 INTEGER,
+    b2_q1_top INTEGER,
+    b2_q2_top INTEGER,
+    b2_q3_top INTEGER,
+    b2_q4_top INTEGER,
+    b2_q5_top INTEGER,
+    b2_q6_top INTEGER,
+    b2_q7_top INTEGER,
+    b2_q8_top INTEGER,
+    b2_q9_top INTEGER,
+    b2_q10_top INTEGER,
+    b2_q11_top INTEGER,
+    b2_q12_top INTEGER,
+    b2_q13_top INTEGER,
+    b2_q14_top INTEGER,
+    b2_q15_top INTEGER,
+    b2_q16_top INTEGER,
+    b2_q17_top INTEGER,
+    b2_q18_top INTEGER,
+    b2_q19_top INTEGER,
+    b2_q20_top INTEGER,
+    b2_q21_top INTEGER,
+    b2_q22_top INTEGER,
+    b2_q23_top INTEGER,
+    b2_q24_top INTEGER,
+    b2_q25_top INTEGER,
+    b2_q26_top INTEGER,
+    b2_q27_top INTEGER,
+    b2_q28_top INTEGER,
+    b2_q29_top INTEGER,
+    b2_q30_top INTEGER,
 
     adaptation_3 INTEGER,
     threat_3 INTEGER,
@@ -269,41 +91,15 @@ CREATE TABLE ISeC_results (
     threatCount_3 REAL,
     cooperationCount_3 REAL,
 
-    b3_q1_v1 INTEGER,
-    b3_q1_v2 INTEGER,
-    b3_q1_v3 INTEGER,
-
-    b3_q2_v1 INTEGER,
-    b3_q2_v2 INTEGER,
-    b3_q2_v3 INTEGER,
-
-    b3_q3_v1 INTEGER,
-    b3_q3_v2 INTEGER,
-    b3_q3_v3 INTEGER,
-
-    b3_q4_v1 INTEGER,
-    b3_q4_v2 INTEGER,
-    b3_q4_v3 INTEGER,
-
-    b3_q5_v1 INTEGER,
-    b3_q5_v2 INTEGER,
-    b3_q5_v3 INTEGER,
-
-    b3_q6_v1 INTEGER,
-    b3_q6_v2 INTEGER,
-    b3_q6_v3 INTEGER,
-
-    b3_q7_v1 INTEGER,
-    b3_q7_v2 INTEGER,
-    b3_q7_v3 INTEGER,
-
-    b3_q8_v1 INTEGER,
-    b3_q8_v2 INTEGER,
-    b3_q8_v3 INTEGER,
-
-    b3_q9_v1 INTEGER,
-    b3_q9_v2 INTEGER,
-    b3_q9_v3 INTEGER,
+    b3_q1 INTEGER,
+    b3_q2 INTEGER,
+    b3_q3 INTEGER,
+    b3_q4 INTEGER,
+    b3_q5 INTEGER,
+    b3_q6 INTEGER,
+    b3_q7 INTEGER,
+    b3_q8 INTEGER,
+    b3_q9 INTEGER,
 
     understandingOfStyles_4 INTEGER,
 
@@ -315,69 +111,22 @@ CREATE TABLE ISeC_results (
     manipulationInstallationCount_4 REAL,
     negotiationsInstallationCount_4 REAL,
 
-    b4_q1_v1 INTEGER,
-    b4_q1_v2 INTEGER,
-    b4_q1_v3 INTEGER,
-
-    b4_q2_v1 INTEGER,
-    b4_q2_v2 INTEGER,
-    b4_q2_v3 INTEGER,
-
-    b4_q3_v1 INTEGER,
-    b4_q3_v2 INTEGER,
-    b4_q3_v3 INTEGER,
-
-    b4_q4_v1 INTEGER,
-    b4_q4_v2 INTEGER,
-    b4_q4_v3 INTEGER,
-
-    b4_q5_v1 INTEGER,
-    b4_q5_v2 INTEGER,
-    b4_q5_v3 INTEGER,
-
-    b4_q6_v1 INTEGER,
-    b4_q6_v2 INTEGER,
-    b4_q6_v3 INTEGER,
-
-    b4_q7_v1 INTEGER,
-    b4_q7_v2 INTEGER,
-    b4_q7_v3 INTEGER,
-
-    b4_q8_v1 INTEGER,
-    b4_q8_v2 INTEGER,
-    b4_q8_v3 INTEGER,
-
-    b4_q9_v1 INTEGER,
-    b4_q9_v2 INTEGER,
-    b4_q9_v3 INTEGER,
-
-    b4_q10_v1 INTEGER,
-    b4_q10_v2 INTEGER,
-    b4_q10_v3 INTEGER,
-
-    b4_q11_v1 INTEGER,
-    b4_q11_v2 INTEGER,
-    b4_q11_v3 INTEGER,
-
-    b4_q12_v1 INTEGER,
-    b4_q12_v2 INTEGER,
-    b4_q12_v3 INTEGER,
-
-    b4_q13_v1 INTEGER,
-    b4_q13_v2 INTEGER,
-    b4_q13_v3 INTEGER,
-
-    b4_q14_v1 INTEGER,
-    b4_q14_v2 INTEGER,
-    b4_q14_v3 INTEGER,
-
-    b4_q15_v1 INTEGER,
-    b4_q15_v2 INTEGER,
-    b4_q15_v3 INTEGER,
-
-    b4_q16_v1 INTEGER,
-    b4_q16_v2 INTEGER,
-    b4_q16_v3 INTEGER,
+    b4_q1 INTEGER,
+    b4_q2 INTEGER,
+    b4_q3 INTEGER,
+    b4_q4 INTEGER,
+    b4_q5 INTEGER,
+    b4_q6 INTEGER,
+    b4_q7 INTEGER,
+    b4_q8 INTEGER,
+    b4_q9 INTEGER,
+    b4_q10 INTEGER,
+    b4_q11 INTEGER,
+    b4_q12 INTEGER,
+    b4_q13 INTEGER,
+    b4_q14 INTEGER,
+    b4_q15 INTEGER,
+    b4_q16 INTEGER,
 
     adaptation_5 INTEGER,
     bidding_5 INTEGER,
@@ -391,53 +140,18 @@ CREATE TABLE ISeC_results (
     emotionsArgumentCount_5 REAL,
     avoidanceCount_5 REAL,
 
-    b5_q1_v1 INTEGER,
-    b5_q1_v2 INTEGER,
-    b5_q1_v3 INTEGER,
-                        
-    b5_q2_v1 INTEGER,
-    b5_q2_v2 INTEGER,
-    b5_q2_v3 INTEGER,
-                        
-    b5_q3_v1 INTEGER,
-    b5_q3_v2 INTEGER,
-    b5_q3_v3 INTEGER,
-                        
-    b5_q4_v1 INTEGER,
-    b5_q4_v2 INTEGER,
-    b5_q4_v3 INTEGER,
-                        
-    b5_q5_v1 INTEGER,
-    b5_q5_v2 INTEGER,
-    b5_q5_v3 INTEGER,
-                        
-    b5_q6_v1 INTEGER,
-    b5_q6_v2 INTEGER,
-    b5_q6_v3 INTEGER,
-                        
-    b5_q7_v1 INTEGER,
-    b5_q7_v2 INTEGER,
-    b5_q7_v3 INTEGER,
-                        
-    b5_q8_v1 INTEGER,
-    b5_q8_v2 INTEGER,
-    b5_q8_v3 INTEGER,
-                        
-    b5_q9_v1 INTEGER,
-    b5_q9_v2 INTEGER,
-    b5_q9_v3 INTEGER,
-                        
-    b5_q10_v1 INTEGER,
-    b5_q10_v2 INTEGER,
-    b5_q10_v3 INTEGER,
-                        
-    b5_q11_v1 INTEGER,
-    b5_q11_v2 INTEGER,
-    b5_q11_v3 INTEGER,
-                        
-    b5_q12_v1 INTEGER,
-    b5_q12_v2 INTEGER,
-    b5_q12_v3 INTEGER,
+    b5_q1 INTEGER,
+    b5_q2 INTEGER,
+    b5_q3 INTEGER,
+    b5_q4 INTEGER,
+    b5_q5 INTEGER,
+    b5_q6 INTEGER,
+    b5_q7 INTEGER,
+    b5_q8 INTEGER,
+    b5_q9 INTEGER,
+    b5_q10 INTEGER,
+    b5_q11 INTEGER,
+    b5_q12 INTEGER,
 
     logicArgument_6 INTEGER,
     emotionsArgument_6 INTEGER,
@@ -449,51 +163,12 @@ CREATE TABLE ISeC_results (
     b6_q1_v2 INTEGER,
     b6_q1_v3 INTEGER,
     b6_q1_v4 INTEGER,
-
-    b6_q2_v1 INTEGER,
-    b6_q2_v2 INTEGER,
-    b6_q2_v3 INTEGER,
-    b6_q2_v4 INTEGER,
-
-    b6_q3_v1 INTEGER,
-    b6_q3_v2 INTEGER,
-    b6_q3_v3 INTEGER,
-    b6_q3_v4 INTEGER,
-
-    b6_q4_v1 INTEGER,
-    b6_q4_v2 INTEGER,
-    b6_q4_v3 INTEGER,
-    b6_q4_v4 INTEGER,
-
-    b6_q5_v1 INTEGER,
-    b6_q5_v2 INTEGER,
-    b6_q5_v3 INTEGER,
-    b6_q5_v4 INTEGER,
-
-    b6_q6_v1 INTEGER,
-    b6_q6_v2 INTEGER,
-    b6_q6_v3 INTEGER,
-    b6_q6_v4 INTEGER,
-
-    b6_q7_v1 INTEGER,
-    b6_q7_v2 INTEGER,
-    b6_q7_v3 INTEGER,
-    b6_q7_v4 INTEGER,
-
-    b6_q8_v1 INTEGER,
-    b6_q8_v2 INTEGER,
-    b6_q8_v3 INTEGER,
-    b6_q8_v4 INTEGER,
-
-    b6_q9_v1 INTEGER,
-    b6_q9_v2 INTEGER,
-    b6_q9_v3 INTEGER,
-    b6_q9_v4 INTEGER,
-
-    b6_q10_v1 INTEGER,
-    b6_q10_v2 INTEGER,
-    b6_q10_v3 INTEGER,
-    b6_q10_v4 INTEGER
+    b6_q1_v5 INTEGER,
+    b6_q1_v6 INTEGER,
+    b6_q1_v7 INTEGER,
+    b6_q1_v8 INTEGER,
+    b6_q1_v9 INTEGER,
+    b6_q1_v10 INTEGER
 );
 
 INSERT INTO ISeC_results (

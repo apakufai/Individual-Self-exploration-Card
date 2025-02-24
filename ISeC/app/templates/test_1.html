@@ -1782,6 +1782,23 @@
                         let logicArgumentCount = 0; // Логика как аргумент (счёт)
                         let emotionsArgumentCount = 0; // Эмоции как аргумент (счёт)
 
+                        // Инициализация вариантов для статистики
+                        let b1_q1_top = 0;
+                        let b1_q2_top = 0;
+                        let b1_q3_top = 0;
+                        let b1_q4_top = 0;
+                        let b1_q5_top = 0;
+                        let b1_q6_top = 0;
+                        let b1_q7_top = 0;
+                        let b1_q8_top = 0;
+                        let b1_q9_top = 0;
+                        let b1_q10_top = 0;
+                        let b1_q11_top = 0;
+                        let b1_q12_top = 0;
+                        let b1_q13_top = 0;
+                        let b1_q14_top = 0;
+                        let b1_q15_top = 0;
+
                         // Результаты вопроса 1
                         const radios_1_1 = document.getElementsByName("1_1_top");
                         radios_1_1.forEach(radio => {
@@ -1790,22 +1807,26 @@
                                     case "1_1_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b1_q1_top = 1; // статистика
                                         break;
                                     case "1_1_top_2":
                                         compromise += 2;
                                         adaptation += 1;
                                         adaptationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b1_q1_top = 2; // статистика
                                         break;
                                     case "1_1_top_3":
                                         compromise += 1;
                                         adaptation += 2;
                                         adaptationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b1_q1_top = 3; // статистика
                                         break;
                                     case "1_1_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b1_q1_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1819,22 +1840,26 @@
                                     case "1_2_top_1":
                                         bidding += 3;
                                         biddingCount += 1; // счёт
+                                        b1_q2_top = 1; // статистика
                                         break;
                                     case "1_2_top_2":
                                         bidding += 2;
                                         threat += 1;
                                         biddingCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q2_top = 2; // статистика
                                         break;
                                     case "1_2_top_3":
                                         bidding += 1;
                                         threat += 2;
                                         biddingCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q2_top = 3; // статистика
                                         break;
                                     case "1_2_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b1_q2_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1848,22 +1873,26 @@
                                     case "1_3_top_1":
                                         logicArgument += 3;
                                         logicArgumentCount += 1; // счёт
+                                        b1_q3_top = 1; // статистика
                                         break;
                                     case "1_3_top_2":
                                         logicArgument += 2;
                                         emotionsArgument += 1;
                                         emotionsArgumentCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q3_top = 2; // статистика
                                         break;
                                     case "1_3_top_3":
                                         logicArgument += 1;
                                         emotionsArgument += 2;
                                         emotionsArgumentCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q3_top = 3; // статистика
                                         break;
                                     case "1_3_top_4":
                                         emotionsArgument += 3;
                                         emotionsArgumentCount += 1; // счёт
+                                        b1_q3_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1877,22 +1906,26 @@
                                     case "1_4_top_1":
                                         bidding += 3;
                                         biddingCount += 1; // счёт
+                                        b1_q4_top = 1; // статистика
                                         break;
                                     case "1_4_top_2":
                                         bidding += 2;
                                         compromise += 1;
                                         biddingCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b1_q4_top = 2; // статистика
                                         break;
                                     case "1_4_top_3":
                                         bidding += 1;
                                         compromise += 2;
                                         biddingCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b1_q4_top = 3; // статистика
                                         break;
                                     case "1_4_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b1_q4_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1906,22 +1939,26 @@
                                     case "1_5_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b1_q5_top = 1; // статистика
                                         break;
                                     case "1_5_top_2":
                                         threat += 2;
                                         logicArgument += 1;
                                         threatCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q5_top = 2; // статистика
                                         break;
                                     case "1_5_top_3":
                                         threat += 1;
                                         logicArgument += 2;
                                         threatCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q5_top = 3; // статистика
                                         break;
                                     case "1_5_top_4":
                                         logicArgument += 3;
                                         logicArgumentCount += 1; // счёт
+                                        b1_q5_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1935,22 +1972,26 @@
                                     case "1_6_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b1_q6_top = 1; // статистика
                                         break;
                                     case "1_6_top_2":
                                         compromise += 2;
                                         emotionsArgument += 1;
                                         compromiseCount += 0.5; // счёт
                                         emotionsArgumentCount += 0.5; // счёт
+                                        b1_q6_top = 2; // статистика
                                         break;
                                     case "1_6_top_3":
                                         compromise += 1;
                                         emotionsArgument += 2;
                                         compromiseCount += 0.5; // счёт
                                         emotionsArgumentCount += 0.5; // счёт
+                                        b1_q6_top = 3; // статистика
                                         break;
                                     case "1_6_top_4":
                                         emotionsArgument += 3;
                                         emotionsArgumentCount += 1; // счёт
+                                        b1_q6_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1964,22 +2005,26 @@
                                     case "1_7_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b1_q7_top = 1; // статистика
                                         break;
                                     case "1_7_top_2":
                                         adaptation += 2;
                                         threat += 1;
                                         adaptationCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q7_top = 2; // статистика
                                         break;
                                     case "1_7_top_3":
                                         adaptation += 1;
                                         threat += 2;
                                         adaptationCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q7_top = 3; // статистика
                                         break;
                                     case "1_7_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b1_q7_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -1993,22 +2038,26 @@
                                     case "1_8_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b1_q8_top = 1; // статистика
                                         break;
                                     case "1_8_top_2":
                                         compromise += 2;
                                         logicArgument += 1;
                                         compromiseCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q8_top = 2; // статистика
                                         break;
                                     case "1_8_top_3":
                                         compromise += 1;
                                         logicArgument += 2;
                                         compromiseCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q8_top = 3; // статистика
                                         break;
                                     case "1_8_top_4":
                                         logicArgument += 3;
                                         logicArgumentCount += 1; // счёт
+                                        b1_q8_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2022,22 +2071,26 @@
                                     case "1_9_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b1_q9_top = 1; // статистика
                                         break;
                                     case "1_9_top_2":
                                         adaptation += 2;
                                         bidding += 1;
                                         adaptationCount += 0.5; // счёт
                                         biddingCount += 0.5; // счёт
+                                        b1_q9_top = 2; // статистика
                                         break;
                                     case "1_9_top_3":
                                         adaptation += 1;
                                         bidding += 2;
                                         adaptationCount += 0.5; // счёт
                                         biddingCount += 0.5; // счёт
+                                        b1_q9_top = 3; // статистика
                                         break;
                                     case "1_9_top_4":
                                         bidding += 3;
                                         biddingCount += 1; // счёт
+                                        b1_q9_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2051,22 +2104,26 @@
                                     case "1_10_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b1_q10_top = 1; // статистика
                                         break;
                                     case "1_10_top_2":
                                         threat += 2;
                                         emotionsArgument += 1;
                                         emotionsArgumentCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q10_top = 2; // статистика
                                         break;
                                     case "1_10_top_3":
                                         threat += 1;
                                         emotionsArgument += 2;
                                         emotionsArgumentCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q10_top = 3; // статистика
                                         break;
                                     case "1_10_top_4":
                                         emotionsArgument += 3;
                                         emotionsArgumentCount += 1; // счёт
+                                        b1_q10_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2080,22 +2137,26 @@
                                     case "1_11_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b1_q11_top = 1; // статистика
                                         break;
                                     case "1_11_top_2":
                                         adaptation += 2;
                                         logicArgument += 1;
                                         adaptationCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q11_top = 2; // статистика
                                         break;
                                     case "1_11_top_3":
                                         adaptation += 1;
                                         logicArgument += 2;
                                         adaptationCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q11_top = 3; // статистика
                                         break;
                                     case "1_11_top_4":
                                         logicArgument += 3;
                                         logicArgumentCount += 1; // счёт
+                                        b1_q11_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2109,22 +2170,26 @@
                                     case "1_12_top_1":
                                         emotionsArgument += 3;
                                         emotionsArgumentCount += 1; // счёт
+                                        b1_q12_top = 1; // статистика
                                         break;
                                     case "1_12_top_2":
                                         emotionsArgument += 2;
                                         bidding += 1;
                                         emotionsArgumentCount += 0.5; // счёт
                                         biddingCount += 0.5; // счёт
+                                        b1_q12_top = 2; // статистика
                                         break;
                                     case "1_12_top_3":
                                         emotionsArgument += 1;
                                         bidding += 2;
                                         emotionsArgumentCount += 0.5; // счёт
                                         biddingCount += 0.5; // счёт
+                                        b1_q12_top = 3; // статистика
                                         break;
                                     case "1_12_top_4":
                                         bidding += 3;
                                         biddingCount += 1; // счёт
+                                        b1_q12_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2138,22 +2203,26 @@
                                     case "1_13_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b1_q13_top = 1; // статистика
                                         break;
                                     case "1_13_top_2":
                                         compromise += 2;
                                         threat += 1;
                                         compromiseCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q13_top = 2; // статистика
                                         break;
                                     case "1_13_top_3":
                                         compromise += 1;
                                         threat += 2;
                                         compromiseCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b1_q13_top = 3; // статистика
                                         break;
                                     case "1_13_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b1_q13_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2167,22 +2236,26 @@
                                     case "1_14_top_1":
                                         bidding += 3;
                                         biddingCount += 1; // счёт
+                                        b1_q14_top = 1; // статистика
                                         break;
                                     case "1_14_top_2":
                                         bidding += 2;
                                         logicArgument += 1;
                                         biddingCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q14_top = 2; // статистика
                                         break;
                                     case "1_14_top_3":
                                         bidding += 1;
                                         logicArgument += 2;
                                         biddingCount += 0.5; // счёт
                                         logicArgumentCount += 0.5; // счёт
+                                        b1_q14_top = 3; // статистика
                                         break;
                                     case "1_14_top_4":
                                         logicArgument += 3;
                                         logicArgumentCount += 1; // счёт
+                                        b1_q14_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2196,22 +2269,26 @@
                                     case "1_15_top_1":
                                         emotionsArgument += 3;
                                         emotionsArgumentCount += 1; // счёт
+                                        b1_q15_top = 1; // статистика
                                         break;
                                     case "1_15_top_2":
                                         emotionsArgument += 2;
                                         adaptation += 1;
                                         emotionsArgumentCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b1_q15_top = 2; // статистика
                                         break;
                                     case "1_15_top_3":
                                         emotionsArgument += 1;
                                         adaptation += 2;
                                         emotionsArgumentCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b1_q15_top = 3; // статистика
                                         break;
                                     case "1_15_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b1_q15_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -2231,6 +2308,23 @@
                         sessionStorage.setItem('threatCount_1', threatCount); // Угроза (счёт)
                         sessionStorage.setItem('logicArgumentCount_1', logicArgumentCount); // Логика как аргумент (счёт)
                         sessionStorage.setItem('emotionsArgumentCount_1', emotionsArgumentCount); // Эмоции как аргумент (счёт)
+
+                        // Сохраняем статистику в sessionStorage
+                        sessionStorage.setItem('b1_q1_top', b1_q1_top);
+                        sessionStorage.setItem('b1_q2_top', b1_q2_top);
+                        sessionStorage.setItem('b1_q3_top', b1_q3_top);
+                        sessionStorage.setItem('b1_q4_top', b1_q4_top);
+                        sessionStorage.setItem('b1_q5_top', b1_q5_top);
+                        sessionStorage.setItem('b1_q6_top', b1_q6_top);
+                        sessionStorage.setItem('b1_q7_top', b1_q7_top);
+                        sessionStorage.setItem('b1_q8_top', b1_q8_top);
+                        sessionStorage.setItem('b1_q9_top', b1_q9_top);
+                        sessionStorage.setItem('b1_q10_top', b1_q10_top);
+                        sessionStorage.setItem('b1_q11_top', b1_q11_top);
+                        sessionStorage.setItem('b1_q12_top', b1_q12_top);
+                        sessionStorage.setItem('b1_q13_top', b1_q13_top);
+                        sessionStorage.setItem('b1_q14_top', b1_q14_top);
+                        sessionStorage.setItem('b1_q15_top', b1_q15_top);
 
                         // Отправляем ключ "test1Pass" со значением "true" на сервер
                         fetch('/set_test_1_pass', {

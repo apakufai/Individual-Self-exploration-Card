@@ -297,10 +297,11 @@ def generate_and_download_pdf():
             return "Не удалось подключиться к базе данных"
         cursor = conn.cursor()
 
-        # Проверяем, существует ли таблица ISeC_results
+        # Проверка на существование таблицы "ISeC_results"
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='ISeC_results';")
         table_exists = cursor.fetchone()
 
+        # Переменные из JSON-файла
         receiveByEmail = bool(ISeC_results_array.get('receiveByEmail'))
         downloadToPC = bool(ISeC_results_array.get('downloadToPC'))
         insertData = bool(ISeC_results_array.get('insertData'))
@@ -326,6 +327,22 @@ def generate_and_download_pdf():
         threatCount_1 = float(ISeC_results_array.get('threatCount_1'))
         logicArgumentCount_1 = float(ISeC_results_array.get('logicArgumentCount_1'))
         emotionsArgumentCount_1 = float(ISeC_results_array.get('emotionsArgumentCount_1'))
+        
+        b1_q1_top = int(ISeC_results_array.get('b1_q1_top'))
+        b1_q2_top = int(ISeC_results_array.get('b1_q2_top'))
+        b1_q3_top = int(ISeC_results_array.get('b1_q3_top'))
+        b1_q4_top = int(ISeC_results_array.get('b1_q4_top'))
+        b1_q5_top = int(ISeC_results_array.get('b1_q5_top'))
+        b1_q6_top = int(ISeC_results_array.get('b1_q6_top'))
+        b1_q7_top = int(ISeC_results_array.get('b1_q7_top'))
+        b1_q8_top = int(ISeC_results_array.get('b1_q8_top'))
+        b1_q9_top = int(ISeC_results_array.get('b1_q9_top'))
+        b1_q10_top = int(ISeC_results_array.get('b1_q10_top'))
+        b1_q11_top = int(ISeC_results_array.get('b1_q11_top'))
+        b1_q12_top = int(ISeC_results_array.get('b1_q12_top'))
+        b1_q13_top = int(ISeC_results_array.get('b1_q13_top'))
+        b1_q14_top = int(ISeC_results_array.get('b1_q14_top'))
+        b1_q15_top = int(ISeC_results_array.get('b1_q15_top'))
 
         adaptation_2 = int(ISeC_results_array.get('adaptation_2'))
         compromise_2 = int(ISeC_results_array.get('compromise_2'))
@@ -338,12 +355,53 @@ def generate_and_download_pdf():
         cooperationCount_2 = float(ISeC_results_array.get('cooperationCount_2'))
         avoidanceCount_2 = float(ISeC_results_array.get('avoidanceCount_2'))
 
+        b2_q1_top = int(ISeC_results_array.get('b2_q1_top'))
+        b2_q2_top = int(ISeC_results_array.get('b2_q2_top'))
+        b2_q3_top = int(ISeC_results_array.get('b2_q3_top'))
+        b2_q4_top = int(ISeC_results_array.get('b2_q4_top'))
+        b2_q5_top = int(ISeC_results_array.get('b2_q5_top'))
+        b2_q6_top = int(ISeC_results_array.get('b2_q6_top'))
+        b2_q7_top = int(ISeC_results_array.get('b2_q7_top'))
+        b2_q8_top = int(ISeC_results_array.get('b2_q8_top'))
+        b2_q9_top = int(ISeC_results_array.get('b2_q9_top'))
+        b2_q10_top = int(ISeC_results_array.get('b2_q10_top'))
+        b2_q11_top = int(ISeC_results_array.get('b2_q11_top'))
+        b2_q12_top = int(ISeC_results_array.get('b2_q12_top'))
+        b2_q13_top = int(ISeC_results_array.get('b2_q13_top'))
+        b2_q14_top = int(ISeC_results_array.get('b2_q14_top'))
+        b2_q15_top = int(ISeC_results_array.get('b2_q15_top'))
+        b2_q16_top = int(ISeC_results_array.get('b2_q16_top'))
+        b2_q17_top = int(ISeC_results_array.get('b2_q17_top'))
+        b2_q18_top = int(ISeC_results_array.get('b2_q18_top'))
+        b2_q19_top = int(ISeC_results_array.get('b2_q19_top'))
+        b2_q20_top = int(ISeC_results_array.get('b2_q20_top'))
+        b2_q21_top = int(ISeC_results_array.get('b2_q21_top'))
+        b2_q22_top = int(ISeC_results_array.get('b2_q22_top'))
+        b2_q23_top = int(ISeC_results_array.get('b2_q23_top'))
+        b2_q24_top = int(ISeC_results_array.get('b2_q24_top'))
+        b2_q25_top = int(ISeC_results_array.get('b2_q25_top'))
+        b2_q26_top = int(ISeC_results_array.get('b2_q26_top'))
+        b2_q27_top = int(ISeC_results_array.get('b2_q27_top'))
+        b2_q28_top = int(ISeC_results_array.get('b2_q28_top'))
+        b2_q29_top = int(ISeC_results_array.get('b2_q29_top'))
+        b2_q30_top = int(ISeC_results_array.get('b2_q30_top'))
+
         adaptation_3 = int(ISeC_results_array.get('adaptation_3'))
         threat_3 = int(ISeC_results_array.get('threat_3'))
         cooperation_3 = int(ISeC_results_array.get('cooperation_3'))
         adaptationCount_3 = float(ISeC_results_array.get('adaptationCount_3'))
         threatCount_3 = float(ISeC_results_array.get('threatCount_3'))
         cooperationCount_3 = float(ISeC_results_array.get('cooperationCount_3'))
+        
+        b3_q1 = int(ISeC_results_array.get('b3_q1'))
+        b3_q2 = int(ISeC_results_array.get('b3_q2'))
+        b3_q3 = int(ISeC_results_array.get('b3_q3'))
+        b3_q4 = int(ISeC_results_array.get('b3_q4'))
+        b3_q5 = int(ISeC_results_array.get('b3_q5'))
+        b3_q6 = int(ISeC_results_array.get('b3_q6'))
+        b3_q7 = int(ISeC_results_array.get('b3_q7'))
+        b3_q8 = int(ISeC_results_array.get('b3_q8'))
+        b3_q9 = int(ISeC_results_array.get('b3_q9'))
 
         understandingOfStyles_4 = int(ISeC_results_array.get('understandingOfStyles_4'))
         strengthInstallation_4 = int(ISeC_results_array.get('strengthInstallation_4'))
@@ -352,6 +410,23 @@ def generate_and_download_pdf():
         strengthInstallationCount_4 = float(ISeC_results_array.get('strengthInstallationCount_4'))
         manipulationInstallationCount_4 = float(ISeC_results_array.get('manipulationInstallationCount_4'))
         negotiationsInstallationCount_4 = float(ISeC_results_array.get('negotiationsInstallationCount_4'))
+        
+        b4_q1 = int(ISeC_results_array.get('b4_q1'))
+        b4_q2 = int(ISeC_results_array.get('b4_q2'))
+        b4_q3 = int(ISeC_results_array.get('b4_q3'))
+        b4_q4 = int(ISeC_results_array.get('b4_q4'))
+        b4_q5 = int(ISeC_results_array.get('b4_q5'))
+        b4_q6 = int(ISeC_results_array.get('b4_q6'))
+        b4_q7 = int(ISeC_results_array.get('b4_q7'))
+        b4_q8 = int(ISeC_results_array.get('b4_q8'))
+        b4_q9 = int(ISeC_results_array.get('b4_q9'))
+        b4_q10 = int(ISeC_results_array.get('b4_q10'))
+        b4_q11 = int(ISeC_results_array.get('b4_q11'))
+        b4_q12 = int(ISeC_results_array.get('b4_q12'))
+        b4_q13 = int(ISeC_results_array.get('b4_q13'))
+        b4_q14 = int(ISeC_results_array.get('b4_q14'))
+        b4_q15 = int(ISeC_results_array.get('b4_q15'))
+        b4_q16 = int(ISeC_results_array.get('b4_q16'))
 
         adaptation_5 = int(ISeC_results_array.get('adaptation_5'))
         bidding_5 = int(ISeC_results_array.get('bidding_5'))
@@ -363,11 +438,35 @@ def generate_and_download_pdf():
         logicArgumentCount_5 = float(ISeC_results_array.get('logicArgumentCount_5'))
         emotionsArgumentCount_5 = float(ISeC_results_array.get('emotionsArgumentCount_5'))
         avoidanceCount_5 = float(ISeC_results_array.get('avoidanceCount_5'))
+        
+        b5_q1 = int(ISeC_results_array.get('b5_q1'))
+        b5_q2 = int(ISeC_results_array.get('b5_q2'))
+        b5_q3 = int(ISeC_results_array.get('b5_q3'))
+        b5_q4 = int(ISeC_results_array.get('b5_q4'))
+        b5_q5 = int(ISeC_results_array.get('b5_q5'))
+        b5_q6 = int(ISeC_results_array.get('b5_q6'))
+        b5_q7 = int(ISeC_results_array.get('b5_q7'))
+        b5_q8 = int(ISeC_results_array.get('b5_q8'))
+        b5_q9 = int(ISeC_results_array.get('b5_q9'))
+        b5_q10 = int(ISeC_results_array.get('b5_q10'))
+        b5_q11 = int(ISeC_results_array.get('b5_q11'))
+        b5_q12 = int(ISeC_results_array.get('b5_q12'))
 
         logicArgument_6 = int(ISeC_results_array.get('logicArgument_6'))
         emotionsArgument_6 = int(ISeC_results_array.get('emotionsArgument_6'))
         logicArgumentCount_6 = float(ISeC_results_array.get('logicArgumentCount_6'))
         emotionsArgumentCount_6 = float(ISeC_results_array.get('emotionsArgumentCount_6'))
+        
+        b6_q1 = int(ISeC_results_array.get('b6_q1'))
+        b6_q2 = int(ISeC_results_array.get('b6_q2'))
+        b6_q3 = int(ISeC_results_array.get('b6_q3'))
+        b6_q4 = int(ISeC_results_array.get('b6_q4'))
+        b6_q5 = int(ISeC_results_array.get('b6_q5'))
+        b6_q6 = int(ISeC_results_array.get('b6_q6'))
+        b6_q7 = int(ISeC_results_array.get('b6_q7'))
+        b6_q8 = int(ISeC_results_array.get('b6_q8'))
+        b6_q9 = int(ISeC_results_array.get('b6_q9'))
+        b6_q10 = int(ISeC_results_array.get('b6_q10'))
 
         # ОБЩИЕ РЕЗУЛЬТАТЫ
         adaptation = adaptation_1 + adaptation_2 + adaptation_3 + adaptation_5
@@ -1790,16 +1889,34 @@ def generate_and_download_pdf():
                 userId TEXT PRIMARY KEY, userGroup TEXT, userName TEXT, userSurname TEXT, userSex TEXT, userBirthyear INTEGER, userCategory TEXT, userEmail TEXT,
                 adaptation_1 INTEGER, compromise_1 INTEGER, bidding_1 INTEGER, threat_1 INTEGER, logicArgument_1 INTEGER, emotionsArgument_1 INTEGER,
                 adaptationCount_1 REAL, compromiseCount_1 REAL, biddingCount_1 REAL, threatCount_1 REAL, logicArgumentCount_1 REAL, emotionsArgumentCount_1 REAL,
+                b1_q1_top INTEGER, b1_q2_top INTEGER, b1_q3_top INTEGER, b1_q4_top INTEGER, b1_q5_top INTEGER, b1_q6_top INTEGER, b1_q7_top INTEGER, b1_q8_top INTEGER,
+                b1_q9_top INTEGER, b1_q10_top INTEGER, b1_q11_top INTEGER, b1_q12_top INTEGER, b1_q13_top INTEGER, b1_q14_top INTEGER, b1_q15_top INTEGER,
+
                 adaptation_2 INTEGER, compromise_2 INTEGER, threat_2 INTEGER, cooperation_2 INTEGER, avoidance_2 INTEGER,
                 adaptationCount_2 REAL, compromiseCount_2 REAL, threatCount_2 REAL, cooperationCount_2 REAL, avoidanceCount_2 REAL,
+                b2_q1_top INTEGER, b2_q2_top INTEGER, b2_q3_top INTEGER, b2_q4_top INTEGER, b2_q5_top INTEGER, b2_q6_top INTEGER, b2_q7_top INTEGER, b2_q8_top INTEGER,
+                b2_q9_top INTEGER, b2_q10_top INTEGER, b2_q11_top INTEGER, b2_q12_top INTEGER, b2_q13_top INTEGER, b2_q14_top INTEGER, b2_q15_top INTEGER, b2_q16_top INTEGER,
+                b2_q17_top INTEGER, b2_q18_top INTEGER, b2_q19_top INTEGER, b2_q20_top INTEGER, b2_q21_top INTEGER, b2_q22_top INTEGER, b2_q23_top INTEGER, b2_q24_top INTEGER,
+                b2_q25_top INTEGER, b2_q26_top INTEGER, b2_q27_top INTEGER, b2_q28_top INTEGER, b2_q29_top INTEGER, b2_q30_top INTEGER,
+
                 adaptation_3 INTEGER, threat_3 INTEGER, cooperation_3 INTEGER,
                 adaptationCount_3 REAL, threatCount_3 REAL, cooperationCount_3 REAL,
+                b3_q1 INTEGER, b3_q2 INTEGER, b3_q3 INTEGER, b3_q4 INTEGER, b3_q5 INTEGER, b3_q6 INTEGER, b3_q7 INTEGER, b3_q8 INTEGER, b3_q9 INTEGER,
+
                 understandingOfStyles_4 INTEGER, strengthInstallation_4 INTEGER, manipulationInstallation_4 INTEGER, negotiationsInstallation_4 INTEGER,
                 strengthInstallationCount_4 REAL, manipulationInstallationCount_4 REAL, negotiationsInstallationCount_4 REAL,
+                b4_q1 INTEGER, b4_q2 INTEGER, b4_q3 INTEGER, b4_q4 INTEGER, b4_q5 INTEGER, b4_q6 INTEGER, b4_q7 INTEGER, b4_q8 INTEGER,
+                b4_q9 INTEGER, b4_q10 INTEGER, b4_q11 INTEGER, b4_q12 INTEGER, b4_q13 INTEGER, b4_q14 INTEGER, b4_q15 INTEGER, b4_q16 INTEGER,
+
                 adaptation_5 INTEGER, bidding_5 INTEGER, logicArgument_5 INTEGER, emotionsArgument_5 INTEGER, avoidance_5 INTEGER,
                 adaptationCount_5 REAL, biddingCount_5 REAL, logicArgumentCount_5 REAL, emotionsArgumentCount_5 REAL, avoidanceCount_5 REAL,
+                b5_q1 INTEGER, b5_q2 INTEGER, b5_q3 INTEGER, b5_q4 INTEGER, b5_q5 INTEGER, b5_q6 INTEGER, b5_q7 INTEGER, b5_q8 INTEGER,
+                b5_q9 INTEGER, b5_q10 INTEGER, b5_q11 INTEGER, b5_q12 INTEGER,
+
                 logicArgument_6 INTEGER, emotionsArgument_6 INTEGER,
-                logicArgumentCount_6 REAL, emotionsArgumentCount_6 REAL
+                logicArgumentCount_6 REAL, emotionsArgumentCount_6 REAL,
+                b6_q1 INTEGER, b6_q2 INTEGER, b6_q3 INTEGER, b6_q4 INTEGER, b6_q5 INTEGER, b6_q6 INTEGER, b6_q7 INTEGER, b6_q8 INTEGER, b6_q9 INTEGER, b6_q10 INTEGER
+
             );
             '''
             # Выполнение запроса на создание таблицы
@@ -1817,34 +1934,72 @@ def generate_and_download_pdf():
                 userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
                 adaptation_1, compromise_1, bidding_1, threat_1, logicArgument_1, emotionsArgument_1,
                 adaptationCount_1, compromiseCount_1, biddingCount_1, threatCount_1, logicArgumentCount_1, emotionsArgumentCount_1,
+                b1_q1_top, b1_q2_top, b1_q3_top, b1_q4_top, b1_q5_top, b1_q6_top, b1_q7_top, b1_q8_top,
+                b1_q9_top, b1_q10_top, b1_q11_top, b1_q12_top, b1_q13_top, b1_q14_top, b1_q15_top,
+
                 adaptation_2, compromise_2, threat_2, cooperation_2, avoidance_2,
                 adaptationCount_2, compromiseCount_2, threatCount_2, cooperationCount_2, avoidanceCount_2,
+                b2_q1_top, b2_q2_top, b2_q3_top, b2_q4_top, b2_q5_top, b2_q6_top, b2_q7_top, b2_q8_top,
+                b2_q9_top, b2_q10_top, b2_q11_top, b2_q12_top, b2_q13_top, b2_q14_top, b2_q15_top, b2_q16_top,
+                b2_q17_top, b2_q18_top, b2_q19_top, b2_q20_top, b2_q21_top, b2_q22_top, b2_q23_top, b2_q24_top,
+                b2_q25_top, b2_q26_top, b2_q27_top, b2_q28_top, b2_q29_top, b2_q30_top,
+
                 adaptation_3, threat_3, cooperation_3,
                 adaptationCount_3, threatCount_3, cooperationCount_3,
+                b3_q1, b3_q2, b3_q3, b3_q4, b3_q5, b3_q6, b3_q7, b3_q8, b3_q9,
+
                 understandingOfStyles_4, strengthInstallation_4, manipulationInstallation_4, negotiationsInstallation_4,
                 strengthInstallationCount_4, manipulationInstallationCount_4, negotiationsInstallationCount_4,
+                b4_q1, b4_q2, b4_q3, b4_q4, b4_q5, b4_q6, b4_q7, b4_q8,
+                b4_q9, b4_q10, b4_q11, b4_q12, b4_q13, b4_q14, b4_q15, b4_q16,
+
                 adaptation_5, bidding_5, logicArgument_5, emotionsArgument_5, avoidance_5,
                 adaptationCount_5, biddingCount_5, logicArgumentCount_5, emotionsArgumentCount_5, avoidanceCount_5,
+                b5_q1, b5_q2, b5_q3, b5_q4, b5_q5, b5_q6, b5_q7, b5_q8,
+                b5_q9, b5_q10, b5_q11, b5_q12,
+
                 logicArgument_6, emotionsArgument_6,
-                logicArgumentCount_6, emotionsArgumentCount_6
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+                logicArgumentCount_6, emotionsArgumentCount_6,
+                b6_q1, b6_q2, b6_q3, b6_q4, b6_q5, b6_q6, b6_q7, b6_q8, b6_q9, b6_q10
+                
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
 
             # Выполнение запроса с передачей значений
             cursor.execute(sql, (
                 userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
+
                 adaptation_1, compromise_1, bidding_1, threat_1, logicArgument_1, emotionsArgument_1,
                 adaptationCount_1, compromiseCount_1, biddingCount_1, threatCount_1, logicArgumentCount_1, emotionsArgumentCount_1,
+                b1_q1_top, b1_q2_top, b1_q3_top, b1_q4_top, b1_q5_top, b1_q6_top, b1_q7_top, b1_q8_top,
+                b1_q9_top, b1_q10_top, b1_q11_top, b1_q12_top, b1_q13_top, b1_q14_top, b1_q15_top,
+
                 adaptation_2, compromise_2, threat_2, cooperation_2, avoidance_2,
                 adaptationCount_2, compromiseCount_2, threatCount_2, cooperationCount_2, avoidanceCount_2,
+                b2_q1_top, b2_q2_top, b2_q3_top, b2_q4_top, b2_q5_top, b2_q6_top, b2_q7_top, b2_q8_top,
+                b2_q9_top, b2_q10_top, b2_q11_top, b2_q12_top, b2_q13_top, b2_q14_top, b2_q15_top, b2_q16_top,
+                b2_q17_top, b2_q18_top, b2_q19_top, b2_q20_top, b2_q21_top, b2_q22_top, b2_q23_top, b2_q24_top,
+                b2_q25_top, b2_q26_top, b2_q27_top, b2_q28_top, b2_q29_top, b2_q30_top,
+
                 adaptation_3, threat_3, cooperation_3,
                 adaptationCount_3, threatCount_3, cooperationCount_3,
+                b3_q1, b3_q2, b3_q3, b3_q4, b3_q5, b3_q6, b3_q7, b3_q8, b3_q9,
+
                 understandingOfStyles_4, strengthInstallation_4, manipulationInstallation_4, negotiationsInstallation_4,
                 strengthInstallationCount_4, manipulationInstallationCount_4, negotiationsInstallationCount_4,
+                b4_q1, b4_q2, b4_q3, b4_q4, b4_q5, b4_q6, b4_q7, b4_q8,
+                b4_q9, b4_q10, b4_q11, b4_q12, b4_q13, b4_q14, b4_q15, b4_q16,
+
                 adaptation_5, bidding_5, logicArgument_5, emotionsArgument_5, avoidance_5,
                 adaptationCount_5, biddingCount_5, logicArgumentCount_5, emotionsArgumentCount_5, avoidanceCount_5,
+                b5_q1, b5_q2, b5_q3, b5_q4, b5_q5, b5_q6, b5_q7, b5_q8,
+                b5_q9, b5_q10, b5_q11, b5_q12,
+
                 logicArgument_6, emotionsArgument_6,
-                logicArgumentCount_6, emotionsArgumentCount_6
+                logicArgumentCount_6, emotionsArgumentCount_6,
+                b6_q1, b6_q2, b6_q3, b6_q4, b6_q5, b6_q6, b6_q7, b6_q8, b6_q9, b6_q10
             ))
             
         # Сохранение изменений и закрытие соединения

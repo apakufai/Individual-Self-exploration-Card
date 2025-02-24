@@ -3027,6 +3027,38 @@
                         let cooperationCount = 0; // Сотрудничество (счёт)
                         let avoidanceCount = 0; // Избегание (счёт)
 
+                        // Инициализация вариантов для статистики
+                        let b2_q1_top = 0;
+                        let b2_q2_top = 0;
+                        let b2_q3_top = 0;
+                        let b2_q4_top = 0;
+                        let b2_q5_top = 0;
+                        let b2_q6_top = 0;
+                        let b2_q7_top = 0;
+                        let b2_q8_top = 0;
+                        let b2_q9_top = 0;
+                        let b2_q10_top = 0;
+                        let b2_q11_top = 0;
+                        let b2_q12_top = 0;
+                        let b2_q13_top = 0;
+                        let b2_q14_top = 0;
+                        let b2_q15_top = 0;
+                        let b2_q16_top = 0;
+                        let b2_q17_top = 0;
+                        let b2_q18_top = 0;
+                        let b2_q19_top = 0;
+                        let b2_q20_top = 0;
+                        let b2_q21_top = 0;
+                        let b2_q22_top = 0;
+                        let b2_q23_top = 0;
+                        let b2_q24_top = 0;
+                        let b2_q25_top = 0;
+                        let b2_q26_top = 0;
+                        let b2_q27_top = 0;
+                        let b2_q28_top = 0;
+                        let b2_q29_top = 0;
+                        let b2_q30_top = 0;
+
                         // Результаты вопроса 1
                         const radios_2_1 = document.getElementsByName("2_1_top");
                         radios_2_1.forEach(radio => {
@@ -3035,22 +3067,26 @@
                                     case "2_1_top_1":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q1_top = 1; // статистика
                                         break;
                                     case "2_1_top_2":
                                         avoidance += 2;
                                         adaptation += 1;
                                         avoidanceCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q1_top = 2; // статистика
                                         break;
                                     case "2_1_top_3":
                                         avoidance += 1;
                                         adaptation += 2;
                                         avoidanceCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q1_top = 3; // статистика
                                         break;
                                     case "2_1_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q1_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3064,22 +3100,26 @@
                                     case "2_2_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q2_top = 1; // статистика
                                         break;
                                     case "2_2_top_2":
                                         compromise += 2;
                                         cooperation += 1;
                                         compromiseCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q2_top = 2; // статистика
                                         break;
                                     case "2_2_top_3":
                                         compromise += 1;
                                         cooperation += 2;
                                         compromiseCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q2_top = 3; // статистика
                                         break;
                                     case "2_2_top_4":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q2_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3093,22 +3133,26 @@
                                     case "2_3_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q3_top = 1; // статистика
                                         break;
                                     case "2_3_top_2":
                                         threat += 2;
                                         adaptation += 1;
                                         threatCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q3_top = 2; // статистика
                                         break;
                                     case "2_3_top_3":
                                         threat += 1;
                                         adaptation += 2;
                                         threatCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q3_top = 3; // статистика
                                         break;
                                     case "2_3_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q3_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3122,22 +3166,26 @@
                                     case "2_4_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q4_top = 1; // статистика
                                         break;
                                     case "2_4_top_2":
                                         compromise += 2;
                                         adaptation += 1;
                                         compromiseCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q4_top = 2; // статистика
                                         break;
                                     case "2_4_top_3":
                                         compromise += 1;
                                         adaptation += 2;
                                         compromiseCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q4_top = 3; // статистика
                                         break;
                                     case "2_4_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q4_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3151,22 +3199,26 @@
                                     case "2_5_top_1":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q5_top = 1; // статистика
                                         break;
                                     case "2_5_top_2":
                                         cooperation += 2;
                                         avoidance += 1;
                                         avoidanceCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q5_top = 2; // статистика
                                         break;
                                     case "2_5_top_3":
                                         cooperation += 1;
                                         avoidance += 2;
                                         avoidanceCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q5_top = 3; // статистика
                                         break;
                                     case "2_5_top_4":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q5_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3180,22 +3232,26 @@
                                     case "2_6_top_1":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q6_top = 1; // статистика
                                         break;
                                     case "2_6_top_2":
                                         avoidance += 2;
                                         threat += 1;
                                         avoidanceCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q6_top = 2; // статистика
                                         break;
                                     case "2_6_top_3":
                                         avoidance += 1;
                                         threat += 2;
                                         avoidanceCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q6_top = 3; // статистика
                                         break;
                                     case "2_6_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q6_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3209,22 +3265,26 @@
                                     case "2_7_top_1":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q7_top = 1; // статистика
                                         break;
                                     case "2_7_top_2":
                                         avoidance += 2;
                                         compromise += 1;
                                         avoidanceCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q7_top = 2; // статистика
                                         break;
                                     case "2_7_top_3":
                                         avoidance += 1;
                                         compromise += 2;
                                         avoidanceCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q7_top = 3; // статистика
                                         break;
                                     case "2_7_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q7_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3238,22 +3298,26 @@
                                     case "2_8_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q8_top = 1; // статистика
                                         break;
                                     case "2_8_top_2":
                                         threat += 2;
                                         cooperation += 1;
                                         threatCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q8_top = 2; // статистика
                                         break;
                                     case "2_8_top_3":
                                         threat += 1;
                                         cooperation += 2;
                                         threatCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q8_top = 3; // статистика
                                         break;
                                     case "2_8_top_4":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q8_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3267,22 +3331,26 @@
                                     case "2_9_top_1":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q9_top = 1; // статистика
                                         break;
                                     case "2_9_top_2":
                                         avoidance += 2;
                                         threat += 1;
                                         avoidanceCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q9_top = 2; // статистика
                                         break;
                                     case "2_9_top_3":
                                         avoidance += 1;
                                         threat += 2;
                                         avoidanceCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q9_top = 3; // статистика
                                         break;
                                     case "2_9_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q9_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3296,22 +3364,26 @@
                                     case "2_10_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q10_top = 1; // статистика
                                         break;
                                     case "2_10_top_2":
                                         threat += 2;
                                         compromise += 1;
                                         threatCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q10_top = 2; // статистика
                                         break;
                                     case "2_10_top_3":
                                         threat += 1;
                                         compromise += 2;
                                         threatCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q10_top = 3; // статистика
                                         break;
                                     case "2_10_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q10_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3325,22 +3397,26 @@
                                     case "2_11_top_1":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q11_top = 1; // статистика
                                         break;
                                     case "2_11_top_2":
                                         cooperation += 2;
                                         adaptation += 1;
                                         adaptationCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q11_top = 2; // статистика
                                         break;
                                     case "2_11_top_3":
                                         cooperation += 1;
                                         adaptation += 2;
                                         adaptationCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q11_top = 3; // статистика
                                         break;
                                     case "2_11_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q11_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3354,22 +3430,26 @@
                                     case "2_12_top_1":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q12_top = 1; // статистика
                                         break;
                                     case "2_12_top_2":
                                         avoidance += 2;
                                         compromise += 1;
                                         avoidanceCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q12_top = 2; // статистика
                                         break;
                                     case "2_12_top_3":
                                         avoidance += 1;
                                         compromise += 2;
                                         avoidanceCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q12_top = 3; // статистика
                                         break;
                                     case "2_12_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q12_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3383,22 +3463,26 @@
                                     case "2_13_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q13_top = 1; // статистика
                                         break;
                                     case "2_13_top_2":
                                         compromise += 2;
                                         threat += 1;
                                         compromiseCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q13_top = 2; // статистика
                                         break;
                                     case "2_13_top_3":
                                         compromise += 1;
                                         threat += 2;
                                         compromiseCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q13_top = 3; // статистика
                                         break;
                                     case "2_13_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q13_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3412,22 +3496,26 @@
                                     case "2_14_top_1":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q14_top = 1; // статистика
                                         break;
                                     case "2_14_top_2":
                                         cooperation += 2;
                                         threat += 1;
                                         cooperationCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q14_top = 2; // статистика
                                         break;
                                     case "2_14_top_3":
                                         cooperation += 1;
                                         threat += 2;
                                         cooperationCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q14_top = 3; // статистика
                                         break;
                                     case "2_14_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q14_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3441,22 +3529,26 @@
                                     case "2_15_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q15_top = 1; // статистика
                                         break;
                                     case "2_15_top_2":
                                         adaptation += 2;
                                         avoidance += 1;
                                         adaptationCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q15_top = 2; // статистика
                                         break;
                                     case "2_15_top_3":
                                         adaptation += 1;
                                         avoidance += 2;
                                         adaptationCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q15_top = 3; // статистика
                                         break;
                                     case "2_15_top_4":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q15_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3470,22 +3562,26 @@
                                     case "2_16_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q16_top = 1; // статистика
                                         break;
                                     case "2_16_top_2":
                                         adaptation += 2;
                                         threat += 1;
                                         adaptationCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q16_top = 2; // статистика
                                         break;
                                     case "2_16_top_3":
                                         adaptation += 1;
                                         threat += 2;
                                         adaptationCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q16_top = 3; // статистика
                                         break;
                                     case "2_16_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q16_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3499,22 +3595,26 @@
                                     case "2_17_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q17_top = 1; // статистика
                                         break;
                                     case "2_17_top_2":
                                         threat += 2;
                                         avoidance += 1;
                                         threatCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q17_top = 2; // статистика
                                         break;
                                     case "2_17_top_3":
                                         threat += 1;
                                         avoidance += 2;
                                         threatCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q17_top = 3; // статистика
                                         break;
                                     case "2_17_top_4":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q17_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3528,22 +3628,26 @@
                                     case "2_18_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q18_top = 1; // статистика
                                         break;
                                     case "2_18_top_2":
                                         adaptation += 2;
                                         compromise += 1;
                                         adaptationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q18_top = 2; // статистика
                                         break;
                                     case "2_18_top_3":
                                         adaptation += 1;
                                         compromise += 2;
                                         adaptationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q18_top = 3; // статистика
                                         break;
                                     case "2_18_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q18_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3557,22 +3661,26 @@
                                     case "2_19_top_1":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q19_top = 1; // статистика
                                         break;
                                     case "2_19_top_2":
                                         cooperation += 2;
                                         avoidance += 1;
                                         cooperationCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q19_top = 2; // статистика
                                         break;
                                     case "2_19_top_3":
                                         cooperation += 1;
                                         avoidance += 2;
                                         cooperationCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q19_top = 3; // статистика
                                         break;
                                     case "2_19_top_4":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q19_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3586,22 +3694,26 @@
                                     case "2_20_top_1":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q20_top = 1; // статистика
                                         break;
                                     case "2_20_top_2":
                                         cooperation += 2;
                                         compromise += 1;
                                         cooperationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q20_top = 2; // статистика
                                         break;
                                     case "2_20_top_3":
                                         cooperation += 1;
                                         compromise += 2;
                                         cooperationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q20_top = 3; // статистика
                                         break;
                                     case "2_20_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q20_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3615,22 +3727,26 @@
                                     case "2_21_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q21_top = 1; // статистика
                                         break;
                                     case "2_21_top_2":
                                         adaptation += 2;
                                         cooperation += 1;
                                         adaptationCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q21_top = 2; // статистика
                                         break;
                                     case "2_21_top_3":
                                         adaptation += 1;
                                         cooperation += 2;
                                         adaptationCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q21_top = 3; // статистика
                                         break;
                                     case "2_21_top_4":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q21_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3644,22 +3760,26 @@
                                     case "2_22_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q22_top = 1; // статистика
                                         break;
                                     case "2_22_top_2":
                                         compromise += 2;
                                         threat += 1;
                                         compromiseCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q22_top = 2; // статистика
                                         break;
                                     case "2_22_top_3":
                                         compromise += 1;
                                         threat += 2;
                                         compromiseCount += 0.5; // счёт
                                         threatCount += 0.5; // счёт
+                                        b2_q22_top = 3; // статистика
                                         break;
                                     case "2_22_top_4":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q22_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3673,22 +3793,26 @@
                                     case "2_23_top_1":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q23_top = 1; // статистика
                                         break;
                                     case "2_23_top_2":
                                         cooperation += 2;
                                         avoidance += 1;
                                         cooperationCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q23_top = 2; // статистика
                                         break;
                                     case "2_23_top_3":
                                         cooperation += 1;
                                         avoidance += 2;
                                         cooperationCount += 0.5; // счёт
                                         avoidanceCount += 0.5; // счёт
+                                        b2_q23_top = 3; // статистика
                                         break;
                                     case "2_23_top_4":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q23_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3702,22 +3826,26 @@
                                     case "2_24_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q24_top = 1; // статистика
                                         break;
                                     case "2_24_top_2":
                                         adaptation += 2;
                                         compromise += 1;
                                         adaptationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q24_top = 2; // статистика
                                         break;
                                     case "2_24_top_3":
                                         adaptation += 1;
                                         compromise += 2;
                                         adaptationCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q24_top = 3; // статистика
                                         break;
                                     case "2_24_top_4":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q24_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3731,22 +3859,26 @@
                                     case "2_25_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q25_top = 1; // статистика
                                         break;
                                     case "2_25_top_2":
                                         threat += 2;
                                         adaptation += 1;
                                         threatCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q25_top = 2; // статистика
                                         break;
                                     case "2_25_top_3":
                                         threat += 1;
                                         adaptation += 2;
                                         threatCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q25_top = 3; // статистика
                                         break;
                                     case "2_25_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q25_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3760,22 +3892,26 @@
                                     case "2_26_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q26_top = 1; // статистика
                                         break;
                                     case "2_26_top_2":
                                         compromise += 2;
                                         cooperation += 1;
                                         compromiseCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q26_top = 2; // статистика
                                         break;
                                     case "2_26_top_3":
                                         compromise += 1;
                                         cooperation += 2;
                                         compromiseCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q26_top = 3; // статистика
                                         break;
                                     case "2_26_top_4":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q26_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3789,22 +3925,26 @@
                                     case "2_27_top_1":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q27_top = 1; // статистика
                                         break;
                                     case "2_27_top_2":
                                         avoidance += 2;
                                         adaptation += 1;
                                         avoidanceCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q27_top = 2; // статистика
                                         break;
                                     case "2_27_top_3":
                                         avoidance += 1;
                                         adaptation += 2;
                                         avoidanceCount += 0.5; // счёт
                                         adaptationCount += 0.5; // счёт
+                                        b2_q27_top = 3; // статистика
                                         break;
                                     case "2_27_top_4":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q27_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3818,22 +3958,26 @@
                                     case "2_28_top_1":
                                         threat += 3;
                                         threatCount += 1; // счёт
+                                        b2_q28_top = 1; // статистика
                                         break;
                                     case "2_28_top_2":
                                         threat += 2;
                                         cooperation += 1;
                                         threatCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q28_top = 2; // статистика
                                         break;
                                     case "2_28_top_3":
                                         threat += 1;
                                         cooperation += 2;
                                         threatCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q28_top = 3; // статистика
                                         break;
                                     case "2_28_top_4":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q28_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3847,22 +3991,26 @@
                                     case "2_29_top_1":
                                         compromise += 3;
                                         compromiseCount += 1; // счёт
+                                        b2_q29_top = 1; // статистика
                                         break;
                                     case "2_29_top_2":
                                         compromise += 2;
                                         avoidance += 1;
                                         avoidanceCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q29_top = 2; // статистика
                                         break;
                                     case "2_29_top_3":
                                         compromise += 1;
                                         avoidance += 2;
                                         avoidanceCount += 0.5; // счёт
                                         compromiseCount += 0.5; // счёт
+                                        b2_q29_top = 3; // статистика
                                         break;
                                     case "2_29_top_4":
                                         avoidance += 3;
                                         avoidanceCount += 1; // счёт
+                                        b2_q29_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3876,22 +4024,26 @@
                                     case "2_30_top_1":
                                         adaptation += 3;
                                         adaptationCount += 1; // счёт
+                                        b2_q30_top = 1; // статистика
                                         break;
                                     case "2_30_top_2":
                                         adaptation += 2;
                                         cooperation += 1;
                                         adaptationCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q30_top = 2; // статистика
                                         break;
                                     case "2_30_top_3":
                                         adaptation += 1;
                                         cooperation += 2;
                                         adaptationCount += 0.5; // счёт
                                         cooperationCount += 0.5; // счёт
+                                        b2_q30_top = 3; // статистика
                                         break;
                                     case "2_30_top_4":
                                         cooperation += 3;
                                         cooperationCount += 1; // счёт
+                                        b2_q30_top = 4; // статистика
                                         break;
                                 }
                             }
@@ -3909,6 +4061,38 @@
                         sessionStorage.setItem('threatCount_2', threatCount); // Угроза (Б) (счёт)
                         sessionStorage.setItem('cooperationCount_2', cooperationCount); // Сотрудничество (В) (счёт)
                         sessionStorage.setItem('avoidanceCount_2', avoidanceCount); // Избегание (Р) (счёт)
+
+                        // Сохраняем статистику в sessionStorage
+                        sessionStorage.setItem('b2_q1_top', b2_q1_top);
+                        sessionStorage.setItem('b2_q2_top', b2_q2_top);
+                        sessionStorage.setItem('b2_q3_top', b2_q3_top);
+                        sessionStorage.setItem('b2_q4_top', b2_q4_top);
+                        sessionStorage.setItem('b2_q5_top', b2_q5_top);
+                        sessionStorage.setItem('b2_q6_top', b2_q6_top);
+                        sessionStorage.setItem('b2_q7_top', b2_q7_top);
+                        sessionStorage.setItem('b2_q8_top', b2_q8_top);
+                        sessionStorage.setItem('b2_q9_top', b2_q9_top);
+                        sessionStorage.setItem('b2_q10_top', b2_q10_top);
+                        sessionStorage.setItem('b2_q11_top', b2_q11_top);
+                        sessionStorage.setItem('b2_q12_top', b2_q12_top);
+                        sessionStorage.setItem('b2_q13_top', b2_q13_top);
+                        sessionStorage.setItem('b2_q14_top', b2_q14_top);
+                        sessionStorage.setItem('b2_q15_top', b2_q15_top);
+                        sessionStorage.setItem('b2_q16_top', b2_q16_top);
+                        sessionStorage.setItem('b2_q17_top', b2_q17_top);
+                        sessionStorage.setItem('b2_q18_top', b2_q18_top);
+                        sessionStorage.setItem('b2_q19_top', b2_q19_top);
+                        sessionStorage.setItem('b2_q20_top', b2_q20_top);
+                        sessionStorage.setItem('b2_q21_top', b2_q21_top);
+                        sessionStorage.setItem('b2_q22_top', b2_q22_top);
+                        sessionStorage.setItem('b2_q23_top', b2_q23_top);
+                        sessionStorage.setItem('b2_q24_top', b2_q24_top);
+                        sessionStorage.setItem('b2_q25_top', b2_q25_top);
+                        sessionStorage.setItem('b2_q26_top', b2_q26_top);
+                        sessionStorage.setItem('b2_q27_top', b2_q27_top);
+                        sessionStorage.setItem('b2_q28_top', b2_q28_top);
+                        sessionStorage.setItem('b2_q29_top', b2_q29_top);
+                        sessionStorage.setItem('b2_q30_top', b2_q30_top);
 
                         // Отправляем ключ "test2Pass" со значением "true" на сервер
                         fetch('/set_test_2_pass', {

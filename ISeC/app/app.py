@@ -23,7 +23,8 @@ from datetime import datetime
 
 import pandas as pd
 from openpyxl import load_workbook
-from openpyxl.styles import Alignment
+from openpyxl.styles import PatternFill, Alignment
+from openpyxl.utils import get_column_letter
 
 from flask import flash
 
@@ -2594,11 +2595,9 @@ def sort_groups_by_date(groups):
     return sorted(groups, key=extract_date, reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
 
 
-
 # Маршрут для страницы выборок
 @app.route('/generate_query', methods=['POST'])
 def generate_query():
-    
     # Проверяем, существует ли директория 'temp', и если нет, создаем её
     directory = 'temp'
     if not os.path.exists(directory):
@@ -2607,7 +2606,7 @@ def generate_query():
     data = request.get_json()
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     groups = data.get('groups', [])
     categories = data.get('categories', [])
     sex = data.get('sex')
@@ -2645,6 +2644,62 @@ def generate_query():
     columns = [column[0] for column in cursor.description]  # Получаем названия столбцов
     df = pd.DataFrame(results, columns=columns)  # Создаем DataFrame
 
+    # Создаем новые столбцы с суммированием
+    df['Прс_ИШ'] = df['adaptationCount_1'] + df['adaptationCount_2'] + df['adaptationCount_3'] + df['adaptationCount_5']
+    df['Кмп_ИШ'] = df['compromiseCount_1'] + df['compromiseCount_2']
+    df['Трг_ИШ'] = df['biddingCount_1'] + df['biddingCount_5']
+    df['Угр_ИШ'] = df['threatCount_1'] + df['threatCount_2'] + df['threatCount_3']
+    df['Лгк_ИШ'] = df['logicArgumentCount_1'] + df['logicArgumentCount_5'] + df['logicArgumentCount_6']
+    df['Эмц_ИШ'] = df['emotionsArgumentCount_1'] + df['emotionsArgumentCount_5'] + df['emotionsArgumentCount_6']
+    df['ПСт_ИШ'] = df['understandingOfStyles_4']
+    df['Сил_ИШ'] = df['strengthInstallationCount_4']
+    df['Ман_ИШ'] = df['manipulationInstallationCount_4']
+    df['Дел_ИШ'] = df['negotiationsInstallationCount_4']
+    df['Стр_ИШ'] = df['cooperationCount_2'] + df['cooperationCount_3']
+    df['Изб_ИШ'] = df['avoidanceCount_2'] + df['avoidanceCount_5']
+
+    # Выбираем нужные столбцы и переименовываем их
+    df = df[[
+        "userGroup", "userCategory", "userBirthyear", "userSex",
+        "adaptation_1", "compromise_1", "bidding_1", "threat_1", "logicArgument_1", "emotionsArgument_1",
+        "adaptation_2", "compromise_2", "threat_2", "cooperation_2", "avoidance_2",
+        "adaptation_3", "threat_3", "cooperation_3",
+        "understandingOfStyles_4", "strengthInstallation_4", "manipulationInstallation_4", "negotiationsInstallation_4",
+        "adaptation_5", "bidding_5", "logicArgument_5", "emotionsArgument_5", "avoidance_5",
+        "logicArgument_6", "emotionsArgumentCount_6",
+        "Прс_ИШ", "Кмп_ИШ", "Трг_ИШ", "Угр_ИШ", "Лгк_ИШ", "Эмц_ИШ", "ПСт_ИШ", "Сил_ИШ", "Ман_ИШ", "Дел_ИШ", "Стр_ИШ", "Изб_ИШ"
+    ]].rename(columns={
+        "userGroup": "Группа",
+        "userCategory": "Категория",
+        "userBirthyear": "Г.р.",
+        "userSex": "Пол",
+        "adaptation_1": "Прс_1",
+        "compromise_1": "Кмп_1",
+        "bidding_1": "Трг_1",
+        "threat_1": "Угр_1",
+        "logicArgument_1": "Лгк_1",
+        "emotionsArgument_1": "Эмц_1",
+        "adaptation_2": "Прс_2",
+        "compromise_2": "Кмп_2",
+        "threat_2": "Угр_2",
+        "cooperation_2": "Стр_2",
+        "avoidance_2": "Изб_2",
+        "adaptation_3": "Прс_3",
+        "threat_3": "Угр_3",
+        "cooperation_3": "Стр_3",
+        "understandingOfStyles_4": "ПСт_4",
+        "strengthInstallation_4": "Сил_4",
+        "manipulationInstallation_4": "Ман_4",
+        "negotiationsInstallation_4": "Дел_4",
+        "adaptation_5": "Прс_5",
+        "bidding_5": "Трг_5",
+        "logicArgument_5": "Лгк_5",
+        "emotionsArgument_5": "Эмц_5",
+        "avoidance_5": "Изб_5",
+        "logicArgument_6": "Лгк_6",
+        "emotionsArgumentCount_6": "Эмц_6",
+    })
+
     # Получаем текущую дату и время
     current_time = datetime.now()
     formatted_time = current_time.strftime("Запрос_%d.%m.%y_%H.%M.%S")  # Форматируем строку
@@ -2654,28 +2709,62 @@ def generate_query():
 
     # Сохраняем DataFrame в Excel с использованием openpyxl как движка
     with pd.ExcelWriter(excel_file_path, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False)  # Сохраняем в Excel, без индекса
+        df.to_excel(writer, index=False, startrow=1)  # Сохраняем в Excel, начиная с третьей строки
 
     # Открываем файл с помощью openpyxl для настройки ширины столбцов и выравнивания
     wb = load_workbook(excel_file_path)
     ws = wb.active
 
+    # Изменяем название закладки на "Выборка"
+    ws.title = "Выборка"
+
+    # Создаем объединенные ячейки и устанавливаем стиль
+    ws.merge_cells('A1:D1')  # Объединяем ячейки A1:D1
+    ws.merge_cells('E1:AC1')  # Объединяем ячейки E1:AC1
+    ws.merge_cells('AD1:AO1')  # Объединяем ячейки AD1:AO1
+
+    # Устанавливаем цвет и выравнивание для объединенных ячеек
+    fill1 = PatternFill(start_color="da9694", fill_type="solid")
+    fill2 = PatternFill(start_color="95b3d7", fill_type="solid")
+    fill3 = PatternFill(start_color="bbbbbb", fill_type="solid")
+
+    # Устанавливаем данные и стиль для объединенных ячеек
+    ws['A1'].value = "Данные"
+    ws['A1'].fill = fill1
+    ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
+
+    ws['E1'].value = "Результаты"
+    ws['E1'].fill = fill2
+    ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
+
+    ws['AD1'].value = "Интегральные шкалы"
+    ws['AD1'].fill = fill3
+    ws['AD1'].alignment = Alignment(horizontal='center', vertical='center')
+
+    # Устанавливаем минимальную ширину по умолчанию для всех столбцов от A до AO
+    default_min_width = 10  # Задайте значение по умолчанию
+
     # Устанавливаем ширину столбцов и выравнивание
-    for column in ws.columns:
+    for column in range(1, 42):  # От 1 до 41, чтобы охватить столбцы от A до AO
+        column_letter = get_column_letter(column)  # Преобразуем индекс в букву столбца
         max_length = 0
-        column_letter = column[0].column_letter  # Получаем букву столбца
-        for cell in column:
+
+        for cell in ws[column_letter]:
             try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = (max_length + 2)  # Добавляем немного пространства
-        ws.column_dimensions[column_letter].width = adjusted_width
-        
+                if cell.value is not None:
+                    cell_length = len(str(cell.value).strip())
+                    if cell_length > max_length:
+                        max_length = cell_length
+            except Exception as e:
+                print(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")
+
+        # Устанавливаем ширину для каждого столбца от A до AO
+        ws.column_dimensions[column_letter].width = max(ws.column_dimensions[column_letter].width, max_length, default_min_width)
+
         # Устанавливаем выравнивание для всех ячеек в столбце
-        for cell in column:
-            cell.alignment = Alignment(horizontal='left')
+        for cell in ws[column_letter]:
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+
 
     # Сохраняем изменения в файле
     wb.save(excel_file_path)
@@ -2684,7 +2773,7 @@ def generate_query():
     conn.close()
 
     # Запускаем таймер для удаления файла через 10 секунд
-    threading.Timer(10, delete_excel, args=(excel_file_path,)).start()
+    threading.Timer(3, delete_excel, args=(excel_file_path,)).start()
 
     # Возвращаем Excel-файл пользователю
     return send_file(excel_file_path, as_attachment=True, download_name=f"{formatted_time}.xlsx")  # Отправляем файл как вложение

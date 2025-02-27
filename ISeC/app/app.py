@@ -2102,7 +2102,7 @@ def clear_session():
 # ------------------------------------------------
 
 # Функция для хеширования пароля
-def hash_password(password):
+def cab_hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 # Маршрут для авторизации
@@ -2111,7 +2111,7 @@ def cab_login():
     if request.method == 'POST':
         adminLogin = request.form['adminLogin']
         adminPass = request.form['adminPass']
-        hashed_password = hash_password(adminPass)
+        hashed_password = cab_hash_password(adminPass)
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину
@@ -2151,7 +2151,7 @@ def cab_archive():
         adminPass = request.form.get('adminPass')
         conn = get_db_connection()
         if action == 'add':
-            hashed_password = hash_password(password)
+            hashed_password = cab_hash_password(password)
             conn.execute('INSERT INTO ISeC_adminAccounts (logins, passwords) VALUES (?, ?)', 
                          (adminLogin, hashed_password))
             conn.commit()
@@ -2549,6 +2549,137 @@ def cab_delete_code(code_id):
 
 
 
+@app.route('/cab_analysis')
+def cab_analysis():
+    if 'adminName' not in session:
+        return redirect(url_for('cab_login'))
+    data = cab_get_analysis_data()
+    processed_data, total_rows = cab_process_analysis_data(data)
+    return render_template('cab_analysis.html', analysis_data=processed_data, total_rows=total_rows)
+
+def cab_get_analysis_data():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Выполним запрос для получения нужных столбцов
+    query = """
+    SELECT 
+        b1_q1_top, b1_q2_top, b1_q3_top, b1_q4_top, b1_q5_top, b1_q6_top, b1_q7_top, b1_q8_top, b1_q9_top, b1_q10_top, b1_q11_top, b1_q12_top, b1_q13_top, b1_q14_top, b1_q15_top,
+        b2_q1_top, b2_q2_top, b2_q3_top, b2_q4_top, b2_q5_top, b2_q6_top, b2_q7_top, b2_q8_top, b2_q9_top, b2_q10_top, b2_q11_top, b2_q12_top, b2_q13_top, b2_q14_top, b2_q15_top,
+        b2_q16_top, b2_q17_top, b2_q18_top, b2_q19_top, b2_q20_top, b2_q21_top, b2_q22_top, b2_q23_top, b2_q24_top, b2_q25_top, b2_q26_top, b2_q27_top, b2_q28_top, b2_q29_top, b2_q30_top,
+        b3_q1, b3_q2, b3_q3, b3_q4, b3_q5, b3_q6, b3_q7, b3_q8, b3_q9,
+        b4_q1, b4_q2, b4_q3, b4_q4, b4_q5, b4_q6, b4_q7, b4_q8, b4_q9, b4_q10, b4_q11, b4_q12, b4_q13, b4_q14, b4_q15, b4_q16,
+        b5_q1, b5_q2, b5_q3, b5_q4, b5_q5, b5_q6, b5_q7, b5_q8, b5_q9, b5_q10, b5_q11, b5_q12,
+        b6_q1, b6_q2, b6_q3, b6_q4, b6_q5, b6_q6, b6_q7, b6_q8, b6_q9, b6_q10
+    FROM ISeC_results
+    """
+
+    cursor.execute(query)
+    data = cursor.fetchall()
+    conn.close()
+    return data
+
+
+
+def cab_process_analysis_data(data):
+    result = []
+    total_rows = len(data)
+
+    # Инициализируем счетчики для вопросов
+    count_dict_1 = {i: {1: 0, 2: 0, 3: 0, 4: 0} for i in range(1, 16)}
+    count_dict_2 = {i: {1: 0, 2: 0, 3: 0, 4: 0} for i in range(1, 31)}
+    count_dict_3 = {i: {1: 0, 2: 0, 3: 0} for i in range(1, 10)}
+    count_dict_4 = {i: {1: 0, 2: 0, 3: 0} for i in range(1, 17)}
+    count_dict_5 = {i: {1: 0, 2: 0, 3: 0} for i in range(1, 13)}
+    count_dict_6 = {i: {1: 0, 2: 0, 3: 0, 4: 0} for i in range(1, 11)}
+
+    # Подсчитываем значения для всех строк
+    for row in data:
+        for i in range(15):  # 15 вопросов для b1_
+            value = row[i]
+            if value in count_dict_1[i + 1]:
+                count_dict_1[i + 1][value] += 1
+        for i in range(30):  # 30 вопросов для b2_
+            value = row[15 + i]
+            if value in count_dict_2[i + 1]:
+                count_dict_2[i + 1][value] += 1
+        for i in range(9):  # 9 вопросов для b3_
+            value = row[45 + i]
+            if value in count_dict_3[i + 1]:
+                count_dict_3[i + 1][value] += 1
+        for i in range(16):  # 16 вопросов для b4_
+            value = row[54 + i]
+            if value in count_dict_4[i + 1]:
+                count_dict_4[i + 1][value] += 1
+        for i in range(12):  # 12 вопросов для b5_
+            value = row[70 + i]
+            if value in count_dict_5[i + 1]:
+                count_dict_5[i + 1][value] += 1
+        for i in range(10):  # 10 вопросов для b6_
+            value = row[82 + i]
+            if value in count_dict_6[i + 1]:
+                count_dict_6[i + 1][value] += 1
+
+    # Формируем результаты для b1_
+    for question_number in range(1, 16):
+        for value in range(1, 5):
+            count_value = count_dict_1[question_number][value]
+            result.append([f"Б.1 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+
+    # Формируем результаты для b2_
+    for question_number in range(1, 31):
+        for value in range(1, 5):
+            count_value = count_dict_2[question_number][value]
+            result.append([f"Б.2 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+
+
+    # Формируем результаты для b3_
+    for question_number in range(1, 10):
+        for value in range(1, 4):  # Убедитесь, что здесь 3 строки
+            count_value = count_dict_3[question_number][value]
+            result.append([f"Б.3 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+
+    # Формируем результаты для b4_
+    for question_number in range(1, 17):
+        for value in range(1, 4):  # 3 строки
+            count_value = count_dict_4[question_number][value]
+            result.append([f"Б.4 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+
+    # Формируем результаты для b5_
+    for question_number in range(1, 13):
+        for value in range(1, 4):  # 3 строки
+            count_value = count_dict_5[question_number][value]
+            result.append([f"Б.5 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+
+    # Формируем результаты для b6_
+    for question_number in range(1, 11):
+        for value in range(1, 5):  # 4 строки
+            count_value = count_dict_6[question_number][value]
+            result.append([f"Б.6 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+
+    return result, total_rows
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2582,7 +2713,7 @@ def get_unique_categories():
     cursor.execute("SELECT DISTINCT userCategory FROM ISeC_results")
     categories = cursor.fetchall()
     conn.close()
-    return [category[0] for category in categories]  # Преобразуем в список
+    return sorted([category[0] for category in categories])  # Преобразуем в список и сортируем по алфавиту
 
 # Функция для сортировки групп по дате
 def sort_groups_by_date(groups):
@@ -2778,11 +2909,21 @@ def generate_query():
     # Возвращаем Excel-файл пользователю
     return send_file(excel_file_path, as_attachment=True, download_name=f"{formatted_time}.xlsx")  # Отправляем файл как вложение
 
-
 # Функция для удаления excel-файла
 def delete_excel(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

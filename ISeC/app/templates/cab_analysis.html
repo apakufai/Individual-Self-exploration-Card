@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>Администрация. ИКС-файл</title>
+    <script type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_adminCab.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header_ISeC">ИКС-файл. Администраторная</div>
+        <div class="header_admin">
+            <span>
+                Привет, <a href="{{ url_for('index') }}">{{ session['adminName'] }}</a> |
+                <a href="{{ url_for('index') }}">Тест</a> |
+                <a href="{{ url_for('cab_logout') }}">Выйти</a>
+            </span>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="side_menu">
+            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+                Архив
+            </button>
+
+            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+                Коды доступа
+            </button>
+
+            <button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+                Анализ по вопросам
+            </button>
+
+            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+                Выборки (excel)
+            </button>
+
+            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+                Администраторы
+            </button>
+
+        </div>
+
+        <div class="central_analysis">
+
+            <p class="respondences_count">Общее количество респондентов: {{ total_rows }}</p>
+
+            <table class="table_analysis">
+                <thead>
+                    <tr class="analysis_head">
+                        <th class="analysis_head_th_0">Вопрос</th>
+                        <th class="analysis_head_th_1">Вар</th>
+                        <th class="analysis_head_th_2">К-во</th>
+                        <th class="analysis_head_th_3">Доля</th>
+                        <th class="analysis_head_th_4">График</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Блок для b1_ -->
+                    {% set rowspan_b1 = 4 %}
+                    {% for question_number in range(1, 16) %}
+                    {% set start_index = (question_number - 1) * rowspan_b1 %}
+                    {% if analysis_data[start_index][0].startswith('Б.1 В.') %}
+                    <tr>
+                        <td rowspan="{{ rowspan_b1 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
+                        <td>{{ analysis_data[start_index][1] }}</td>
+                        <td>{{ analysis_data[start_index][2] }}</td>
+                        <td>{{ analysis_data[start_index][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 1][1] }}</td>
+                        <td>{{ analysis_data[start_index + 1][2] }}</td>
+                        <td>{{ analysis_data[start_index + 1][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 2][1] }}</td>
+                        <td>{{ analysis_data[start_index + 2][2] }}</td>
+                        <td>{{ analysis_data[start_index + 2][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][1] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][2] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][3] }}</td>
+                        <td class="table_underline">
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 3][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- Блок для b2_ -->
+                    {% set rowspan_b2 = 4 %}
+                    {% for question_number in range(1, 31) %}
+                    {% set start_index = (question_number - 1) * rowspan_b2 + (15 * 4) %} {# Учитываем, что b1 имеет 15
+                    вопросов * 4 строки #}
+                    {% if analysis_data[start_index][0].startswith('Б.2 В.') %}
+                    <tr>
+                        <td rowspan="{{ rowspan_b2 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
+                        <td>{{ analysis_data[start_index][1] }}</td>
+                        <td>{{ analysis_data[start_index][2] }}</td>
+                        <td>{{ analysis_data[start_index][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 1][1] }}</td>
+                        <td>{{ analysis_data[start_index + 1][2] }}</td>
+                        <td>{{ analysis_data[start_index + 1][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 2][1] }}</td>
+                        <td>{{ analysis_data[start_index + 2][2] }}</td>
+                        <td>{{ analysis_data[start_index + 2][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][1] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][2] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][3] }}</td>
+                        <td class="table_underline">
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 3][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- Блок для b3 -->
+                    {% set rowspan_b3 = 3 %}
+                    {% for question_number in range(1, 10) %}
+                    {% set start_index = (question_number - 1) * rowspan_b3 + 180 %}
+                    {% if analysis_data[start_index][0].startswith('Б.3 В.') %}
+                    <tr>
+                        <td rowspan="{{ rowspan_b3 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
+                        <td>{{ analysis_data[start_index][1] }}</td>
+                        <td>{{ analysis_data[start_index][2] }}</td>
+                        <td>{{ analysis_data[start_index][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 1][1] }}</td>
+                        <td>{{ analysis_data[start_index + 1][2] }}</td>
+                        <td>{{ analysis_data[start_index + 1][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][1] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][2] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][3] }}</td>
+                        <td class="table_underline">
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- Блок для b4 -->
+                    {% set rowspan_b4 = 3 %}
+                    {% for question_number in range(1, 17) %}
+                    {% set start_index = (question_number - 1) * rowspan_b3 + 207 %}
+                    {% if analysis_data[start_index][0].startswith('Б.4 В.') %}
+                    <tr>
+                        <td rowspan="{{ rowspan_b4 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
+                        <td>{{ analysis_data[start_index][1] }}</td>
+                        <td>{{ analysis_data[start_index][2] }}</td>
+                        <td>{{ analysis_data[start_index][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 1][1] }}</td>
+                        <td>{{ analysis_data[start_index + 1][2] }}</td>
+                        <td>{{ analysis_data[start_index + 1][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][1] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][2] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][3] }}</td>
+                        <td class="table_underline">
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- Блок для b5 -->
+                    {% set rowspan_b5 = 3 %}
+                    {% for question_number in range(1, 13) %}
+                    {% set start_index = (question_number - 1) * rowspan_b3 + 255 %}
+                    {% if analysis_data[start_index][0].startswith('Б.5 В.') %}
+                    <tr>
+                        <td rowspan="{{ rowspan_b5 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
+                        <td>{{ analysis_data[start_index][1] }}</td>
+                        <td>{{ analysis_data[start_index][2] }}</td>
+                        <td>{{ analysis_data[start_index][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 1][1] }}</td>
+                        <td>{{ analysis_data[start_index + 1][2] }}</td>
+                        <td>{{ analysis_data[start_index + 1][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][1] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][2] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 2][3] }}</td>
+                        <td class="table_underline">
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                    <!-- Блок для b6_ -->
+                    {% set rowspan_b6 = 4 %}
+                    {% for question_number in range(1, 11) %}
+                    {% set start_index = (question_number - 1) * rowspan_b6 + 291 %}
+                    {% if analysis_data[start_index][0].startswith('Б.6 В.') %}
+                    <tr>
+                        <td rowspan="{{ rowspan_b6 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
+                        <td>{{ analysis_data[start_index][1] }}</td>
+                        <td>{{ analysis_data[start_index][2] }}</td>
+                        <td>{{ analysis_data[start_index][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 1][1] }}</td>
+                        <td>{{ analysis_data[start_index + 1][2] }}</td>
+                        <td>{{ analysis_data[start_index + 1][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ analysis_data[start_index + 2][1] }}</td>
+                        <td>{{ analysis_data[start_index + 2][2] }}</td>
+                        <td>{{ analysis_data[start_index + 2][3] }}</td>
+                        <td>
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][1] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][2] }}</td>
+                        <td class="table_underline">{{ analysis_data[start_index + 3][3] }}</td>
+                        <td class="table_underline">
+                            <div class="progress-container">
+                                <div class="progress-filled"
+                                    style="width: {{ analysis_data[start_index + 3][3] | replace('%', '') }}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

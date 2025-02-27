@@ -114,8 +114,9 @@ a:hover {
    flex-direction: column;
    width: 250px;
    background-color: #d3d7d8;
-   height: calc(100vh - 50px);
+   height: 220px;
    gap: 15px;
+   border-bottom-right-radius: 30px;
 }
 
 .btn_sidelink {
@@ -193,8 +194,8 @@ a:hover {
    flex-grow: 1;
    display: flex;
    flex-direction: column;
-   justify-content: center;
-   align-items: center;
+   margin-top: 100px;
+   margin-left: 150px;
    gap: 30px;
 }
 
@@ -315,12 +316,97 @@ a:hover {
 
 
 /* ------------------------------------------------ */
-/* ------------ СТРАНИЦА КОДОВ ДОСТУПА ------------ */
+/* -------------- СТРАНИЦА АНАЛИТИКИ -------------- */
 /* ------------------------------------------------ */
 
 
 
+.progress-container {
+   width: 100%; /* Ширина контейнера */
+   background-color: #d3d7d8; /* Цвет незаполненной части (подложка) */
+   border-radius: 5px; /* Закругление углов */
+   overflow: hidden; /* Скрыть переполнение */
+}
 
+.progress-filled {
+   height: 20px; /* Высота графика */
+   background-color: #acbdd6; /* Цвет заполненной части */
+}
+
+.respondences_count {
+   margin: 30px 80px;
+   font-size: 26px; /* Устанавливаем размер шрифта в 30 пунктов */
+}
+
+
+.analysis_head * {
+   padding-bottom: 5px;
+}
+
+.analysis_head,
+.central_analysis table tbody .table_underline {
+   border-bottom: 2px solid #5b7ead;
+}
+
+.table_spacing {
+   margin-top: 15px; /* Отступ сверху */
+}
+
+
+.central_analysis table tbody tr td {
+   padding: 5px; /* Отступ внутри ячеек */
+}
+
+
+.central_analysis * {
+   border-collapse: collapse;
+}
+
+.table_analysis {
+   margin: 20px 0 0 20px;
+   font-size: 14pt;
+}
+
+.central_analysis table th,
+.central_analysis table td {
+    text-align: center;
+}
+
+.analysis_head_th_0 {
+   width: 100px;
+}
+
+
+.analysis_head_th_1 {
+   width: 70px;
+}
+
+.analysis_head_th_2 {
+   width: 70px;
+}
+
+.analysis_head_th_3 {
+   width: 80px;
+}
+
+.analysis_head_th_4 {
+   width: 250px;
+}
+
+
+/* ------------------------------------------------ */
+/* ----------- СТРАНИЦА EXCEL-ГЕНЕРАЦИИ ----------- */
+/* ------------------------------------------------ */
+
+.central_excelgen * {
+   border-collapse: collapse;
+   /* Убирает двойные границы */
+   font-size: 14pt;
+}
+
+.central_excelgen table {
+   margin: 20px 0 0 20px;
+}
 
 .conditions_block_td_3 * {
    width: 70px;

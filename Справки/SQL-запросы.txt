@@ -259,14 +259,15 @@ DROP TABLE ISeC_accessCodes;
 -- ТАБЛИЦА ДОСТУПОВ К КАБИНЕТУ АДМИНИСТРАТОРА
 
 CREATE TABLE ISeC_adminAccounts (
-    login TEXT PRIMARY KEY,
+    adminId TEXT PRIMARY KEY,
+    login TEXT UNIQUE,
     password TEXT,
     adminName TEXT UNIQUE
 );
 
 INSERT INTO ISeC_adminAccounts
-(login, password, adminName)
-VALUES ('apakufai', 'f2c7a1b6c1b9d1c5b6c2b1e3f5d8e1c2c8e7f4b0fc0c8f7e5c3c2c6a1b3c1b0d
+(adminId, login, password, adminName)
+VALUES ('admin_0000', 'apakufai', 'f2c7a1b6c1b9d1c5b6c2b1e3f5d8e1c2c8e7f4b0fc0c8f7e5c3c2c6a1b3c1b0d
 ', 'Apakufai');
 
 DELETE FROM ISeC_adminAccounts;

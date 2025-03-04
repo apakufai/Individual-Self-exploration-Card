@@ -24,27 +24,27 @@
 	</header>
 
 	<main class="main">
+
 		<div class="side_menu">
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+			<button class="btn_sidelink" id="btn_cab_archive">
 				Архив
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+			<button class="btn_sidelink" id="btn_cab_codes">
 				Коды доступа
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+			<button class="btn_sidelink" id="btn_cab_analysis">
 				Анализ по вопросам
 			</button>
 
-			<button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+			<button class="btn_sidelink_actual" id="btn_cab_excelgen">
 				Выборки (excel)
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+			<button class="btn_sidelink" id="btn_cab_admins">
 				Администраторы
 			</button>
-
 		</div>
 
 		<div class="central_excelgen">
@@ -138,76 +138,95 @@
 
 			</table>
 
-			<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
-			<script>
-
-				document.getElementById('show_all_groups').addEventListener('click', function () {
-					// Получаем все элементы с классом group-item
-					const groups = document.querySelectorAll('.group-item.hidden_groups');
-					// Показываем все скрытые элементы
-					groups.forEach(function (group) {
-						group.classList.remove('hidden_groups');
-					});
-					// Скрываем кнопку после нажатия
-					this.classList.add('hidden-button');
-				});
-
-
-				document.getElementById('start_excelgen').addEventListener('click', function () {
-					const selectedGroups = Array.from(document.querySelectorAll('input[name="group_checkbox"]:checked')).map(el => el.value);
-					const selectedCategories = Array.from(document.querySelectorAll('input[name="category_checkbox"]:checked')).map(el => el.value);
-					const selectedSex = document.querySelector('input[name="sex"]:checked')?.value || null;
-					const yearFrom = parseInt(document.getElementById('yearFrom').value, 10);
-					const yearUntil = parseInt(document.getElementById('yearUntil').value, 10);
-
-					// Проверяем, что yearFrom не больше yearUntil
-					if (yearFrom > yearUntil) {
-						alert("Год ОТ больше года ДО");
-						return; // Прерываем выполнение функции
-					}
-
-					fetch('/generate_query', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ groups: selectedGroups, categories: selectedCategories, sex: selectedSex, yearFrom, yearUntil })
-					})
-						.then(response => {
-							if (response.ok) {
-								return response.blob().then(blob => {
-									const contentDisposition = response.headers.get('Content-Disposition');
-									const originalFilename = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)?.[1]?.replace(/['"]/g, '') || 'download.xlsx';
-									const filename = `Запрос${originalFilename}`;
-
-									const url = window.URL.createObjectURL(blob);
-									const a = document.createElement('a');
-									a.style.display = 'none';
-									a.href = url;
-									a.download = filename;
-									document.body.appendChild(a);
-									a.click();
-									window.URL.revokeObjectURL(url);
-								});
-							} else if (response.status === 404) {
-								return response.json().then(data => {
-									alert(data.error); // Показываем сообщение об ошибке
-								});
-							} else {
-								throw new Error('Сетевой ответ не в порядке');
-							}
-						})
-						.catch(console.error);
-				});
-
-
-			</script>
-
 		</div>
 
-
-
-
-
+		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>
+
+			document.getElementById('btn_cab_archive').addEventListener('click', function () {
+				window.location.href = '/cab_archive';
+			});
+
+			document.getElementById('btn_cab_codes').addEventListener('click', function () {
+				window.location.href = '/cab_codes';
+			});
+
+			document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+				window.location.href = '/cab_analysis';
+			});
+
+			document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+				window.location.href = '/cab_excelgen';
+			});
+
+			document.getElementById('btn_cab_admins').addEventListener('click', function () {
+				window.location.href = '/cab_admins';
+			});
+
+			function confirmUpdateCode(adminLogin) {
+				return confirm(`Сохранить изменения?`);
+			}
+			function confirmDeleteCode(adminLogin) {
+				return confirm(`Удалить группу ${adminLogin}?`);
+			}
+
+			document.getElementById('show_all_groups').addEventListener('click', function () {
+				// Получаем все элементы с классом group-item
+				const groups = document.querySelectorAll('.group-item.hidden_groups');
+				// Показываем все скрытые элементы
+				groups.forEach(function (group) {
+					group.classList.remove('hidden_groups');
+				});
+				// Скрываем кнопку после нажатия
+				this.classList.add('hidden-button');
+			});
+
+
+			document.getElementById('start_excelgen').addEventListener('click', function () {
+				const selectedGroups = Array.from(document.querySelectorAll('input[name="group_checkbox"]:checked')).map(el => el.value);
+				const selectedCategories = Array.from(document.querySelectorAll('input[name="category_checkbox"]:checked')).map(el => el.value);
+				const selectedSex = document.querySelector('input[name="sex"]:checked')?.value || null;
+				const yearFrom = parseInt(document.getElementById('yearFrom').value, 10);
+				const yearUntil = parseInt(document.getElementById('yearUntil').value, 10);
+
+				// Проверяем, что yearFrom не больше yearUntil
+				if (yearFrom > yearUntil) {
+					alert("Год ОТ больше года ДО");
+					return; // Прерываем выполнение функции
+				}
+
+				fetch('/generate_query', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ groups: selectedGroups, categories: selectedCategories, sex: selectedSex, yearFrom, yearUntil })
+				})
+					.then(response => {
+						if (response.ok) {
+							return response.blob().then(blob => {
+								const contentDisposition = response.headers.get('Content-Disposition');
+								const originalFilename = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)?.[1]?.replace(/['"]/g, '') || 'download.xlsx';
+								const filename = `Запрос${originalFilename}`;
+
+								const url = window.URL.createObjectURL(blob);
+								const a = document.createElement('a');
+								a.style.display = 'none';
+								a.href = url;
+								a.download = filename;
+								document.body.appendChild(a);
+								a.click();
+								window.URL.revokeObjectURL(url);
+							});
+						} else if (response.status === 404) {
+							return response.json().then(data => {
+								alert(data.error); // Показываем сообщение об ошибке
+							});
+						} else {
+							throw new Error('Сетевой ответ не в порядке');
+						}
+					})
+					.catch(console.error);
+			});
+
 
 		</script>
 

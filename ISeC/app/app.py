@@ -2101,7 +2101,7 @@ def clear_session():
 # ------------ КАБИНЕТ АДМИНИСТРАТОРА ------------
 # ------------------------------------------------
 
-# Функция для хеширования пароля
+# Хеширование пароля
 def cab_hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -2140,7 +2140,7 @@ def cab_logout():
 
 
 
-# Маршрут для главной страницы
+# Маршрут для главной страницы кабинета администратора
 @app.route('/cab_archive', methods=['GET', 'POST'])
 def cab_archive():
     if 'adminName' not in session:
@@ -2382,7 +2382,7 @@ def cab_codes():
     # Возврат отсортированного списка
     return render_template('cab_codes.html', accessRows=sorted_codes_list)
 
-# Функция проверки существования кодов доступа в базе данных перед созданием/обновлением
+# Проверка существования кодов доступа в базе данных перед созданием/обновлением
 @app.route('/cab_check_code', methods=['POST'])
 def cab_check_code():
     action = request.json.get('action')  # Операция
@@ -2423,7 +2423,7 @@ def cab_check_code():
         conn.close()  # Закрываем соединение в любом случае
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
-# Функция проверки существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
+# Проверка существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
 @app.route('/cab_check_code_id', methods=['POST'])
 def cab_check_code_id():
     input_id = request.json.get('codeId')  # Получаем код из запроса
@@ -2448,32 +2448,7 @@ def cab_check_code_id():
     finally:
         conn.close()
 
-# Функция проверки существования логина администратора в базе (нужна для исключения дубликатов)
-@app.route('/cab_check_admin_login', methods=['POST'])
-def cab_check_admin_login():
-    input_id = request.json.get('adminId')  # Получаем код из запроса
-    conn = get_db_connection()
-    if conn is None:
-        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
-    cursor = conn.cursor()
-    try:
-        cursor.execute('SELECT userId FROM ISeC_adminAccounts WHERE login = ?', (input_id,))
-        result = cursor.fetchone()
-        
-        if result:
-            return jsonify({'found': True})  # Если id найден
-        else:
-            return jsonify({'found': False})  # Если id не найден
-            
-    except sqlite3.OperationalError as e:
-        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
-            return jsonify({'found': False})  # Если таблица не существует
-        else:
-            return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
-    finally:
-        conn.close()
-
-# Функция создания нового кода доступа
+# Создание нового кода доступа
 @app.route('/cab_create_code', methods=['POST'])
 def create_code():
     if 'adminName' not in session:
@@ -2507,7 +2482,7 @@ def create_code():
         conn.close()
     return redirect(url_for('cab_codes'))
 
-# Функция изменения кодов доступа в базе данных
+# Изменение кодов доступа в базе данных
 @app.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
     if 'adminName' not in session:
@@ -2534,7 +2509,7 @@ def cab_update_code(code_id):
         conn.close()
     return redirect(url_for('cab_codes'))
 
-# Функция удаления кодов доступа
+# Удаление кодов доступа
 @app.route('/cab_delete_code/<code_id>', methods=['POST'])
 def cab_delete_code(code_id):
     if 'adminName' not in session:
@@ -2548,7 +2523,7 @@ def cab_delete_code(code_id):
     return redirect(url_for('cab_codes'))
 
 
-
+# Маршрут для страницы аналитики
 @app.route('/cab_analysis')
 def cab_analysis():
     if 'adminName' not in session:
@@ -2557,11 +2532,11 @@ def cab_analysis():
     processed_data, total_rows = cab_process_analysis_data(data)
     return render_template('cab_analysis.html', analysis_data=processed_data, total_rows=total_rows)
 
+# Функция получения данных из БД
 def cab_get_analysis_data():
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    # Выполним запрос для получения нужных столбцов
+    # Запрос для получения нужных столбцов
     query = """
     SELECT 
         b1_q1_top, b1_q2_top, b1_q3_top, b1_q4_top, b1_q5_top, b1_q6_top, b1_q7_top, b1_q8_top, b1_q9_top, b1_q10_top, b1_q11_top, b1_q12_top, b1_q13_top, b1_q14_top, b1_q15_top,
@@ -2573,14 +2548,12 @@ def cab_get_analysis_data():
         b6_q1, b6_q2, b6_q3, b6_q4, b6_q5, b6_q6, b6_q7, b6_q8, b6_q9, b6_q10
     FROM ISeC_results
     """
-
     cursor.execute(query)
     data = cursor.fetchall()
     conn.close()
     return data
 
-
-
+# Функция формирования сводных результатов в виде списка
 def cab_process_analysis_data(data):
     result = []
     total_rows = len(data)
@@ -2632,7 +2605,6 @@ def cab_process_analysis_data(data):
             count_value = count_dict_2[question_number][value]
             result.append([f"Б.2 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
-
     # Формируем результаты для b3_
     for question_number in range(1, 10):
         for value in range(1, 4):  # Убедитесь, что здесь 3 строки
@@ -2658,32 +2630,6 @@ def cab_process_analysis_data(data):
             result.append([f"Б.6 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     return result, total_rows
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2715,7 +2661,7 @@ def get_unique_categories():
     conn.close()
     return sorted([category[0] for category in categories])  # Преобразуем в список и сортируем по алфавиту
 
-# Функция для сортировки групп по дате
+# Сортировка групп по дате
 def sort_groups_by_date(groups):
     def extract_date(group_name):
         match = re.search(r'(\d{2}\.\d{2}\.\d{4})', group_name)  # Используем регулярное выражение для извлечения даты
@@ -2726,10 +2672,10 @@ def sort_groups_by_date(groups):
     return sorted(groups, key=extract_date, reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
 
 
-# Маршрут для страницы выборок
+# Создание sql-запроса из данных на html-странице
 @app.route('/generate_query', methods=['POST'])
 def generate_query():
-    # Проверяем, существует ли директория 'temp', и если нет, создаем её
+    # Проверяем, существует ли директория 'temp', и, если нет, создаем её
     directory = 'temp'
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -2921,6 +2867,31 @@ def delete_excel(file_path):
 
 
 
+
+# Функция проверки существования логина администратора в базе (нужна для исключения дубликатов)
+@app.route('/cab_check_admin_login', methods=['POST'])
+def cab_check_admin_login():
+    input_id = request.json.get('adminId')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT userId FROM ISeC_adminAccounts WHERE login = ?', (input_id,))
+        result = cursor.fetchone()
+        
+        if result:
+            return jsonify({'found': True})  # Если id найден
+        else:
+            return jsonify({'found': False})  # Если id не найден
+            
+    except sqlite3.OperationalError as e:
+        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
+            return jsonify({'found': False})  # Если таблица не существует
+        else:
+            return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
+    finally:
+        conn.close()
 
 
 

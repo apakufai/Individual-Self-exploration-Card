@@ -23,27 +23,27 @@
 	</header>
 
 	<main class="main">
+
 		<div class="side_menu">
-			<button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+			<button class="btn_sidelink_actual" id="btn_cab_archive">
 				Архив
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+			<button class="btn_sidelink" id="btn_cab_codes">
 				Коды доступа
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+			<button class="btn_sidelink" id="btn_cab_analysis">
 				Анализ по вопросам
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+			<button class="btn_sidelink" id="btn_cab_excelgen">
 				Выборки (excel)
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+			<button class="btn_sidelink" id="btn_cab_admins">
 				Администраторы
 			</button>
-
 		</div>
 
 		<div class="central_archive">
@@ -56,7 +56,35 @@
 			<button id="gener_and_send_PDF" class="btn_startgen" type="button">Запустить генерацию</button>
 		</div>
 
+		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>
+
+			document.getElementById('btn_cab_archive').addEventListener('click', function () {
+				window.location.href = '/cab_archive';
+			});
+
+			document.getElementById('btn_cab_codes').addEventListener('click', function () {
+				window.location.href = '/cab_codes';
+			});
+
+			document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+				window.location.href = '/cab_analysis';
+			});
+
+			document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+				window.location.href = '/cab_excelgen';
+			});
+
+			document.getElementById('btn_cab_admins').addEventListener('click', function () {
+				window.location.href = '/cab_admins';
+			});
+
+			function confirmUpdateCode(adminLogin) {
+				return confirm(`Сохранить изменения?`);
+			}
+			function confirmDeleteCode(adminLogin) {
+				return confirm(`Удалить группу ${adminLogin}?`);
+			}
 
 			document.addEventListener('DOMContentLoaded', function () {
 				document.getElementById('gener_and_send_PDF').addEventListener('click', function () {
@@ -314,7 +342,7 @@
 						});
 				});
 			});
-			
+
 		</script>
 
 	</main>

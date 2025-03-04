@@ -23,27 +23,27 @@
 	</header>
 
 	<main class="main">
+
 		<div class="side_menu">
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+			<button class="btn_sidelink" id="btn_cab_archive">
 				Архив
 			</button>
 
-			<button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+			<button class="btn_sidelink_actual" id="btn_cab_codes">
 				Коды доступа
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+			<button class="btn_sidelink" id="btn_cab_analysis">
 				Анализ по вопросам
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+			<button class="btn_sidelink" id="btn_cab_excelgen">
 				Выборки (excel)
 			</button>
 
-			<button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+			<button class="btn_sidelink" id="btn_cab_admins">
 				Администраторы
 			</button>
-
 		</div>
 
 		<div class="central_codes">
@@ -121,30 +121,58 @@
 				</tbody>
 			</table>
 
-			<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
-			<script>
-
-				document.addEventListener('DOMContentLoaded', function () {  // Для отображения сегодняшней даты
-					const today = new Date();
-					const day = String(today.getDate()).padStart(2, '0');
-					const month = String(today.getMonth() + 1).padStart(2, '0'); // Январь - 0
-					const year = today.getFullYear();
-					// Форматирование даты
-					const formattedDate = `${day}.${month}.${year}`;
-					// Заполнение ячейки датой
-					const dateCell = document.getElementById('entrycode_block_td_0');
-					dateCell.textContent = formattedDate;
-				});
-
-				function confirmUpdate(testGroup) {
-					return confirm(`Сохранить изменения?`);
-				}
-				function confirmDelete(testGroup) {
-					return confirm(`Удалить группу ${testGroup}?`);
-				}
-			</script>
-
 		</div>
+
+		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
+		<script>
+
+			document.getElementById('btn_cab_archive').addEventListener('click', function () {
+				window.location.href = '/cab_archive';
+			});
+
+			document.getElementById('btn_cab_codes').addEventListener('click', function () {
+				window.location.href = '/cab_codes';
+			});
+
+			document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+				window.location.href = '/cab_analysis';
+			});
+
+			document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+				window.location.href = '/cab_excelgen';
+			});
+
+			document.getElementById('btn_cab_admins').addEventListener('click', function () {
+				window.location.href = '/cab_admins';
+			});
+
+			function confirmUpdateCode(adminLogin) {
+				return confirm(`Сохранить изменения?`);
+			}
+			function confirmDeleteCode(adminLogin) {
+				return confirm(`Удалить группу ${adminLogin}?`);
+			}
+
+			document.addEventListener('DOMContentLoaded', function () {  // Для отображения сегодняшней даты
+				const today = new Date();
+				const day = String(today.getDate()).padStart(2, '0');
+				const month = String(today.getMonth() + 1).padStart(2, '0'); // Январь - 0
+				const year = today.getFullYear();
+				// Форматирование даты
+				const formattedDate = `${day}.${month}.${year}`;
+				// Заполнение ячейки датой
+				const dateCell = document.getElementById('entrycode_block_td_0');
+				dateCell.textContent = formattedDate;
+			});
+
+			function confirmUpdate(testGroup) {
+				return confirm(`Сохранить изменения?`);
+			}
+			function confirmDelete(testGroup) {
+				return confirm(`Удалить группу ${testGroup}?`);
+			}
+
+		</script>
 
 	</main>
 

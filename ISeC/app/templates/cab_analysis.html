@@ -23,28 +23,29 @@
     </header>
 
     <main class="main">
+
         <div class="side_menu">
-            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_archive'">
+            <button class="btn_sidelink" id="btn_cab_archive">
                 Архив
             </button>
 
-            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_codes'">
+            <button class="btn_sidelink" id="btn_cab_codes">
                 Коды доступа
             </button>
 
-            <button class="btn_sidelink_actual" onclick="window.location.href='http://127.0.0.1:5000/cab_analysis'">
+            <button class="btn_sidelink_actual" id="btn_cab_analysis">
                 Анализ по вопросам
             </button>
 
-            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_excelgen'">
+            <button class="btn_sidelink" id="btn_cab_excelgen">
                 Выборки (excel)
             </button>
 
-            <button class="btn_sidelink" onclick="window.location.href='http://127.0.0.1:5000/cab_admins'">
+            <button class="btn_sidelink" id="btn_cab_admins">
                 Администраторы
             </button>
-
         </div>
+
 
         <div class="central_analysis">
 
@@ -75,7 +76,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -86,7 +87,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 1][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -97,7 +98,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 2][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -108,7 +109,7 @@
                         <td class="table_underline">
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 3][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 3][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -129,7 +130,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -140,7 +141,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 1][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -151,7 +152,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 2][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -162,7 +163,7 @@
                         <td class="table_underline">
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 3][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 3][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -182,7 +183,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -193,7 +194,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 1][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -204,7 +205,7 @@
                         <td class="table_underline">
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 2][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -214,7 +215,7 @@
                     <!-- Блок для b4 -->
                     {% set rowspan_b4 = 3 %}
                     {% for question_number in range(1, 17) %}
-                    {% set start_index = (question_number - 1) * rowspan_b3 + 207 %}
+                    {% set start_index = (question_number - 1) * rowspan_b4 + 207 %}
                     {% if analysis_data[start_index][0].startswith('Б.4 В.') %}
                     <tr>
                         <td rowspan="{{ rowspan_b4 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
@@ -224,7 +225,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -235,7 +236,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 1][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -246,7 +247,7 @@
                         <td class="table_underline">
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 2][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -256,7 +257,7 @@
                     <!-- Блок для b5 -->
                     {% set rowspan_b5 = 3 %}
                     {% for question_number in range(1, 13) %}
-                    {% set start_index = (question_number - 1) * rowspan_b3 + 255 %}
+                    {% set start_index = (question_number - 1) * rowspan_b5 + 255 %}
                     {% if analysis_data[start_index][0].startswith('Б.5 В.') %}
                     <tr>
                         <td rowspan="{{ rowspan_b5 }}" class="table_underline">{{ analysis_data[start_index][0] }}</td>
@@ -266,7 +267,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -277,7 +278,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 1][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -288,7 +289,7 @@
                         <td class="table_underline">
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 2][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -308,7 +309,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -319,7 +320,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 1][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 1][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -330,7 +331,7 @@
                         <td>
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 2][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 2][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
@@ -341,17 +342,50 @@
                         <td class="table_underline">
                             <div class="progress-container">
                                 <div class="progress-filled"
-                                    style="width: {{ analysis_data[start_index + 3][3] | replace('%', '') }}%;"></div>
+                                    data-percentage="{{ analysis_data[start_index + 3][3] | replace('%', '') }}"></div>
                             </div>
                         </td>
                     </tr>
                     {% endif %}
                     {% endfor %}
 
-
                 </tbody>
             </table>
+
         </div>
+
+        <script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
+        <script>
+
+            document.getElementById('btn_cab_archive').addEventListener('click', function () {
+                window.location.href = '/cab_archive';
+            });
+
+            document.getElementById('btn_cab_codes').addEventListener('click', function () {
+                window.location.href = '/cab_codes';
+            });
+
+            document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+                window.location.href = '/cab_analysis';
+            });
+
+            document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+                window.location.href = '/cab_excelgen';
+            });
+
+            document.getElementById('btn_cab_admins').addEventListener('click', function () {
+                window.location.href = '/cab_admins';
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const progressFilledElements = document.querySelectorAll('.progress-filled');
+                progressFilledElements.forEach(function (el) {
+                    const percentage = el.getAttribute('data-percentage');
+                    el.style.width = percentage + '%';
+                });
+            });
+
+        </script>
 
     </main>
 

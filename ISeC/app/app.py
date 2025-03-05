@@ -26,8 +26,6 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
-from flask import flash
-
 
 
 
@@ -2141,26 +2139,10 @@ def cab_logout():
 
 
 # Маршрут для главной страницы кабинета администратора
-@app.route('/cab_archive', methods=['GET', 'POST'])
+@app.route('/cab_archive')
 def cab_archive():
     if 'adminName' not in session:
         return redirect(url_for('cab_login'))
-    if request.method == 'POST':
-        action = request.form.get('action')
-        adminLogin = request.form.get('adminLogin')
-        adminPass = request.form.get('adminPass')
-        conn = get_db_connection()
-        if action == 'add':
-            hashed_password = cab_hash_password(password)
-            conn.execute('INSERT INTO ISeC_adminAccounts (logins, passwords) VALUES (?, ?)', 
-                         (adminLogin, hashed_password))
-            conn.commit()
-            flash('Аккаунт успешно добавлен')
-        elif action == 'delete':
-            conn.execute('DELETE FROM ISeC_adminAccounts WHERE logins = ?', (adminLogin,))
-            conn.commit()
-            flash('Аккаунт успешно удален')
-        conn.close()
     return render_template('cab_archive.html')
 
 # Маршрут для получения данных пользователя по userId

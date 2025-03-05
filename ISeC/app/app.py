@@ -2108,8 +2108,7 @@ def cab_hash_password(password):
 def cab_login():
     if request.method == 'POST':
         adminLogin = request.form['adminLogin']
-        adminPass = request.form['adminPass']
-        hashed_password = cab_hash_password(adminPass)
+        hashed_password = cab_hash_password(request.form['adminPass'])
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину

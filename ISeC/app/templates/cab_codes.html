@@ -78,10 +78,10 @@
 						<td class="entrycode_block_td_0" id="entrycode_block_td_0">
 						</td>
 						<td class="entrycode_block_td_1">
-							<input type="text" name="test_group">
+							<input type="text" name="test_group" autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_2">
-							<input type="text" name="code">
+							<input type="text" name="code" autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_3">
 							<input type="date" name="start_date">
@@ -100,10 +100,10 @@
 							{{ accessRow.test_group[:10] }}
 						</td>
 						<td class="entrycode_block_td_1">
-							<input type="text" name="test_group" value="{{ accessRow.test_group[11:] }}">
+							<input type="text" name="test_group" value="{{ accessRow.test_group[11:] }}" autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_2">
-							<input type="text" name="code" value="{{ accessRow.code }}">
+							<input type="text" name="code" value="{{ accessRow.code }}" autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_3">
 							<input type="date" name="start_date" value="{{ accessRow.start_date }}">

@@ -232,7 +232,7 @@ function deleteCode(button) {
 
 
 
-// Создание id администратора  с проверкой на наличие в базе данных
+// Создание id администратора с проверкой на наличие в базе данных
 async function cab_generateUniqueAdminId() {
     let isLoginFree = false; // Счётчик проверки на существование id в базе
     let loginToCheck; // Объявляем переменную для ID

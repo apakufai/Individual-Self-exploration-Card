@@ -267,8 +267,7 @@ CREATE TABLE ISeC_adminAccounts (
 
 INSERT INTO ISeC_adminAccounts
 (adminId, login, password, adminName)
-VALUES ('admin_0000', 'apakufai', 'f2c7a1b6c1b9d1c5b6c2b1e3f5d8e1c2c8e7f4b0fc0c8f7e5c3c2c6a1b3c1b0d
-', 'Apakufai');
+VALUES ('admin_0000', 'apakufai', '7b87b8faf344151afdb9c55bbd3d2899cf9b3bd7d73d7f2755f89982fe7ae9cd', 'Apakufai');
 
 DELETE FROM ISeC_adminAccounts;
 

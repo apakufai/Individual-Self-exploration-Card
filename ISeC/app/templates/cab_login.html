@@ -14,11 +14,11 @@
 		<form id="loginForm" action="{{ url_for('cab_login') }}" method="post" novalidate>
 			<div class="input-group">
 				<label class="login_label" for="adminLogin">Логин</label>
-				<input class="login_input" type="text" id="adminLogin" name="adminLogin" placeholder="">
+				<input type="text" class="login_input" id="adminLogin" name="adminLogin" placeholder="">
 			</div>
 			<div class="input-group">
 				<label class="login_label" for="adminPass">Пароль</label>
-				<input class="login_input" type="password" id="adminPass" name="adminPass" placeholder="">
+				<input type="password" class="login_input" id="adminPass" name="adminPass" placeholder="" autocomplete="off">
 			</div>
 			<button class="enter_btn" type="submit">Войти</button>
 		</form>
@@ -64,7 +64,7 @@
 						} else if (data === "passwordIsWrong") {
 							alert("Введённый пароль неверен");
 						} else if (data === "sucsess") {
-							window.location.href = "/cab_archive";
+							window.location.href = "/cab_analysis";
 						}
 					})
 					.catch(error => {

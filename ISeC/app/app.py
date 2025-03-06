@@ -28,7 +28,6 @@ from openpyxl.utils import get_column_letter
 
 
 
-
 app = Flask(__name__)
 CORS(app)  # Разрешить CORS для всех маршрутов
 app.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
@@ -2122,17 +2121,22 @@ def cab_login():
             # Если пароль неверен
             return "passwordIsWrong"
         # Если все проверки пройдены, сохраняем сессию
-        session['adminLogin'] = user['login']
-        session['adminName'] = user['adminName']
-        return "sucsess"
+        session['admin_data'] = {
+            'adminId': user['adminId'],
+            'adminName': user['adminName'],
+            'archivePass': user['archivePass'],
+            'codesPass': user['codesPass'],
+            'analysisPass': user['analysisPass'],
+            'excelgenPass': user['excelgenPass']
+        }  # Сохраняем данные в сессии
         conn.close()
+        return "sucsess"
     return render_template('cab_login.html')
 
 # Маршрут для выхода из системы
 @app.route('/cab_logout')
 def cab_logout():
-    session.pop('adminLogin', None)
-    session.pop('adminName', None)
+    session.pop('admin_data', None)
     return redirect(url_for('cab_login'))
 
 
@@ -2140,7 +2144,7 @@ def cab_logout():
 # Маршрут для главной страницы кабинета администратора
 @app.route('/cab_archive')
 def cab_archive():
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     return render_template('cab_archive.html')
 
@@ -2148,11 +2152,14 @@ def cab_archive():
 @app.route('/get_respondent_data', methods=['POST'])
 def get_respondent_data():
     data = request.get_json()
-    user_id = data.get('userId')
-
+    if not data or 'userId' not in data:
+        return "Invalid input", 400  # Возвращаем ошибку, если входные данные некорректны
     conn = get_db_connection()
-    respondent_data = conn.execute('SELECT * FROM ISeC_results WHERE userId = ?', (user_id,)).fetchone()
+    respondent_data = conn.execute('SELECT * FROM ISeC_results WHERE userId = ?', (data.get('userId'),)).fetchone()
     conn.close()
+
+    if respondent_data is None:
+        return "No data found", 404  # Возвращаем ошибку, если данные не найдены
 
     if respondent_data:
         return jsonify({
@@ -2327,7 +2334,7 @@ def get_respondent_data():
 # Маршрут для страницы кодов доступа
 @app.route('/cab_codes')
 def cab_codes():
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -2388,7 +2395,6 @@ def cab_check_code():
             result = cursor.fetchone()
             if result:
                 isCodeInDB = True
-
         elif action == "update":
             # Проверка на существование группы, исключая текущий codeId
             cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
@@ -2432,7 +2438,7 @@ def cab_check_code_id():
 # Создание нового кода доступа
 @app.route('/cab_create_code', methods=['POST'])
 def create_code():
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     # Получение данных из JSON
     data = request.get_json()
@@ -2466,7 +2472,7 @@ def create_code():
 # Изменение кодов доступа в базе данных
 @app.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     # Получение данных из JSON
     data = request.get_json()
@@ -2493,7 +2499,7 @@ def cab_update_code(code_id):
 # Удаление кодов доступа
 @app.route('/cab_delete_code/<code_id>', methods=['POST'])
 def cab_delete_code(code_id):
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -2507,7 +2513,7 @@ def cab_delete_code(code_id):
 # Маршрут для страницы аналитики
 @app.route('/cab_analysis')
 def cab_analysis():
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     data = cab_get_analysis_data()
     processed_data, total_rows = cab_process_analysis_data(data)
@@ -2617,7 +2623,7 @@ def cab_process_analysis_data(data):
 # Маршрут для страницы выборок
 @app.route('/cab_excelgen')
 def cab_excelgen():
-    if 'adminName' not in session:
+    if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     groups = get_unique_groups()  # Получаем уникальные группы
     categories = get_unique_categories()  # Получаем уникальные категории

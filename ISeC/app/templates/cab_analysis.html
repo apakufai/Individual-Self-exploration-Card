@@ -15,7 +15,7 @@
         <div class="header_ISeC">ИКС-файл. Администраторная</div>
         <div class="header_admin">
             <span>
-                Привет, <a href="{{ url_for('index') }}">{{ session['adminName'] }}</a> |
+                Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
                 <a href="{{ url_for('index') }}">Тест</a> |
                 <a href="{{ url_for('cab_logout') }}">Выйти</a>
             </span>
@@ -46,7 +46,7 @@
             </button>
         </div>
 
-
+        {% if session.admin_data.analysisPass == 'true' %}
         <div class="central_analysis">
 
             <p class="respondences_count">Общее количество респондентов: {{ total_rows }}</p>
@@ -353,6 +353,9 @@
             </table>
 
         </div>
+        {% else %}
+        <span class="access_blocked">У Вас нет доступа к этой странице</span>
+        {% endif %}
 
         <script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
         <script>

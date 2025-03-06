@@ -15,10 +15,10 @@
 		<div class="header_ISeC">ИКС-файл. Администраторная</div>
 		<div class="header_admin">
 			<span>
-				Привет, <a href="{{ url_for('index') }}">{{ session['adminName'] }}</a> |
+				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
 				<a href="{{ url_for('index') }}">Тест</a> |
 				<a href="{{ url_for('cab_logout') }}">Выйти</a>
-			</span>
+			</span>			
 		</div>
 	</header>
 
@@ -46,6 +46,7 @@
 			</button>
 		</div>
 
+        {% if session.admin_data.archivePass == 'true' %}
 		<div class="central_archive">
 
 			<input type="text" class="inp_text" id="respondent_id" required placeholder="ID респондента" autocomplete="off">
@@ -54,6 +55,9 @@
 
 			<button id="gener_and_send_PDF" class="btn_startgen" type="button">Запустить генерацию</button>
 		</div>
+        {% else %}
+        <span class="access_blocked">У Вас нет доступа к этой странице</span>
+        {% endif %}
 
 		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>

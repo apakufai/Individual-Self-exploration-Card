@@ -263,18 +263,18 @@ CREATE TABLE ISeC_adminAccounts (
     login TEXT UNIQUE,
     password TEXT,
     adminName TEXT UNIQUE,
-    archivePass TEXT,
-    codesPass TEXT,
-    analysisPass TEXT,
-    excelgenPass TEXT
+    archiveAccess TEXT,
+    codesAccess TEXT,
+    analysisAccess TEXT,
+    excelgenAccess TEXT
 );
 
 INSERT INTO ISeC_adminAccounts
-(adminId, login, password, adminName, archivePass, codesPass, analysisPass, excelgenPass)
+(adminId, login, password, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess)
 VALUES ('admin', 'apakufai', '7b87b8faf344151afdb9c55bbd3d2899cf9b3bd7d73d7f2755f89982fe7ae9cd', 'Apakufai', 'true', 'true', 'true', 'true');
 
 INSERT INTO ISeC_adminAccounts
-(adminId, login, password, adminName, archivePass, codesPass, analysisPass, excelgenPass)
+(adminId, login, password, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess)
 VALUES ('admin_0000', 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'Администратор', 'false', 'false', 'false', 'false');
 
 DELETE FROM ISeC_adminAccounts;

@@ -18,7 +18,7 @@
 				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
 				<a href="{{ url_for('index') }}">Тест</a> |
 				<a href="{{ url_for('cab_logout') }}">Выйти</a>
-			</span>			
+			</span>
 		</div>
 	</header>
 
@@ -46,18 +46,19 @@
 			</button>
 		</div>
 
-        {% if session.admin_data.archivePass == 'true' %}
+		{% if session.admin_data.archiveAccess == 'true' %}
 		<div class="central_archive">
 
-			<input type="text" class="inp_text" id="respondent_id" required placeholder="ID респондента" autocomplete="off">
+			<input type="text" class="inp_text" id="respondent_id" required placeholder="ID респондента"
+				autocomplete="off">
 
 			<input type="email" class="inp_text" id="email_to_send" required placeholder="Эл. почта" autocomplete="off">
 
 			<button id="gener_and_send_PDF" class="btn_startgen" type="button">Запустить генерацию</button>
 		</div>
-        {% else %}
-        <span class="access_blocked">У Вас нет доступа к этой странице</span>
-        {% endif %}
+		{% else %}
+		<span class="access_blocked">У Вас нет доступа к этой странице</span>
+		{% endif %}
 
 		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>
@@ -115,234 +116,238 @@
 						return;
 					}
 
-					// Отправка данных на сервер
-					fetch('/get_respondent_data', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify({ userId: respondentId })
-					})
-						.then(response => {
-							if (response.status === 404) {
-								alert("Такого id нет в базе данных");
-								return Promise.reject(); // Останавливаем выполнение
-							}
+					// Диалоговое окно подтверждения
+					if (confirm('Данные введены верно?')) {
 
-							if (!response.ok) {
-								throw new Error('Ошибка при получении данных респондента');
-							}
-
-							return response.json();
+						// Отправка данных на сервер
+						fetch('/get_respondent_data', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({ userId: respondentId })
 						})
-						.then(respondentData => {
+							.then(response => {
+								if (response.status === 404) {
+									alert("Такого id нет в базе данных");
+									return Promise.reject(); // Останавливаем выполнение
+								}
 
-							// Создаем JSON-объект для хранения данных
-							const ISeC_results = {
+								if (!response.ok) {
+									throw new Error('Ошибка при получении данных респондента');
+								}
 
-								downloadToPC: false,
-								receiveByEmail: true,
-								insertData: false,
-								emailToSend: emailToSend,
+								return response.json();
+							})
+							.then(respondentData => {
 
-								userGroup: respondentData.userGroup,
-								userId: respondentId,
-								userName: respondentData.userName,
-								userSurname: respondentData.userSurname,
-								userSex: respondentData.userSex,
-								userBirthyear: respondentData.userBirthyear,
-								userCategory: respondentData.userCategory,
-								userEmail: respondentData.userEmail,
+								// Создаем JSON-объект для хранения данных
+								const ISeC_results = {
 
-								adaptation_1: respondentData.adaptation_1,
-								compromise_1: respondentData.compromise_1,
-								bidding_1: respondentData.bidding_1,
-								threat_1: respondentData.threat_1,
-								logicArgument_1: respondentData.logicArgument_1,
-								emotionsArgument_1: respondentData.emotionsArgument_1,
-								adaptationCount_1: respondentData.adaptationCount_1,
-								compromiseCount_1: respondentData.compromiseCount_1,
-								biddingCount_1: respondentData.biddingCount_1,
-								threatCount_1: respondentData.threatCount_1,
-								logicArgumentCount_1: respondentData.logicArgumentCount_1,
-								emotionsArgumentCount_1: respondentData.emotionsArgumentCount_1,
+									downloadToPC: false,
+									receiveByEmail: true,
+									insertData: false,
+									emailToSend: emailToSend,
 
-								b1_q1_top: respondentData.b1_q1_top,
-								b1_q2_top: respondentData.b1_q2_top,
-								b1_q3_top: respondentData.b1_q3_top,
-								b1_q4_top: respondentData.b1_q4_top,
-								b1_q5_top: respondentData.b1_q5_top,
-								b1_q6_top: respondentData.b1_q6_top,
-								b1_q7_top: respondentData.b1_q7_top,
-								b1_q8_top: respondentData.b1_q8_top,
-								b1_q9_top: respondentData.b1_q9_top,
-								b1_q10_top: respondentData.b1_q10_top,
-								b1_q11_top: respondentData.b1_q11_top,
-								b1_q12_top: respondentData.b1_q12_top,
-								b1_q13_top: respondentData.b1_q13_top,
-								b1_q14_top: respondentData.b1_q14_top,
-								b1_q15_top: respondentData.b1_q15_top,
+									userGroup: respondentData.userGroup,
+									userId: respondentId,
+									userName: respondentData.userName,
+									userSurname: respondentData.userSurname,
+									userSex: respondentData.userSex,
+									userBirthyear: respondentData.userBirthyear,
+									userCategory: respondentData.userCategory,
+									userEmail: respondentData.userEmail,
 
-								adaptation_2: respondentData.adaptation_2,
-								compromise_2: respondentData.compromise_2,
-								threat_2: respondentData.threat_2,
-								cooperation_2: respondentData.cooperation_2,
-								avoidance_2: respondentData.avoidance_2,
-								adaptationCount_2: respondentData.adaptationCount_2,
-								compromiseCount_2: respondentData.compromiseCount_2,
-								threatCount_2: respondentData.threatCount_2,
-								cooperationCount_2: respondentData.cooperationCount_2,
-								avoidanceCount_2: respondentData.avoidanceCount_2,
+									adaptation_1: respondentData.adaptation_1,
+									compromise_1: respondentData.compromise_1,
+									bidding_1: respondentData.bidding_1,
+									threat_1: respondentData.threat_1,
+									logicArgument_1: respondentData.logicArgument_1,
+									emotionsArgument_1: respondentData.emotionsArgument_1,
+									adaptationCount_1: respondentData.adaptationCount_1,
+									compromiseCount_1: respondentData.compromiseCount_1,
+									biddingCount_1: respondentData.biddingCount_1,
+									threatCount_1: respondentData.threatCount_1,
+									logicArgumentCount_1: respondentData.logicArgumentCount_1,
+									emotionsArgumentCount_1: respondentData.emotionsArgumentCount_1,
 
-								b2_q1_top: respondentData.b2_q1_top,
-								b2_q2_top: respondentData.b2_q2_top,
-								b2_q3_top: respondentData.b2_q3_top,
-								b2_q4_top: respondentData.b2_q4_top,
-								b2_q5_top: respondentData.b2_q5_top,
-								b2_q6_top: respondentData.b2_q6_top,
-								b2_q7_top: respondentData.b2_q7_top,
-								b2_q8_top: respondentData.b2_q8_top,
-								b2_q9_top: respondentData.b2_q9_top,
-								b2_q10_top: respondentData.b2_q10_top,
-								b2_q11_top: respondentData.b2_q11_top,
-								b2_q12_top: respondentData.b2_q12_top,
-								b2_q13_top: respondentData.b2_q13_top,
-								b2_q14_top: respondentData.b2_q14_top,
-								b2_q15_top: respondentData.b2_q15_top,
-								b2_q16_top: respondentData.b2_q16_top,
-								b2_q17_top: respondentData.b2_q17_top,
-								b2_q18_top: respondentData.b2_q18_top,
-								b2_q19_top: respondentData.b2_q19_top,
-								b2_q20_top: respondentData.b2_q20_top,
-								b2_q21_top: respondentData.b2_q21_top,
-								b2_q22_top: respondentData.b2_q22_top,
-								b2_q23_top: respondentData.b2_q23_top,
-								b2_q24_top: respondentData.b2_q24_top,
-								b2_q25_top: respondentData.b2_q25_top,
-								b2_q26_top: respondentData.b2_q26_top,
-								b2_q27_top: respondentData.b2_q27_top,
-								b2_q28_top: respondentData.b2_q28_top,
-								b2_q29_top: respondentData.b2_q29_top,
-								b2_q30_top: respondentData.b2_q30_top,
+									b1_q1_top: respondentData.b1_q1_top,
+									b1_q2_top: respondentData.b1_q2_top,
+									b1_q3_top: respondentData.b1_q3_top,
+									b1_q4_top: respondentData.b1_q4_top,
+									b1_q5_top: respondentData.b1_q5_top,
+									b1_q6_top: respondentData.b1_q6_top,
+									b1_q7_top: respondentData.b1_q7_top,
+									b1_q8_top: respondentData.b1_q8_top,
+									b1_q9_top: respondentData.b1_q9_top,
+									b1_q10_top: respondentData.b1_q10_top,
+									b1_q11_top: respondentData.b1_q11_top,
+									b1_q12_top: respondentData.b1_q12_top,
+									b1_q13_top: respondentData.b1_q13_top,
+									b1_q14_top: respondentData.b1_q14_top,
+									b1_q15_top: respondentData.b1_q15_top,
 
-								adaptation_3: respondentData.adaptation_3,
-								threat_3: respondentData.threat_3,
-								cooperation_3: respondentData.cooperation_3,
-								adaptationCount_3: respondentData.adaptationCount_3,
-								threatCount_3: respondentData.threatCount_3,
-								cooperationCount_3: respondentData.cooperationCount_3,
+									adaptation_2: respondentData.adaptation_2,
+									compromise_2: respondentData.compromise_2,
+									threat_2: respondentData.threat_2,
+									cooperation_2: respondentData.cooperation_2,
+									avoidance_2: respondentData.avoidance_2,
+									adaptationCount_2: respondentData.adaptationCount_2,
+									compromiseCount_2: respondentData.compromiseCount_2,
+									threatCount_2: respondentData.threatCount_2,
+									cooperationCount_2: respondentData.cooperationCount_2,
+									avoidanceCount_2: respondentData.avoidanceCount_2,
 
-								b3_q1: respondentData.b3_q1,
-								b3_q2: respondentData.b3_q2,
-								b3_q3: respondentData.b3_q3,
-								b3_q4: respondentData.b3_q4,
-								b3_q5: respondentData.b3_q5,
-								b3_q6: respondentData.b3_q6,
-								b3_q7: respondentData.b3_q7,
-								b3_q8: respondentData.b3_q8,
-								b3_q9: respondentData.b3_q9,
+									b2_q1_top: respondentData.b2_q1_top,
+									b2_q2_top: respondentData.b2_q2_top,
+									b2_q3_top: respondentData.b2_q3_top,
+									b2_q4_top: respondentData.b2_q4_top,
+									b2_q5_top: respondentData.b2_q5_top,
+									b2_q6_top: respondentData.b2_q6_top,
+									b2_q7_top: respondentData.b2_q7_top,
+									b2_q8_top: respondentData.b2_q8_top,
+									b2_q9_top: respondentData.b2_q9_top,
+									b2_q10_top: respondentData.b2_q10_top,
+									b2_q11_top: respondentData.b2_q11_top,
+									b2_q12_top: respondentData.b2_q12_top,
+									b2_q13_top: respondentData.b2_q13_top,
+									b2_q14_top: respondentData.b2_q14_top,
+									b2_q15_top: respondentData.b2_q15_top,
+									b2_q16_top: respondentData.b2_q16_top,
+									b2_q17_top: respondentData.b2_q17_top,
+									b2_q18_top: respondentData.b2_q18_top,
+									b2_q19_top: respondentData.b2_q19_top,
+									b2_q20_top: respondentData.b2_q20_top,
+									b2_q21_top: respondentData.b2_q21_top,
+									b2_q22_top: respondentData.b2_q22_top,
+									b2_q23_top: respondentData.b2_q23_top,
+									b2_q24_top: respondentData.b2_q24_top,
+									b2_q25_top: respondentData.b2_q25_top,
+									b2_q26_top: respondentData.b2_q26_top,
+									b2_q27_top: respondentData.b2_q27_top,
+									b2_q28_top: respondentData.b2_q28_top,
+									b2_q29_top: respondentData.b2_q29_top,
+									b2_q30_top: respondentData.b2_q30_top,
 
-								understandingOfStyles_4: respondentData.understandingOfStyles_4,
-								strengthInstallation_4: respondentData.strengthInstallation_4,
-								manipulationInstallation_4: respondentData.manipulationInstallation_4,
-								negotiationsInstallation_4: respondentData.negotiationsInstallation_4,
-								strengthInstallationCount_4: respondentData.strengthInstallationCount_4,
-								manipulationInstallationCount_4: respondentData.manipulationInstallationCount_4,
-								negotiationsInstallationCount_4: respondentData.negotiationsInstallationCount_4,
+									adaptation_3: respondentData.adaptation_3,
+									threat_3: respondentData.threat_3,
+									cooperation_3: respondentData.cooperation_3,
+									adaptationCount_3: respondentData.adaptationCount_3,
+									threatCount_3: respondentData.threatCount_3,
+									cooperationCount_3: respondentData.cooperationCount_3,
 
-								b4_q1: respondentData.b4_q1,
-								b4_q2: respondentData.b4_q2,
-								b4_q3: respondentData.b4_q3,
-								b4_q4: respondentData.b4_q4,
-								b4_q5: respondentData.b4_q5,
-								b4_q6: respondentData.b4_q6,
-								b4_q7: respondentData.b4_q7,
-								b4_q8: respondentData.b4_q8,
-								b4_q9: respondentData.b4_q9,
-								b4_q10: respondentData.b4_q10,
-								b4_q11: respondentData.b4_q11,
-								b4_q12: respondentData.b4_q12,
-								b4_q13: respondentData.b4_q13,
-								b4_q14: respondentData.b4_q14,
-								b4_q15: respondentData.b4_q15,
-								b4_q16: respondentData.b4_q16,
+									b3_q1: respondentData.b3_q1,
+									b3_q2: respondentData.b3_q2,
+									b3_q3: respondentData.b3_q3,
+									b3_q4: respondentData.b3_q4,
+									b3_q5: respondentData.b3_q5,
+									b3_q6: respondentData.b3_q6,
+									b3_q7: respondentData.b3_q7,
+									b3_q8: respondentData.b3_q8,
+									b3_q9: respondentData.b3_q9,
 
-								adaptation_5: respondentData.adaptation_5,
-								bidding_5: respondentData.bidding_5,
-								logicArgument_5: respondentData.logicArgument_5,
-								emotionsArgument_5: respondentData.emotionsArgument_5,
-								avoidance_5: respondentData.avoidance_5,
-								adaptationCount_5: respondentData.adaptationCount_5,
-								biddingCount_5: respondentData.biddingCount_5,
-								logicArgumentCount_5: respondentData.logicArgumentCount_5,
-								emotionsArgumentCount_5: respondentData.emotionsArgumentCount_5,
-								avoidanceCount_5: respondentData.avoidanceCount_5,
+									understandingOfStyles_4: respondentData.understandingOfStyles_4,
+									strengthInstallation_4: respondentData.strengthInstallation_4,
+									manipulationInstallation_4: respondentData.manipulationInstallation_4,
+									negotiationsInstallation_4: respondentData.negotiationsInstallation_4,
+									strengthInstallationCount_4: respondentData.strengthInstallationCount_4,
+									manipulationInstallationCount_4: respondentData.manipulationInstallationCount_4,
+									negotiationsInstallationCount_4: respondentData.negotiationsInstallationCount_4,
 
-								b5_q1: respondentData.b5_q1,
-								b5_q2: respondentData.b5_q2,
-								b5_q3: respondentData.b5_q3,
-								b5_q4: respondentData.b5_q4,
-								b5_q5: respondentData.b5_q5,
-								b5_q6: respondentData.b5_q6,
-								b5_q7: respondentData.b5_q7,
-								b5_q8: respondentData.b5_q8,
-								b5_q9: respondentData.b5_q9,
-								b5_q10: respondentData.b5_q10,
-								b5_q11: respondentData.b5_q11,
-								b5_q12: respondentData.b5_q12,
+									b4_q1: respondentData.b4_q1,
+									b4_q2: respondentData.b4_q2,
+									b4_q3: respondentData.b4_q3,
+									b4_q4: respondentData.b4_q4,
+									b4_q5: respondentData.b4_q5,
+									b4_q6: respondentData.b4_q6,
+									b4_q7: respondentData.b4_q7,
+									b4_q8: respondentData.b4_q8,
+									b4_q9: respondentData.b4_q9,
+									b4_q10: respondentData.b4_q10,
+									b4_q11: respondentData.b4_q11,
+									b4_q12: respondentData.b4_q12,
+									b4_q13: respondentData.b4_q13,
+									b4_q14: respondentData.b4_q14,
+									b4_q15: respondentData.b4_q15,
+									b4_q16: respondentData.b4_q16,
 
-								logicArgument_6: respondentData.logicArgument_6,
-								emotionsArgument_6: respondentData.emotionsArgument_6,
-								logicArgumentCount_6: respondentData.logicArgumentCount_6,
-								emotionsArgumentCount_6: respondentData.emotionsArgumentCount_6,
+									adaptation_5: respondentData.adaptation_5,
+									bidding_5: respondentData.bidding_5,
+									logicArgument_5: respondentData.logicArgument_5,
+									emotionsArgument_5: respondentData.emotionsArgument_5,
+									avoidance_5: respondentData.avoidance_5,
+									adaptationCount_5: respondentData.adaptationCount_5,
+									biddingCount_5: respondentData.biddingCount_5,
+									logicArgumentCount_5: respondentData.logicArgumentCount_5,
+									emotionsArgumentCount_5: respondentData.emotionsArgumentCount_5,
+									avoidanceCount_5: respondentData.avoidanceCount_5,
 
-								b6_q1: respondentData.b6_q1,
-								b6_q2: respondentData.b6_q2,
-								b6_q3: respondentData.b6_q3,
-								b6_q4: respondentData.b6_q4,
-								b6_q5: respondentData.b6_q5,
-								b6_q6: respondentData.b6_q6,
-								b6_q7: respondentData.b6_q7,
-								b6_q8: respondentData.b6_q8,
-								b6_q9: respondentData.b6_q9,
-								b6_q10: respondentData.b6_q10
-							};
+									b5_q1: respondentData.b5_q1,
+									b5_q2: respondentData.b5_q2,
+									b5_q3: respondentData.b5_q3,
+									b5_q4: respondentData.b5_q4,
+									b5_q5: respondentData.b5_q5,
+									b5_q6: respondentData.b5_q6,
+									b5_q7: respondentData.b5_q7,
+									b5_q8: respondentData.b5_q8,
+									b5_q9: respondentData.b5_q9,
+									b5_q10: respondentData.b5_q10,
+									b5_q11: respondentData.b5_q11,
+									b5_q12: respondentData.b5_q12,
 
-							if (ISeC_results) { // Проверяем, что данные существуют
-								// Успешное завершение генерации PDF
-								alert("Генерация и отправка запущены успешно");
-								// Очистка полей ввода
-								inputHandlerId.value = '';
-								inputHandlerEmail.value = '';
+									logicArgument_6: respondentData.logicArgument_6,
+									emotionsArgument_6: respondentData.emotionsArgument_6,
+									logicArgumentCount_6: respondentData.logicArgumentCount_6,
+									emotionsArgumentCount_6: respondentData.emotionsArgumentCount_6,
 
-								fetch('/generate_and_download_pdf', {
-									method: 'POST',
-									headers: {
-										'Content-Type': 'application/json'
-									},
-									body: JSON.stringify(ISeC_results)
-								})
-									.then(response => {
-										if (!response.ok) {
-											throw new Error('Ошибка при генерации и отправке PDF');
-										}
-										return response.blob();
+									b6_q1: respondentData.b6_q1,
+									b6_q2: respondentData.b6_q2,
+									b6_q3: respondentData.b6_q3,
+									b6_q4: respondentData.b6_q4,
+									b6_q5: respondentData.b6_q5,
+									b6_q6: respondentData.b6_q6,
+									b6_q7: respondentData.b6_q7,
+									b6_q8: respondentData.b6_q8,
+									b6_q9: respondentData.b6_q9,
+									b6_q10: respondentData.b6_q10
+								};
+
+								if (ISeC_results) { // Проверяем, что данные существуют
+									// Успешное завершение генерации PDF
+									alert("Генерация и отправка запущены успешно");
+									// Очистка полей ввода
+									inputHandlerId.value = '';
+									inputHandlerEmail.value = '';
+
+									fetch('/generate_and_download_pdf', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify(ISeC_results)
 									})
-									.catch(error => {
-										console.error('Ошибка:', error);
-										alert('Произошла ошибка. Обратитесь к администратору');
-									});
-							} else {
-								console.error('Данные для генерации отсутствуют, или загрузка уже идет');
-							}
-						})
-						.catch(error => {
-							// Обрабатываем только те ошибки, которые не связаны с 404
-							if (error) {
-								console.error('Произошла ошибка:', error);
-								alert('Произошла ошибка. Пожалуйста, обратитесь к администратору.');
-							}
-						});
+										.then(response => {
+											if (!response.ok) {
+												throw new Error('Ошибка при генерации и отправке PDF');
+											}
+											return response.blob();
+										})
+										.catch(error => {
+											console.error('Ошибка:', error);
+											alert('Произошла ошибка. Обратитесь к администратору');
+										});
+								} else {
+									console.error('Данные для генерации отсутствуют, или загрузка уже идет');
+								}
+							})
+							.catch(error => {
+								// Обрабатываем только те ошибки, которые не связаны с 404
+								if (error) {
+									console.error('Произошла ошибка:', error);
+									alert('Произошла ошибка. Пожалуйста, обратитесь к администратору.');
+								}
+							});
+					}
 				});
 			});
 

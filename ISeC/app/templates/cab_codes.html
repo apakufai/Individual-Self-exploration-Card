@@ -46,7 +46,7 @@
 			</button>
 		</div>
 
-        {% if session.admin_data.codesPass == 'true' %}
+        {% if session.admin_data.codesAccess == 'true' %}
 		<div class="central_codes">
 
 			<table>
@@ -67,7 +67,7 @@
 						<th class="entrycode_head_th_4">
 							<p>Конец</p>
 						</th>
-						<th colspan="2" class="entrycode_head_th_5">
+						<th class="entrycode_head_th_5">
 							<p>Действия</p>
 						</th>
 					</tr>
@@ -79,10 +79,10 @@
 						<td class="entrycode_block_td_0" id="entrycode_block_td_0">
 						</td>
 						<td class="entrycode_block_td_1">
-							<input type="text" name="test_group" autocomplete="off">
+							<input type="text" name="test_group" autocomplete="off" placeholder="Новое название">
 						</td>
 						<td class="entrycode_block_td_2">
-							<input type="text" name="code" autocomplete="off">
+							<input type="text" name="code" autocomplete="off" placeholder="Новый код доступа">
 						</td>
 						<td class="entrycode_block_td_3">
 							<input type="date" name="start_date">
@@ -95,26 +95,26 @@
 						</td>
 					</tr>
 
-					{% for accessRow in accessRows %}
+					{% for codesRow in codesRows %}
 					<tr class="entrycode_block">
 						<td class="entrycode_block_td_0">
-							{{ accessRow.test_group[:10] }}
+							{{ codesRow.test_group[:10] }}
 						</td>
 						<td class="entrycode_block_td_1">
-							<input type="text" name="test_group" value="{{ accessRow.test_group[11:] }}" autocomplete="off">
+							<input type="text" name="test_group" value="{{ codesRow.test_group[11:] }}" autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_2">
-							<input type="text" name="code" value="{{ accessRow.code }}" autocomplete="off">
+							<input type="text" name="code" value="{{ codesRow.code }}" autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_3">
-							<input type="date" name="start_date" value="{{ accessRow.start_date }}">
+							<input type="date" name="start_date" value="{{ codesRow.start_date }}">
 						</td>
 						<td class="entrycode_block_td_4">
-							<input type="date" name="end_date" value="{{ accessRow.end_date }}">
+							<input type="date" name="end_date" value="{{ codesRow.end_date }}">
 						</td>
 						<td class="entrycode_block_td_5">
-							<button code_id="{{ accessRow.code_id }}" onclick="updateCode(this)">Сохранить</button>
-							<button code_id="{{ accessRow.code_id }}" test_group="{{ accessRow.test_group }}"
+							<button code_id="{{ codesRow.code_id }}" onclick="updateCode(this)">Сохранить</button>
+							<button code_id="{{ codesRow.code_id }}" test_group="{{ codesRow.test_group }}"
 								onclick="deleteCode(this)">Удалить</button>
 						</td>
 					</tr>
@@ -150,13 +150,6 @@
 				window.location.href = '/cab_admins';
 			});
 
-			function confirmUpdateCode(adminLogin) {
-				return confirm(`Сохранить изменения?`);
-			}
-			function confirmDeleteCode(adminLogin) {
-				return confirm(`Удалить группу ${adminLogin}?`);
-			}
-
 			document.addEventListener('DOMContentLoaded', function () {  // Для отображения сегодняшней даты
 				const today = new Date();
 				const day = String(today.getDate()).padStart(2, '0');
@@ -169,10 +162,10 @@
 				dateCell.textContent = formattedDate;
 			});
 
-			function confirmUpdate(testGroup) {
+			function confirmUpdateCode(testGroup) {
 				return confirm(`Сохранить изменения?`);
 			}
-			function confirmDelete(testGroup) {
+			function confirmDeleteCode(testGroup) {
 				return confirm(`Удалить группу ${testGroup}?`);
 			}
 

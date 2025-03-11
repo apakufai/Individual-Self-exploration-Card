@@ -17,8 +17,8 @@
 				<input type="text" class="login_input" id="adminLogin" name="adminLogin" placeholder="">
 			</div>
 			<div class="input-group">
-				<label class="login_label" for="adminPass">Пароль</label>
-				<input type="password" class="login_input" id="adminPass" name="adminPass" placeholder="" autocomplete="off">
+				<label class="login_label" for="adminAccess">Пароль</label>
+				<input type="password" class="login_input" id="adminAccess" name="adminAccess" placeholder="" autocomplete="off">
 			</div>
 			<button class="enter_btn" type="submit">Войти</button>
 		</form>
@@ -32,7 +32,7 @@
 
 			// Сбрасываем плейсхолдеры
 			document.getElementById('adminLogin').placeholder = '';
-			document.getElementById('adminPass').placeholder = '';
+			document.getElementById('adminAccess').placeholder = '';
 
 			let valid = true;
 
@@ -44,9 +44,9 @@
 			}
 
 			// Проверка пароля
-			const adminPass = document.getElementById('adminPass').value;
-			if (!adminPass) {
-				document.getElementById('adminPass').placeholder = 'Пожалуйста, заполните пароль.';
+			const adminAccess = document.getElementById('adminAccess').value;
+			if (!adminAccess) {
+				document.getElementById('adminAccess').placeholder = 'Пожалуйста, заполните пароль.';
 				valid = false;
 			}
 
@@ -64,7 +64,7 @@
 						} else if (data === "passwordIsWrong") {
 							alert("Введённый пароль неверен");
 						} else if (data === "sucsess") {
-							window.location.href = "/cab_analysis";
+							window.location.href = "/cab_archive";
 						}
 					})
 					.catch(error => {

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+	<meta charset="utf-8">
+	<title>Администрация. ИКС-файл</title>
+	<script type="text/javascript"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style_adminCab.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+</head>
+
+<body>
+
+	<header class="header">
+		<div class="header_ISeC">ИКС-файл. Администраторная</div>
+		<div class="header_admin">
+			<span>
+				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
+				<a href="{{ url_for('index') }}">Тест</a> |
+				<a href="{{ url_for('cab_logout') }}">Выйти</a>
+			</span>
+		</div>
+	</header>
+
+	<main class="main">
+
+		<div class="side_menu">
+			<button class="btn_sidelink" id="btn_cab_archive">
+				Архив
+			</button>
+
+			<button class="btn_sidelink" id="btn_cab_codes">
+				Коды доступа
+			</button>
+
+			<button class="btn_sidelink" id="btn_cab_analysis">
+				Анализ по вопросам
+			</button>
+
+			<button class="btn_sidelink" id="btn_cab_excelgen">
+				Выборки (excel)
+			</button>
+
+			<button class="btn_sidelink_actual" id="btn_cab_admins">
+				Администраторы
+			</button>
+		</div>
+
+		{% if session.admin_data.adminId == 'admin' %}
+		<div class="central_admins">
+
+			<table>
+
+				<thead>
+					<tr class="admins_head">
+						<th class="admins_head_th_0">
+							<p>Логин</p>
+						</th>
+						<th class="admins_head_th_1">
+							<p>Пароль</p>
+						</th>
+						<th class="admins_head_th_2">
+							<p>Имя</p>
+						</th>
+						<th class="admins_head_th_3">
+							<p>Доступы</p>
+						</th>
+						<th class="admins_head_th_4">
+							<p>Начало</p>
+						</th>
+						<th class="admins_head_th_5">
+							<p>Конец</p>
+						</th>
+						<th class="admins_head_th_6">
+							<p>Действия</p>
+						</th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+					{% if adminData %}
+					<tr class="admins_block_main">
+						<td class="admins_block_td_0" id="admins_block_td_0">
+							<input type="text" name="login" autocomplete="off" value="{{ adminData.login }}">
+						</td>
+						<td class="admins_block_td_1">
+							<input type="password" name="password" autocomplete="off" placeholder="Новый пароль">
+							<input type="password" name="confirm_password" autocomplete="off" placeholder="...ещё раз">
+						</td>
+						<td class="admins_block_td_2">
+							<input type="text" name="admin_name" autocomplete="off" value="{{ adminData.admin_name }}">
+						</td>
+						<td class="admins_block_td_3">
+						</td>
+						<td class="admins_block_td_4">
+						</td>
+						<td class="admins_block_td_5">
+						</td>
+						<td class="admins_block_td_6">
+							<button onclick="updateAdmin(this)">Сохранить</button>
+						</td>
+					</tr>
+					{% endif %}
+
+					<tr class="admins_block_create">
+						<td class="admins_block_td_0" id="admins_block_td_0">
+							<input type="text" name="login" autocomplete="off">
+						</td>
+						<td class="admins_block_td_1">
+							<input type="password" name="password" autocomplete="off" placeholder="Новый пароль">
+							<input type="password" name="confirm_password" autocomplete="off" placeholder="...ещё раз">
+						</td>
+						<td class="admins_block_td_2">
+							<input type="text" name="admin_name" autocomplete="off">
+						</td>
+						<td class="admins_block_td_3">
+							<div class="admins_access_check">
+								<input type="checkbox" name="archive_access">
+								<label for="archive_access">Архив</label>
+							</div>
+							<div class="admins_access_check">
+								<input type="checkbox" name="codes_access">
+								<label for="codes_access">Коды</label>
+							</div>
+							<div class="admins_access_check">
+								<input type="checkbox" name="analysis_access">
+								<label for="analysis_access">Анализ</label>
+							</div>
+							<div class="admins_access_check">
+								<input type="checkbox" name="excelgen_access">
+								<label for="excelgen_access">Выборки</label>
+							</div>
+						</td>
+						<td class="admins_block_td_4">
+							<input type="date" name="start_date">
+						</td>
+						<td class="admins_block_td_5">
+							<input type="date" name="end_date">
+						</td>
+						<td class="admins_block_td_6">
+							<button onclick="createAdmin(this)">Создать</button>
+						</td>
+					</tr>
+
+					{% for adminsRow in adminsRows %}
+					<tr class="admins_block">
+						<td class="admins_block_td_0">
+							<input type="text" name="admin_login" value="{{ adminsRow.login }}" autocomplete="off">
+						</td>
+						<td class="admins_block_td_1">
+							<input type="password" name="password" autocomplete="off" placeholder="Новый пароль">
+							<input type="password" name="confirm_password" autocomplete="off" placeholder="...ещё раз">
+						</td>
+						<td class="admins_block_td_2">
+							<input type="text" name="admin_name" value="{{ adminsRow.admin_name }}" autocomplete="off">
+						</td>
+						<td class="admins_block_td_3">
+							<div class="admins_access_check">
+								<input type="checkbox" name="archive_access" {% if	adminsRow.archive_access=='true' %}checked{% endif %}>
+								<label for="archive_access">Архив</label>
+							</div>
+							<div class="admins_access_check">
+								<input type="checkbox" name="codes_access" {% if adminsRow.codes_access=='true' %}checked{% endif %}>
+								<label for="codes_access">Коды</label>
+							</div>
+							<div class="admins_access_check">
+								<input type="checkbox" name="analysis_access" {% if adminsRow.analysis_access=='true' %}checked{% endif %}>
+								<label for="analysis_access">Анализ</label>
+							</div>
+							<div class="admins_access_check">
+								<input type="checkbox" name="excelgen_access" {% if adminsRow.excelgen_access=='true' %}checked{% endif %}>
+								<label for="excelgen_access">Выборки</label>
+							</div>
+						</td>
+						<td class="admins_block_td_4">
+							<input type="date" name="end_date" value="{{ adminsRow.start_date }}">
+						</td>
+						<td class="admins_block_td_5">
+							<input type="date" name="end_date" value="{{ adminsRow.end_date }}">
+						</td>
+						<td class="admins_block_td_6">
+							<button admin_id="{{ adminsRow.admin_id }}" onclick="updateAdmin(this)">Сохранить</button>
+							<button admin_id="{{ adminsRow.admin_id }}" admin_name="{{ adminsRow.admin_name }}"
+								admin_login="{{ adminsRow.admin_login }}" onclick="deleteAdmin(this)">Удалить</button>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+
+			</table>
+
+		</div>
+		{% else %}
+		<span class="access_blocked">У Вас нет доступа к этой странице</span>
+		{% endif %}
+
+		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
+		<script>
+
+			document.getElementById('btn_cab_archive').addEventListener('click', function () {
+				window.location.href = '/cab_archive';
+			});
+
+			document.getElementById('btn_cab_codes').addEventListener('click', function () {
+				window.location.href = '/cab_codes';
+			});
+
+			document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+				window.location.href = '/cab_analysis';
+			});
+
+			document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+				window.location.href = '/cab_excelgen';
+			});
+
+			document.getElementById('btn_cab_admins').addEventListener('click', function () {
+				window.location.href = '/cab_admins';
+			});
+
+			function confirmUpdateAdmin(adminName) {
+				return confirm(`Сохранить изменения?`);
+			}
+			function confirmDeleteAdmin(adminName) {
+				return confirm(`Удалить администратора ${adminName} с логином ${adminLogin}?`);
+			}
+
+		</script>
+
+	</main>
+
+</body>
+
+</html>

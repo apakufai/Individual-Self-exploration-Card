@@ -2021,13 +2021,19 @@ def generate_and_download_pdf():
             return response  # Возвращаем только response
 
         if  insertData and receiveByEmail and not downloadToPC:
-            send_email(userEmail, pdf_path, pdf_filename)
+            try:
+                send_email(userEmail, pdf_path, pdf_filename)
+            except Exception as e:
+                return jsonify({"error": f"Ошибка при отправке email: {str(e)}"}), 500
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
             return '', 200
 
         if  insertData and receiveByEmail and downloadToPC:
-            send_email(userEmail, pdf_path, pdf_filename)
+            try:
+                send_email(userEmail, pdf_path, pdf_filename)
+            except Exception as e:
+                return jsonify({"error": f"Ошибка при отправке email: {str(e)}"}), 500
             response = send_file(pdf_path, as_attachment=True)
             # Кодируем имя файла в utf-8
             encoded_filename = urllib.parse.quote(pdf_filename)
@@ -2037,9 +2043,11 @@ def generate_and_download_pdf():
             return response  # Возвращаем только response
 
         if  not insertData and receiveByEmail and not downloadToPC:
-            emailToSend = str(ISeC_results_array.get('emailToSend'))
-            print(f"emailToSend: {emailToSend}")  # Отладочный вывод
-            send_email(emailToSend, pdf_path, pdf_filename)
+            try:
+                emailToSend = str(ISeC_results_array.get('emailToSend'))
+                send_email(emailToSend, pdf_path, pdf_filename)
+            except Exception as e:
+                return jsonify({"error": f"Ошибка при отправке email: {str(e)}"}), 500
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
             return '', 200
@@ -2107,7 +2115,7 @@ def cab_hash_password(password):
 def cab_login():
     if request.method == 'POST':
         adminLogin = request.form['adminLogin']
-        hashed_password = cab_hash_password(request.form['adminPass'])
+        hashed_password = cab_hash_password(request.form['adminAccess'])
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину
@@ -2124,10 +2132,10 @@ def cab_login():
         session['admin_data'] = {
             'adminId': user['adminId'],
             'adminName': user['adminName'],
-            'archivePass': user['archivePass'],
-            'codesPass': user['codesPass'],
-            'analysisPass': user['analysisPass'],
-            'excelgenPass': user['excelgenPass']
+            'archiveAccess': user['archiveAccess'],
+            'codesAccess': user['codesAccess'],
+            'analysisAccess': user['analysisAccess'],
+            'excelgenAccess': user['excelgenAccess']
         }  # Сохраняем данные в сессии
         conn.close()
         return "sucsess"
@@ -2368,7 +2376,7 @@ def cab_codes():
     sorted_codes_list.sort(key=lambda x: x['test_group'][:10], reverse=True)
 
     # Возврат отсортированного списка
-    return render_template('cab_codes.html', accessRows=sorted_codes_list)
+    return render_template('cab_codes.html', codesRows=sorted_codes_list)
 
 # Проверка существования кодов доступа в базе данных перед созданием/обновлением
 @app.route('/cab_check_code', methods=['POST'])
@@ -2854,17 +2862,99 @@ def delete_excel(file_path):
 
 
 
+# Маршрут для страницы администраторов
+@app.route('/cab_admins')
+def cab_admins():
+    if 'admin_data' not in session:
+        return redirect(url_for('cab_login'))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Получение данных из таблицы ISeC_adminAccounts
+    cursor.execute("SELECT adminId, login, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil FROM ISeC_adminAccounts")
+    access_codes = cursor.fetchall()
+    # Закрытие соединения
+    conn.close()
+    # Преобразование данных в нужный формат
+    admins_list = []
+    admin_data = None  # Переменная для хранения данных главного администратора
+    for row in access_codes:
+        admin_entry = {
+            'admin_id': row[0],
+            'login': row[1],
+            'admin_name': row[2],
+            'archive_access': row[3],
+            'codes_access': row[4],
+            'analysis_access': row[5],
+            'excelgen_access': row[6],
+            'start_date': datetime.strptime(row[7], '%Y-%m-%d').date().strftime('%Y-%m-%d'),
+            'end_date': datetime.strptime(row[8], '%Y-%m-%d').date().strftime('%Y-%m-%d')
+        }
 
-# Функция проверки существования логина администратора в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_admin_login', methods=['POST'])
-def cab_check_admin_login():
-    input_id = request.json.get('adminId')  # Получаем код из запроса
+        if admin_entry['admin_id'] == "admin":
+            admin_data = admin_entry  # Сохраняем данные администратора с adminId = "admin"
+        else:
+            admins_list.append(admin_entry)  # Добавляем остальных администраторов в список
+
+    # Сортируем список по логину
+    admins_list.sort(key=lambda x: x['login'])
+
+    # Возврат отсортированного списка и данных администратора
+    return render_template('cab_admins.html', adminData=admin_data, adminsRows=admins_list)
+
+# Проверка существования администраторов в базе данных перед созданием/обновлением
+@app.route('/cab_check_admin', methods=['POST'])
+def cab_check_admin():
+    action = request.json.get('action')  # Операция
+    isGroupInDB = False  # Проверка на наличие группы в базе данных
+    isCodeInDB = False    # Проверка на наличие кода доступа в базе данных
+    input_codeId = request.json.get('codeId')  # Получаем ID кода из запроса
+    input_group = request.json.get('testGroup')  # Получаем группу из запроса
+    input_code = request.json.get('code')  # Получаем код из запроса
     conn = get_db_connection()
     if conn is None:
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT userId FROM ISeC_adminAccounts WHERE login = ?', (input_id,))
+        if action == "create":
+            # Проверка на существование группы, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE testGroup = ?', (input_group,))
+            result = cursor.fetchone()
+            if result:
+                isGroupInDB = True
+            # Проверка на существование кода, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE code = ?', (input_code,))
+            result = cursor.fetchone()
+            if result:
+                isCodeInDB = True
+        elif action == "update":
+            # Проверка на существование группы, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
+            result = cursor.fetchone()
+            if result:
+                isGroupInDB = True
+            # Проверка на существование кода, исключая текущий codeId
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE code = ? AND codeId != ?', (input_code, input_codeId))
+            result = cursor.fetchone()
+            if result:
+                isCodeInDB = True
+    finally:
+        conn.close()  # Закрываем соединение в любом случае
+    return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
+
+
+
+        
+
+# Проверка существования id администратора в базе перед созданием (нужна для исключения дубликатов)
+@app.route('/cab_check_admin_id', methods=['POST'])
+def cab_check_admin_id():
+    input_id = request.json.get('codeId')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    try:
+        cursor.execute('SELECT codeId FROM ISeC_adminAccounts WHERE codeId = ?', (input_id,))
         result = cursor.fetchone()
         
         if result:

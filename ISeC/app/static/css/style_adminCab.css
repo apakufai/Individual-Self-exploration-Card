@@ -187,8 +187,8 @@ a:hover {
 }
 
 .access_blocked {
- margin: 100px;
- font-size: 30px;
+   margin: 100px;
+   font-size: 30px;
 }
 
 /* ------------------------------------------------ */
@@ -235,7 +235,7 @@ a:hover {
 /* ------------------------------------------------ */
 
 .entrycode_head,
-.entrycode_block_create td {
+.entrycode_block_create {
    border-bottom: 2px solid #5b7ead;
 }
 
@@ -324,25 +324,29 @@ a:hover {
 /* -------------- СТРАНИЦА АНАЛИТИКИ -------------- */
 /* ------------------------------------------------ */
 
-
-
 .progress-container {
-   width: 100%; /* Ширина контейнера */
-   background-color: #d3d7d8; /* Цвет незаполненной части (подложка) */
-   border-radius: 5px; /* Закругление углов */
-   overflow: hidden; /* Скрыть переполнение */
+   width: 100%;
+   /* Ширина контейнера */
+   background-color: #d3d7d8;
+   /* Цвет незаполненной части (подложка) */
+   border-radius: 5px;
+   /* Закругление углов */
+   overflow: hidden;
+   /* Скрыть переполнение */
 }
 
 .progress-filled {
-   height: 20px; /* Высота графика */
-   background-color: #acbdd6; /* Цвет заполненной части */
+   height: 20px;
+   /* Высота графика */
+   background-color: #acbdd6;
+   /* Цвет заполненной части */
 }
 
 .respondences_count {
    margin: 30px 80px;
-   font-size: 26px; /* Устанавливаем размер шрифта в 30 пунктов */
+   font-size: 26px;
+   /* Устанавливаем размер шрифта в 30 пунктов */
 }
-
 
 .analysis_head * {
    padding-bottom: 5px;
@@ -354,12 +358,14 @@ a:hover {
 }
 
 .table_spacing {
-   margin-top: 15px; /* Отступ сверху */
+   margin-top: 15px;
+   /* Отступ сверху */
 }
 
 
 .central_analysis table tbody tr td {
-   padding: 5px; /* Отступ внутри ячеек */
+   padding: 5px;
+   /* Отступ внутри ячеек */
 }
 
 
@@ -374,7 +380,7 @@ a:hover {
 
 .central_analysis table th,
 .central_analysis table td {
-    text-align: center;
+   text-align: center;
 }
 
 .analysis_head_th_0 {
@@ -397,6 +403,7 @@ a:hover {
 .analysis_head_th_4 {
    width: 250px;
 }
+
 
 
 /* ------------------------------------------------ */
@@ -455,4 +462,114 @@ a:hover {
 
 .hidden-button {
    display: none;
+}
+
+
+/* ------------------------------------------------ */
+/* ----------- СТРАНИЦА АДМИНИСТРАТОРОВ ----------- */
+/* ------------------------------------------------ */
+
+.admins_head,
+.admins_block_main,
+.admins_block_create {
+   border-bottom: 2px solid #5b7ead;
+}
+
+.admins_block_main td,
+.admins_block_create td,
+.admins_block td {
+   padding: 10px 5px;
+}
+
+.admins_head * {
+   padding-bottom: 5px;
+}
+
+.admins_block td {
+   padding-top: 10px;
+   /* Добавляет отступ сверху ячеек */
+}
+
+.central_admins * {
+   border-collapse: collapse;
+   /* Убирает двойные границы */
+   font-size: 14pt;
+}
+
+.central_admins table {
+   margin: 20px 0 0 20px;
+}
+
+.admins_head_th_0,
+.admins_block_td_0 input {
+   width: 180px;
+}
+
+.admins_block_td_0 {
+   padding: 0 5px;
+}
+
+.admins_head_th_1,
+.admins_block_td_1 input {
+   width: 180px;
+}
+
+.admins_block_td_1 {
+   padding: 0 5px;
+}
+
+.admins_head_th_2,
+.admins_block_td_2 input {
+   width: 180px;
+}
+
+.admins_block_th_2,
+.admins_block_td_2 {
+   padding: 0 5px;
+}
+
+.admins_head_th_3 {
+   width: 130px;
+}
+
+.admins_block_td_3 {
+   display: flex;
+   flex-direction: column;
+}
+
+.admins_access_check {
+   display: flex;
+   flex-direction: row;
+}
+
+.admins_access_check input {
+   margin: 0 5px 0 15px;
+}
+
+.admins_head_th_4,
+.admins_block_td_4 input {
+   width: 150px;
+}
+
+.admins_block_td_4 {
+   padding: 0 5px;
+}
+
+.admins_head_th_5,
+.admins_block_td_5 input {
+   width: 150px;
+}
+
+.admins_block_td_5 {
+   padding: 0 5px;
+}
+
+.admins_block_td_6 {
+   text-align: center;
+   padding: 0 5px;
+   width: 180px;
+}
+
+.admins_block_td_6 button {
+   width: 120px;
 }

@@ -1,0 +1,9 @@
+pip install Flask
+
+pip install reportlab
+
+pip install flask-cors
+
+pip install pandas
+
+pip install openpyxl

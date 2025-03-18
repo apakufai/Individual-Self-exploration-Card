@@ -35,8 +35,12 @@ ISeC/
 │       └── functions_adminCab.js # JavaScript-файл с функциями
 │       └── functions_ISeC.js     # JavaScript-файл с функциями
 ├── templates/                    # Папка для HTML-шаблонов
+│   ├── cab_admins.html           # Кабинет администратора (администраторы)
+│   ├── cab_analysis.html         # Кабинет администратора (аналитика)
+│   ├── cab_archive.html          # Кабинет администратора (архив)
+│   ├── cab_codes.html            # Кабинет администратора (коды доступа)
+│   ├── cab_excelgen.html         # Кабинет администратора (excel-генерация)
 │   ├── cab_login.html            # Кабинет администратора (авторизация)
-│   ├── cab_main.html             # Кабинет администратора
 │   ├── index.html                # Главная страница
 │   ├── results.html              # Страница результатов
 │   ├── test_1.html               # Страница блока 1

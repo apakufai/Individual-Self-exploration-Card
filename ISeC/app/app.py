@@ -225,6 +225,7 @@ def check_user_id():
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
     finally:
+        cursor.close()
         conn.close()
 
 
@@ -297,7 +298,7 @@ def generate_and_download_pdf():
 
         # Проверка на существование таблицы "ISeC_results"
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='ISeC_results';")
-        table_exists = cursor.fetchone()
+        ISeC_results_exists = cursor.fetchone()
 
         # Переменные из JSON-файла
         receiveByEmail = bool(ISeC_results_array.get('receiveByEmail'))
@@ -590,7 +591,7 @@ def generate_and_download_pdf():
             can.line(x_start_min, y_start + yTopLine, x_start_max, y_start + yTopLine)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(adaptation_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -627,7 +628,7 @@ def generate_and_download_pdf():
         can.drawImage(image_path_3, 0, 0, width=width, height=height)
             
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(bidding_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -675,7 +676,7 @@ def generate_and_download_pdf():
         can.drawImage(image_path_4, 0, 0, width=width, height=height)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
             
             cursor.execute("SELECT MIN(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -1497,7 +1498,7 @@ def generate_and_download_pdf():
         can.drawImage(image_path_6, 0, 0, width=width, height=height)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(adaptation_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -1534,7 +1535,7 @@ def generate_and_download_pdf():
         can.drawImage(image_path_7, 0, 0, width=width, height=height)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(threat_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -1571,7 +1572,7 @@ def generate_and_download_pdf():
         can.drawImage(image_path_8, 0, 0, width=width, height=height)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(avoidance_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -1671,7 +1672,7 @@ def generate_and_download_pdf():
             can.line(x_start - xTopLine, y_start_min, x_start - xTopLine, y_start_max)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(adaptation_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -1801,7 +1802,7 @@ def generate_and_download_pdf():
         can.drawImage(image_path_16, 0, 0, width=width, height=height)
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
-        if table_exists and userCategory is not None and userCategory != "-":
+        if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
             cursor.execute("SELECT MIN(logicArgument_6) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
@@ -1880,7 +1881,7 @@ def generate_and_download_pdf():
         can.save()
         print(f"PDF-файл успешно создан: {pdf_path}")
 
-        if not table_exists:
+        if not ISeC_results_exists:
             # SQL-запрос для создания таблицы, если она не существует
             create_table_ISeC_results = '''
             CREATE TABLE IF NOT EXISTS ISeC_results (
@@ -2002,6 +2003,7 @@ def generate_and_download_pdf():
             
         # Сохранение изменений и закрытие соединения
         conn.commit()
+        cursor.close()
         conn.close()
 
         print(f"PDF path: {pdf_path}")  # Отладочный вывод
@@ -2098,8 +2100,6 @@ def clear_session():
         session.pop('clearSession', None)
     return jsonify(success=True)
 
-    
-
 
 
 # ------------------------------------------------
@@ -2156,9 +2156,40 @@ def cab_archive():
         return redirect(url_for('cab_login'))
     return render_template('cab_archive.html')
 
+# Внесение дополнительных адресов в БД
+@app.route('/cab_add_resend', methods=['POST'])
+def cab_add_resend():
+    # Инициализация базы данных и создание таблицы, если она не существует
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Проверка на существование таблицы "resends"
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='resends';")
+    resends_exists = cursor.fetchone()
+    # Если таблицы нет, создаем её
+    if not resends_exists:
+        cursor.execute('''
+            CREATE TABLE resends (
+                email TEXT UNIQUE
+            )
+        ''')
+        conn.commit()
+    # Получение email из запроса
+    email = request.json.get('email')
+    if not email:
+        return "Поле почты пустое"
+    try:
+        cursor.execute('INSERT INTO resends (email) VALUES (?)', (email,))
+        conn.commit()
+        return "Электронная почта добавлена"
+    except sqlite3.IntegrityError:
+        return "Электронная почта уже существует"
+    finally:
+        cursor.close()
+        conn.close()
+
 # Маршрут для получения данных пользователя по userId
-@app.route('/get_respondent_data', methods=['POST'])
-def get_respondent_data():
+@app.route('/cab_get_respondent_data', methods=['POST'])
+def cab_get_respondent_data():
     data = request.get_json()
     if not data or 'userId' not in data:
         return "Invalid input", 400  # Возвращаем ошибку, если входные данные некорректны
@@ -2349,7 +2380,8 @@ def cab_codes():
     # Получение данных из таблицы ISeC_accessCodes
     cursor.execute("SELECT codeId, testGroup, code, dateFrom, dateUntil FROM ISeC_accessCodes")
     access_codes = cursor.fetchall()
-    # Закрытие соединения
+    # Закрытие курсора и соединения
+    cursor.close()
     conn.close()
     # Преобразование данных в нужный формат
     codes_list = []
@@ -2393,12 +2425,12 @@ def cab_check_code():
     cursor = conn.cursor()
     try:
         if action == "create":
-            # Проверка на существование группы, исключая текущий codeId
+            # Проверка на существование группы
             cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ?', (input_group,))
             result = cursor.fetchone()
             if result:
                 isGroupInDB = True
-            # Проверка на существование кода, исключая текущий codeId
+            # Проверка на существование кода
             cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = ?', (input_code,))
             result = cursor.fetchone()
             if result:
@@ -2415,7 +2447,8 @@ def cab_check_code():
             if result:
                 isCodeInDB = True
     finally:
-        conn.close()  # Закрываем соединение в любом случае
+        cursor.close()
+        conn.close()
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
 # Проверка существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
@@ -2441,26 +2474,25 @@ def cab_check_code_id():
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
     finally:
+        cursor.close()
         conn.close()
 
 # Создание нового кода доступа
 @app.route('/cab_create_code', methods=['POST'])
-def create_code():
+def cab_create_code():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     # Получение данных из JSON
     data = request.get_json()
-
     if not data:
-        return jsonify({'error': 'no_data'}), 400  # Возвращаем статус 400, если нет данных
-
+        return jsonify({'error': 'Нет данных'}), 400  # Возвращаем статус 400, если нет данных
     code_id = data.get('code_id')
     test_group = data.get('test_group')
     code = data.get('code')
     start_date = data.get('start_date')
     end_date = data.get('end_date')
     if not all([code_id, test_group, code, start_date, end_date]):
-        return jsonify({'error': 'missing_fields'}), 400  # Возвращаем статус 400, если поля отсутствуют
+        return jsonify({'error': 'Отсутствующие поля'}), 400  # Возвращаем статус 400, если поля отсутствуют
     conn = get_db_connection()
     cursor = conn.cursor()
     # Внесение записи в базу данных
@@ -2474,10 +2506,11 @@ def create_code():
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
     finally:
+        cursor.close()
         conn.close()
     return redirect(url_for('cab_codes'))
 
-# Изменение кодов доступа в базе данных
+# Изменение кодов доступа
 @app.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
     if 'admin_data' not in session:
@@ -2501,6 +2534,7 @@ def cab_update_code(code_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
     finally:
+        cursor.close()
         conn.close()
     return redirect(url_for('cab_codes'))
 
@@ -2514,8 +2548,10 @@ def cab_delete_code(code_id):
     # Удаление записи из базы данных по code_id
     cursor.execute("DELETE FROM ISeC_accessCodes WHERE codeId = ?", (code_id,))
     conn.commit()
+    cursor.close()
     conn.close()
     return redirect(url_for('cab_codes'))
+
 
 
 # Маршрут для страницы аналитики
@@ -2545,6 +2581,7 @@ def cab_get_analysis_data():
     """
     cursor.execute(query)
     data = cursor.fetchall()
+    cursor.close()
     conn.close()
     return data
 
@@ -2644,6 +2681,7 @@ def get_unique_groups():
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT userGroup FROM ISeC_results")
     groups = cursor.fetchall()
+    cursor.close()
     conn.close()
     return [group[0] for group in groups]  # Преобразуем в список
 
@@ -2653,6 +2691,7 @@ def get_unique_categories():
     cursor = conn.cursor()
     cursor.execute("SELECT DISTINCT userCategory FROM ISeC_results")
     categories = cursor.fetchall()
+    cursor.close()
     conn.close()
     return sorted([category[0] for category in categories])  # Преобразуем в список и сортируем по алфавиту
 
@@ -2666,10 +2705,9 @@ def sort_groups_by_date(groups):
         return datetime.min  # Если дата не найдена, возвращаем минимальную дату
     return sorted(groups, key=extract_date, reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
 
-
 # Создание sql-запроса из данных на html-странице
-@app.route('/generate_query', methods=['POST'])
-def generate_query():
+@app.route('/cab_generate_query', methods=['POST'])
+def cab_generate_query():
     # Проверяем, существует ли директория 'temp', и, если нет, создаем её
     directory = 'temp'
     if not os.path.exists(directory):
@@ -2709,6 +2747,7 @@ def generate_query():
 
     # Проверяем, есть ли результаты
     if not results:
+        cursor.close()
         conn.close()
         return jsonify({"error": "Нет подходящих результатов"}), 404  # Возвращаем сообщение об ошибке
 
@@ -2837,11 +2876,10 @@ def generate_query():
         for cell in ws[column_letter]:
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
-
     # Сохраняем изменения в файле
     wb.save(excel_file_path)
     wb.close()
-
+    cursor.close()
     conn.close()
 
     # Запускаем таймер для удаления файла через 10 секунд
@@ -2857,11 +2895,6 @@ def delete_excel(file_path):
 
 
 
-
-
-
-
-
 # Маршрут для страницы администраторов
 @app.route('/cab_admins')
 def cab_admins():
@@ -2873,6 +2906,7 @@ def cab_admins():
     cursor.execute("SELECT adminId, login, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil FROM ISeC_adminAccounts")
     access_codes = cursor.fetchall()
     # Закрытие соединения
+    cursor.close()
     conn.close()
     # Преобразование данных в нужный формат
     admins_list = []
@@ -2905,56 +2939,53 @@ def cab_admins():
 @app.route('/cab_check_admin', methods=['POST'])
 def cab_check_admin():
     action = request.json.get('action')  # Операция
-    isGroupInDB = False  # Проверка на наличие группы в базе данных
-    isCodeInDB = False    # Проверка на наличие кода доступа в базе данных
-    input_codeId = request.json.get('codeId')  # Получаем ID кода из запроса
-    input_group = request.json.get('testGroup')  # Получаем группу из запроса
-    input_code = request.json.get('code')  # Получаем код из запроса
+    isLoginInDB = False  # Проверка на наличие логина в базе данных
+    isAdminNameInDB = False    # Проверка на наличие имени администратора в базе данных
+    input_adminId = request.json.get('adminId')  # Получаем ID администроатора из запроса
+    input_login = request.json.get('login')  # Получаем логин из запроса
+    input_adminName = request.json.get('adminName')  # Получаем логин из запроса
     conn = get_db_connection()
     if conn is None:
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
         if action == "create":
-            # Проверка на существование группы, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE testGroup = ?', (input_group,))
+            # Проверка на существование логина
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', (input_login,))
             result = cursor.fetchone()
             if result:
-                isGroupInDB = True
-            # Проверка на существование кода, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE code = ?', (input_code,))
+                isLoginInDB = True
+            # Проверка на существование имени администратора
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = ?', (input_adminName,))
             result = cursor.fetchone()
             if result:
-                isCodeInDB = True
+                isAdminNameInDB = True
         elif action == "update":
-            # Проверка на существование группы, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
+            # Проверка на существование логина, исключая текущий adminId
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ? AND adminId != ?', (input_login, input_adminId))
             result = cursor.fetchone()
             if result:
-                isGroupInDB = True
-            # Проверка на существование кода, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE code = ? AND codeId != ?', (input_code, input_codeId))
+                isLoginInDB = True
+            # Проверка на существование имени администратора, исключая текущий adminId
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = ? AND adminId != ?', (input_adminName, input_adminId))
             result = cursor.fetchone()
             if result:
-                isCodeInDB = True
+                isAdminNameInDB = True
     finally:
-        conn.close()  # Закрываем соединение в любом случае
-    return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
-
-
-
-        
+        cursor.close()  # Закрываем курсор
+        conn.close()  # Закрываем соединение
+    return jsonify({'isLoginInDB': isLoginInDB, 'isAdminNameInDB': isAdminNameInDB})
 
 # Проверка существования id администратора в базе перед созданием (нужна для исключения дубликатов)
 @app.route('/cab_check_admin_id', methods=['POST'])
 def cab_check_admin_id():
-    input_id = request.json.get('codeId')  # Получаем код из запроса
+    input_adminId = request.json.get('adminId')  # Получаем код из запроса
     conn = get_db_connection()
     if conn is None:
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT codeId FROM ISeC_adminAccounts WHERE codeId = ?', (input_id,))
+        cursor.execute('SELECT adminId FROM ISeC_adminAccounts WHERE adminId = ?', (input_adminId,))
         result = cursor.fetchone()
         
         if result:
@@ -2968,8 +2999,142 @@ def cab_check_admin_id():
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
     finally:
+        cursor.close()
         conn.close()
 
+# Создание нового администратора
+@app.route('/cab_create_admin', methods=['POST'])
+def cab_create_admin():
+    if 'admin_data' not in session:
+        return redirect(url_for('cab_login'))
+    # Получение данных из JSON
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'Нет данных'}), 400  # Возвращаем статус 400, если нет данных
+    admin_id = data.get('admin_id')
+    login = data.get('login')
+    password = cab_hash_password(data.get('password'))
+    admin_name = data.get('admin_name')
+    archive_access = str(data.get('archive_access'))
+    codes_access = str(data.get('codes_access'))
+    analysis_access = str(data.get('analysis_access'))
+    excelgen_access = str(data.get('excelgen_access'))
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+
+    if not all([admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date]):
+        return jsonify({'error': 'Отсутствующие поля'}), 400  # Возвращаем статус 400, если поля отсутствуют
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Внесение записи в базу данных
+    try:
+        cursor.execute("""
+            INSERT INTO ISeC_adminAccounts
+            (adminId, login, password, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        """, (admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date))
+        conn.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for('cab_admins'))
+
+# Изменение администраторов
+@app.route('/cab_update_admin/<admin_id>', methods=['POST'])
+def cab_update_admin(admin_id):
+    if 'admin_data' not in session:
+        return redirect(url_for('cab_login'))
+    # Получение данных из JSON
+    data = request.get_json()
+    login = data.get('login')
+    password = data.get('password')
+    admin_name = data.get('admin_name')
+    archive_access = str(data.get('archive_access'))
+    codes_access = str(data.get('codes_access'))
+    analysis_access = str(data.get('analysis_access'))
+    excelgen_access = str(data.get('excelgen_access'))
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Формирование запроса обновления записи в базе данных
+    try:
+        if password is None:  # Если пароль не передан, обновляем без изменения пароля
+            cursor.execute("""
+                UPDATE ISeC_adminAccounts
+                SET login = ?, adminName = ?, archiveAccess = ?, codesAccess = ?, analysisAccess = ?, excelgenAccess = ?, dateFrom = ?, dateUntil = ?
+                WHERE adminId = ?
+            """, (login, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date, admin_id))
+        else:  # Если пароль передан, хешируем его и обновляем
+            password_hashed = cab_hash_password(password)
+            cursor.execute("""
+                UPDATE ISeC_adminAccounts
+                SET login = ?, password = ?, adminName = ?, archiveAccess = ?, codesAccess = ?, analysisAccess = ?, excelgenAccess = ?, dateFrom = ?, dateUntil = ?
+                WHERE adminId = ?
+            """, (login, password_hashed, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date, admin_id))
+        conn.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for('cab_admins'))
+
+# Удаление администраторов
+@app.route('/cab_delete_admin/<admin_id>', methods=['POST'])
+def cab_delete_admin(admin_id):
+    if 'admin_data' not in session:
+        return redirect(url_for('cab_login'))
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Удаление записи из базы данных по admin_id
+    cursor.execute("DELETE FROM ISeC_adminAccounts WHERE adminId = ?", (admin_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('cab_admins'))
+
+# Изменение главного администратора
+@app.route('/cab_update_main_admin', methods=['POST'])
+def cab_update_main_admin():
+    if 'admin_data' not in session:
+        return redirect(url_for('cab_login'))
+    # Получение данных из JSON
+    data = request.get_json()
+    login = data.get('login')
+    password = data.get('password')
+    admin_name = data.get('admin_name')
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        # Проверка существования записи
+        cursor.execute("SELECT COUNT(*) FROM ISeC_adminAccounts WHERE adminId = 'admin'")
+        exists = cursor.fetchone()[0] > 0
+        if not exists:
+            return jsonify({'error': 'Главный администратор не найден'}), 404
+        # Формирование запроса обновления записи в базе данных
+        if password is None:  # Если пароль не передан, обновляем без изменения пароля
+            cursor.execute("""
+                UPDATE ISeC_adminAccounts
+                SET login = ?, adminName = ?
+                WHERE adminId = 'admin'
+            """, (login, admin_name))
+        else:  # Если пароль передан, хешируем его и обновляем
+            password_hashed = cab_hash_password(password)
+            cursor.execute("""
+                UPDATE ISeC_adminAccounts
+                SET login = ?, password = ?, adminName = ?
+                WHERE adminId = 'admin'
+            """, (login, password_hashed, admin_name))
+        conn.commit()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for('cab_admins'))
 
 
 

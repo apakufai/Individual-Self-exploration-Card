@@ -199,7 +199,7 @@
 					return; // Прерываем выполнение функции
 				}
 
-				fetch('/generate_query', {
+				fetch('/cab_generate_query', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ groups: selectedGroups, categories: selectedCategories, sex: selectedSex, yearFrom, yearUntil })

@@ -13,6 +13,7 @@
 
 	<header class="header">
 		<div class="header_ISeC">ИКС-файл. Администраторная</div>
+		<button id="dwnl_emaildata">Скачать адресную базу</button>
 		<div class="header_admin">
 			<span>
 				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
@@ -98,7 +99,7 @@
 						<td class="admins_block_td_5">
 						</td>
 						<td class="admins_block_td_6">
-							<button onclick="updateAdmin(this)">Сохранить</button>
+							<button onclick="updateMainAdmin(this)">Сохранить</button>
 						</td>
 					</tr>
 					{% endif %}
@@ -116,20 +117,20 @@
 						</td>
 						<td class="admins_block_td_3">
 							<div class="admins_access_check">
-								<input type="checkbox" name="archive_access">
-								<label for="archive_access">Архив</label>
+								<input type="checkbox" name="archive_access_create">
+								<label for="archive_access_create">Архив</label>
 							</div>
 							<div class="admins_access_check">
-								<input type="checkbox" name="codes_access">
-								<label for="codes_access">Коды</label>
+								<input type="checkbox" name="codes_access_create">
+								<label for="codes_access_create">Коды</label>
 							</div>
 							<div class="admins_access_check">
-								<input type="checkbox" name="analysis_access">
-								<label for="analysis_access">Анализ</label>
+								<input type="checkbox" name="analysis_access_create">
+								<label for="analysis_access_create">Анализ</label>
 							</div>
 							<div class="admins_access_check">
-								<input type="checkbox" name="excelgen_access">
-								<label for="excelgen_access">Выборки</label>
+								<input type="checkbox" name="excelgen_access_create">
+								<label for="excelgen_access_create">Выборки</label>
 							</div>
 						</td>
 						<td class="admins_block_td_4">
@@ -146,7 +147,7 @@
 					{% for adminsRow in adminsRows %}
 					<tr class="admins_block">
 						<td class="admins_block_td_0">
-							<input type="text" name="admin_login" value="{{ adminsRow.login }}" autocomplete="off">
+							<input type="text" name="login" value="{{ adminsRow.login }}" autocomplete="off">
 						</td>
 						<td class="admins_block_td_1">
 							<input type="password" name="password" autocomplete="off" placeholder="Новый пароль">
@@ -157,24 +158,28 @@
 						</td>
 						<td class="admins_block_td_3">
 							<div class="admins_access_check">
-								<input type="checkbox" name="archive_access" {% if	adminsRow.archive_access=='true' %}checked{% endif %}>
+								<input type="checkbox" name="archive_access" id="archive_access" {% if
+									adminsRow.archive_access=='true' %}checked{% endif %}>
 								<label for="archive_access">Архив</label>
 							</div>
 							<div class="admins_access_check">
-								<input type="checkbox" name="codes_access" {% if adminsRow.codes_access=='true' %}checked{% endif %}>
+								<input type="checkbox" name="codes_access" id="codes_access" {% if
+									adminsRow.codes_access=='true' %}checked{% endif %}>
 								<label for="codes_access">Коды</label>
 							</div>
 							<div class="admins_access_check">
-								<input type="checkbox" name="analysis_access" {% if adminsRow.analysis_access=='true' %}checked{% endif %}>
+								<input type="checkbox" name="analysis_access" id="analysis_access" {% if
+									adminsRow.analysis_access=='true' %}checked{% endif %}>
 								<label for="analysis_access">Анализ</label>
 							</div>
 							<div class="admins_access_check">
-								<input type="checkbox" name="excelgen_access" {% if adminsRow.excelgen_access=='true' %}checked{% endif %}>
+								<input type="checkbox" name="excelgen_access" id="excelgen_access" {% if
+									adminsRow.excelgen_access=='true' %}checked{% endif %}>
 								<label for="excelgen_access">Выборки</label>
 							</div>
 						</td>
 						<td class="admins_block_td_4">
-							<input type="date" name="end_date" value="{{ adminsRow.start_date }}">
+							<input type="date" name="start_date" value="{{ adminsRow.start_date }}">
 						</td>
 						<td class="admins_block_td_5">
 							<input type="date" name="end_date" value="{{ adminsRow.end_date }}">
@@ -182,7 +187,7 @@
 						<td class="admins_block_td_6">
 							<button admin_id="{{ adminsRow.admin_id }}" onclick="updateAdmin(this)">Сохранить</button>
 							<button admin_id="{{ adminsRow.admin_id }}" admin_name="{{ adminsRow.admin_name }}"
-								admin_login="{{ adminsRow.admin_login }}" onclick="deleteAdmin(this)">Удалить</button>
+								login="{{ adminsRow.login }}" onclick="deleteAdmin(this)">Удалить</button>
 						</td>
 					</tr>
 					{% endfor %}
@@ -218,10 +223,14 @@
 				window.location.href = '/cab_admins';
 			});
 
-			function confirmUpdateAdmin(adminName) {
+			function confirmUpdateMainAdmin() {
 				return confirm(`Сохранить изменения?`);
 			}
-			function confirmDeleteAdmin(adminName) {
+
+			function confirmUpdateAdmin() {
+				return confirm(`Сохранить изменения?`);
+			}
+			function confirmDeleteAdmin(adminName, adminLogin) {
 				return confirm(`Удалить администратора ${adminName} с логином ${adminLogin}?`);
 			}
 

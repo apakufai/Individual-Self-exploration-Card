@@ -283,3 +283,18 @@ DELETE FROM ISeC_adminAccounts;
 
 DROP TABLE ISeC_adminAccounts;
 
+
+
+-- ТАБЛИЦА ДОПОЛНИТЕЛЬНЫХ АДРЕСОВ (при повторной генерации и перессылке ИКС-файла)
+
+CREATE TABLE resends (
+    email TEXT unique
+);
+
+INSERT INTO resends (email) VALUES ('mail01@mail.ru');
+INSERT INTO resends (email) VALUES ('mail02@mail.ru');
+INSERT INTO resends (email) VALUES ('mail03@mail.ru');
+
+DELETE FROM resends;
+
+DROP TABLE resends;

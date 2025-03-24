@@ -13,7 +13,7 @@
 
 	<header class="header">
 		<div class="header_ISeC">ИКС-файл. Администраторная</div>
-		<button id="dwnl_emaildata">Скачать адресную базу</button>
+		<button id="dwnl_emaildata" onclick="downloadEmailData()">Скачать адресную базу</button>
 		<div class="header_admin">
 			<span>
 				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
@@ -232,6 +232,10 @@
 			}
 			function confirmDeleteAdmin(adminName, adminLogin) {
 				return confirm(`Удалить администратора ${adminName} с логином ${adminLogin}?`);
+			}
+
+			function confirmDownloadMailbase() {
+				return confirm("Скачать адресную базу?");
 			}
 
 		</script>

@@ -1490,8 +1490,8 @@ try:
 # ВЫБОР ВАРИАНТА ПОЛУЧЕНИЯ ИКС-ФАЙЛА
     time.sleep(0.8)
 
-    # btn_PDF_dwnl = browser.find_element(By.ID, 'PDF_dwnl')
-    # btn_PDF_dwnl.click()
+    btn_PDF_dwnl = browser.find_element(By.ID, 'PDF_dwnl')
+    btn_PDF_dwnl.click()
 
     # btn_PDF_send = browser.find_element(By.ID, 'PDF_send')
     # btn_PDF_send.click()
@@ -1513,9 +1513,9 @@ try:
     # btnConfirm = browser.find_element(By.ID, 'btn_confirm') # КНОПКА ПОДТВЕРЖДЕНИЯ
     # btnConfirm.click()
 
-    # time.sleep(30)
-    # # Обновляем страницу
-    # browser.refresh()
+    time.sleep(30)
+    # Обновляем страницу
+    browser.refresh()
 
 
 except Exception as e:

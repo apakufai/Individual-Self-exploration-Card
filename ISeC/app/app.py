@@ -1879,7 +1879,7 @@ def generate_and_download_pdf():
 
         # Сохранение документа
         can.save()
-        print(f"PDF-файл успешно создан: {pdf_path}")
+        # print(f"PDF-файл успешно создан: {pdf_path}")  # Отладочный вывод
 
         if not ISeC_results_exists:
             # SQL-запрос для создания таблицы, если она не существует
@@ -2005,9 +2005,10 @@ def generate_and_download_pdf():
         conn.commit()
         cursor.close()
         conn.close()
-
-        print(f"PDF path: {pdf_path}")  # Отладочный вывод
-        print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
+        
+        # # Отладочные выводы
+        # print(f"PDF path: {pdf_path}")
+        # print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
 
         # Проверяем, существует ли файл перед отправкой
         if not os.path.isfile(pdf_path):
@@ -2019,7 +2020,7 @@ def generate_and_download_pdf():
             encoded_filename = urllib.parse.quote(pdf_filename)
             response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
-            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return response  # Возвращаем только response
 
         if  insertData and receiveByEmail and not downloadToPC:
@@ -2028,7 +2029,7 @@ def generate_and_download_pdf():
             except Exception as e:
                 return jsonify({"error": f"Ошибка при отправке email: {str(e)}"}), 500
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
-            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return '', 200
 
         if  insertData and receiveByEmail and downloadToPC:
@@ -2041,7 +2042,7 @@ def generate_and_download_pdf():
             encoded_filename = urllib.parse.quote(pdf_filename)
             response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
-            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return response  # Возвращаем только response
 
         if  not insertData and receiveByEmail and not downloadToPC:
@@ -2051,7 +2052,7 @@ def generate_and_download_pdf():
             except Exception as e:
                 return jsonify({"error": f"Ошибка при отправке email: {str(e)}"}), 500
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
-            threading.Timer(180, cleanup, args=[userId, pdf_path]).start()
+            threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return '', 200
 
         # Возвращаем ошибку 404, если ни одна из двух переменных не истинна
@@ -2060,27 +2061,17 @@ def generate_and_download_pdf():
 
 
 # Удаление PDF-файла из временной папки и id пользователя из словаря блокировок
-def cleanup(userId, pdf_path):
+def cleanup_ISeC(userId, pdf_path):
 
     # Удаляем PDF-файл
     if userId in user_locks:
         del user_locks[userId]
-        print(f"Блокировка для пользователя {userId} удалена.")
+        # print(f"Блокировка для пользователя {userId} удалена.")  # Отладочный вывод
 
     # Удаляем userId из словаря блокировок
     if os.path.isfile(pdf_path):
         os.remove(pdf_path)
-        print(f"PDF-файл {pdf_path} удален.")
-
-@app.route('/cleanup', methods=['POST'])
-def cleanup_route():
-
-    data = request.json
-    userId = data.get('userId')
-    pdf_path = data.get('pdf_path')
-    cleanup(userId, pdf_path)
-
-    return jsonify({"status": "success"})
+        # print(f"PDF-файл {pdf_path} удален.")  # Отладочный вывод
 
 
 
@@ -2815,15 +2806,20 @@ def cab_generate_query():
     current_time = datetime.now()
     formatted_time = current_time.strftime("Запрос_%d.%m.%y_%H.%M.%S")  # Форматируем строку
 
+    temp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
+    os.makedirs(temp_dir, exist_ok=True)  # Создаем папку temp, если она не существует
+
     # Задаем путь к файлу в папке temp
-    excel_file_path = os.path.join('temp', f'{formatted_time}.xlsx')  # Путь к файлу в папке temp
+    excel_path = os.path.join(temp_dir, f'{formatted_time}.xlsx')  # Путь к файлу в папке temp
+
+
 
     # Сохраняем DataFrame в Excel с использованием openpyxl как движка
-    with pd.ExcelWriter(excel_file_path, engine='openpyxl') as writer:
+    with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, startrow=1)  # Сохраняем в Excel, начиная с третьей строки
 
     # Открываем файл с помощью openpyxl для настройки ширины столбцов и выравнивания
-    wb = load_workbook(excel_file_path)
+    wb = load_workbook(excel_path)
     ws = wb.active
 
     # Изменяем название закладки на "Выборка"
@@ -2867,7 +2863,7 @@ def cab_generate_query():
                     if cell_length > max_length:
                         max_length = cell_length
             except Exception as e:
-                print(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")
+                print(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")  # Отладочный вывод
 
         # Устанавливаем ширину для каждого столбца от A до AO
         ws.column_dimensions[column_letter].width = max(ws.column_dimensions[column_letter].width, max_length, default_min_width)
@@ -2877,16 +2873,16 @@ def cab_generate_query():
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
     # Сохраняем изменения в файле
-    wb.save(excel_file_path)
+    wb.save(excel_path)
     wb.close()
     cursor.close()
     conn.close()
 
-    # Запускаем таймер для удаления файла через 10 секунд
-    threading.Timer(3, delete_excel, args=(excel_file_path,)).start()
+    # Запускаем таймер для удаления файла через 3 секунды
+    threading.Timer(3, delete_excel, args=(excel_path,)).start()
 
     # Возвращаем Excel-файл пользователю
-    return send_file(excel_file_path, as_attachment=True, download_name=f"{formatted_time}.xlsx")  # Отправляем файл как вложение
+    return send_file(excel_path, as_attachment=True, download_name=f"{formatted_time}.xlsx")  # Отправляем файл как вложение
 
 # Функция для удаления excel-файла
 def delete_excel(file_path):
@@ -3135,6 +3131,56 @@ def cab_update_main_admin():
         cursor.close()
         conn.close()
     return redirect(url_for('cab_admins'))
+
+@app.route('/download_emaildata', methods=['POST'])
+def download_emaildata():
+    # Подключение к базе данных
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Получение уникальных email из ISeC_results
+    try:
+        cursor.execute("SELECT DISTINCT userEmail FROM ISeC_results WHERE userEmail != '-'")
+        emails1 = [row[0] for row in cursor.fetchall()]
+    except sqlite3.Error:
+        emails1 = []
+
+    # Получение уникальных email из resends
+    try:
+        cursor.execute("SELECT DISTINCT email FROM resends")
+        emails2 = [row[0] for row in cursor.fetchall()]
+    except sqlite3.Error:
+        emails2 = []
+
+    # Закрытие соединения с БД
+    conn.close()
+
+    # Проверка на пустые списки
+    if not emails1 and not emails2:
+        return jsonify({"message": "База данных пуста, результатов нет"}), 400
+
+    # Объединение списков, удаление дубликатов и сортировка
+    combined_emails = sorted(set(emails1 + emails2))
+
+    # Создание текстового файла
+    temp_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
+    os.makedirs(temp_dir, exist_ok=True)  # Создаем папку temp, если она не существует
+
+    txt_path = os.path.join(temp_dir, 'База_адресов.txt')
+    with open(txt_path, 'w') as f:
+        for email in combined_emails:
+            f.write(email + '\n')
+
+    # Запуск таймера для удаления файла через 3 секунды
+    threading.Timer(3, delete_txt, args=[txt_path]).start()
+
+    # Отправка файла на скачивание
+    return send_file(txt_path, as_attachment=True)
+
+# Функция для удаления txt-файла
+def delete_txt(file_path):
+    if os.path.exists(file_path):
+        os.remove(file_path)
 
 
 

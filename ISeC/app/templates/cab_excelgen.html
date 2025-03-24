@@ -19,7 +19,7 @@
 				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
 				<a href="{{ url_for('index') }}">Тест</a> |
 				<a href="{{ url_for('cab_logout') }}">Выйти</a>
-			</span>	
+			</span>
 		</div>
 	</header>
 
@@ -47,7 +47,7 @@
 			</button>
 		</div>
 
-        {% if session.admin_data.excelgenAccess == 'true' %}
+		{% if session.admin_data.excelgenAccess == 'true' %}
 		<div class="central_excelgen">
 
 			<table>
@@ -130,7 +130,7 @@
 						</td>
 
 						<td class="conditions_block_td_4">
-							<button id="start_excelgen">Создать</button>
+							<button id="start_excelgen" onclick="startExcelgen()">Создать</button>
 						</td>
 
 					</tr>
@@ -140,9 +140,9 @@
 			</table>
 
 		</div>
-        {% else %}
-        <span class="access_blocked">У Вас нет доступа к этой странице</span>
-        {% endif %}
+		{% else %}
+		<span class="access_blocked">У Вас нет доступа к этой странице</span>
+		{% endif %}
 
 		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>
@@ -167,13 +167,6 @@
 				window.location.href = '/cab_admins';
 			});
 
-			function confirmUpdateCode(adminLogin) {
-				return confirm(`Сохранить изменения?`);
-			}
-			function confirmDeleteCode(adminLogin) {
-				return confirm(`Удалить группу ${adminLogin}?`);
-			}
-
 			document.getElementById('show_all_groups').addEventListener('click', function () {
 				// Получаем все элементы с классом group-item
 				const groups = document.querySelectorAll('.group-item.hidden_groups');
@@ -185,52 +178,9 @@
 				this.classList.add('hidden-button');
 			});
 
-
-			document.getElementById('start_excelgen').addEventListener('click', function () {
-				const selectedGroups = Array.from(document.querySelectorAll('input[name="group_checkbox"]:checked')).map(el => el.value);
-				const selectedCategories = Array.from(document.querySelectorAll('input[name="category_checkbox"]:checked')).map(el => el.value);
-				const selectedSex = document.querySelector('input[name="sex"]:checked')?.value || null;
-				const yearFrom = parseInt(document.getElementById('yearFrom').value, 10);
-				const yearUntil = parseInt(document.getElementById('yearUntil').value, 10);
-
-				// Проверяем, что yearFrom не больше yearUntil
-				if (yearFrom > yearUntil) {
-					alert("Год ОТ больше года ДО");
-					return; // Прерываем выполнение функции
-				}
-
-				fetch('/cab_generate_query', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ groups: selectedGroups, categories: selectedCategories, sex: selectedSex, yearFrom, yearUntil })
-				})
-					.then(response => {
-						if (response.ok) {
-							return response.blob().then(blob => {
-								const contentDisposition = response.headers.get('Content-Disposition');
-								const originalFilename = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)?.[1]?.replace(/['"]/g, '') || 'download.xlsx';
-								const filename = `Запрос${originalFilename}`;
-
-								const url = window.URL.createObjectURL(blob);
-								const a = document.createElement('a');
-								a.style.display = 'none';
-								a.href = url;
-								a.download = filename;
-								document.body.appendChild(a);
-								a.click();
-								window.URL.revokeObjectURL(url);
-							});
-						} else if (response.status === 404) {
-							return response.json().then(data => {
-								alert(data.error); // Показываем сообщение об ошибке
-							});
-						} else {
-							throw new Error('Сетевой ответ не в порядке');
-						}
-					})
-					.catch(console.error);
-			});
-
+			function confirmExcelgen() {
+				return confirm("Скачать адресную базу?");
+			}
 
 		</script>
 

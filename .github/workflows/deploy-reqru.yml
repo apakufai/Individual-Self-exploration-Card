@@ -52,6 +52,6 @@ jobs:
 
       - name: Restart app
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "touch ~/www/isec.smart-skills.pro/.restart-app"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "touch www/isec.smart-skills.pro/.restart-app"
         
         

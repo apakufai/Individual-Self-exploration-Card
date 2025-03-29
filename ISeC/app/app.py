@@ -30,13 +30,13 @@ from openpyxl.utils import get_column_letter
 mysql = MySQL()
 
 application = Flask(__name__)
-# application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
-# application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSWORD"]
-# application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
-# application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
-# application.config["MYSQL_DATABASE_PORT"] = os.environ["MYSQL_DATABASE_PORT"]
+application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
+application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSWORD"]
+application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
+application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
+application.config["MYSQL_DATABASE_PORT"] = os.environ["MYSQL_DATABASE_PORT"]
 
-# mysql.init_app(application)
+mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов
 application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
@@ -48,11 +48,6 @@ user_locks = {}  # Словарь для хранения блокировок �
 def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico',
                                mimetype='image/x-icon')
-
-
-@application.route('/test')
-def test_env():
-    return os.environ.get("MYSQL_DATABASE_DB", "None")
 
 
 # Функция подключение к беза данных

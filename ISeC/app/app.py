@@ -30,13 +30,13 @@ from openpyxl.utils import get_column_letter
 mysql = MySQL()
 
 application = Flask(__name__)
-application.config["MYSQL_DATABASE_USER"] = "u0200264_isec"
-application.config["MYSQL_DATABASE_PASSWORD"] = "yGSm3p3ziBLQrH2"
-application.config["MYSQL_DATABASE_DB"] = "u0200264_isec"
-application.config["MYSQL_DATABASE_HOST"] = "127.0.0.1"
-application.config["MYSQL_DATABASE_PORT"] = 3310
+application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
+application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSWORD"]
+application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
+application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
+application.config["MYSQL_DATABASE_PORT"] = os.environ["MYSQL_DATABASE_PORT"]
 
-# mysql.init_app(application)
+mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов
 application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
@@ -601,22 +601,22 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(adaptation_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(adaptation_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_1_min is not None and adaptation_1_max is not None:
                 rangeSpreadHorizontal(adaptation_1_min, adaptation_1_max, 69.033, 526.35, 517.673, 15)
 
             cursor.execute("SELECT MIN(compromise_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(compromise_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if compromise_1_min is not None and compromise_1_max is not None:
                 rangeSpreadHorizontal(compromise_1_min, compromise_1_max, 69.033, 526.35, 754.016, 15)
@@ -641,33 +641,33 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(bidding_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             bidding_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(bidding_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             bidding_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if bidding_1_min is not None and bidding_1_max is not None:
                 rangeSpreadHorizontal(bidding_1_min, bidding_1_max, 69.033, 526.35, 187.427, 15)
 
             cursor.execute("SELECT MIN(threat_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             threat_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(threat_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             threat_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_1_min is not None and threat_1_max is not None:
                 rangeSpreadHorizontal(threat_1_min, threat_1_max, 69.033, 526.35, 406.910, 15)
 
             cursor.execute("SELECT MIN(logicArgument_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(logicArgument_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if logicArgument_1_min is not None and logicArgument_1_max is not None:
                 rangeSpreadHorizontal(logicArgument_1_min, logicArgument_1_max, 69.033, 526.35, 626.394, 15)
@@ -694,11 +694,11 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if emotionsArgument_1_min is not None and emotionsArgument_1_max is not None:
                 rangeSpreadHorizontal(emotionsArgument_1_min, emotionsArgument_1_max, 69.033, 526.35, 237.834, 15)
@@ -1616,22 +1616,22 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(adaptation_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(adaptation_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_2_min is not None and adaptation_2_max is not None:
                 rangeSpreadHorizontal(adaptation_2_min, adaptation_2_max, 62.242, 532.995, 406.290, 36)
 
             cursor.execute("SELECT MIN(compromise_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(compromise_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if compromise_2_min is not None and compromise_2_max is not None:
                 rangeSpreadHorizontal(compromise_2_min, compromise_2_max, 62.242, 532.995, 763.228, 36)
@@ -1656,22 +1656,22 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(threat_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             threat_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(threat_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             threat_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_2_min is not None and threat_2_max is not None:
                 rangeSpreadHorizontal(threat_2_min, threat_2_max, 62.242, 532.995, 372.274, 36)
 
             cursor.execute("SELECT MIN(cooperation_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(cooperation_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if cooperation_2_min is not None and cooperation_2_max is not None:
                 rangeSpreadHorizontal(cooperation_2_min, cooperation_2_max, 62.242, 532.995, 759.969, 36)
@@ -1696,11 +1696,11 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(avoidance_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             avoidance_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(avoidance_2) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             avoidance_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if avoidance_2_min is not None and avoidance_2_max is not None:
                 rangeSpreadHorizontal(avoidance_2_min, avoidance_2_max, 62.242, 532.995, 405.865, 36)
@@ -1801,33 +1801,33 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(adaptation_3) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(adaptation_3) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_3_min is not None and adaptation_3_max is not None:
                 rangeSpreadVertical(adaptation_3_min, adaptation_3_max, 779.91, 312.05, 391.33, 27)
 
             cursor.execute("SELECT MIN(threat_3) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             threat_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(threat_3) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             threat_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_3_min is not None and threat_3_max is not None:
                 rangeSpreadVertical(threat_3_min, threat_3_max, 779.91, 312.05, 455.11, 27)
 
             cursor.execute("SELECT MIN(cooperation_3) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(cooperation_3) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if cooperation_3_min is not None and cooperation_3_max is not None:
                 rangeSpreadVertical(cooperation_3_min, cooperation_3_max, 779.91, 312.05, 518.889, 27)
@@ -1934,22 +1934,22 @@ def generate_and_download_pdf():
 
             cursor.execute("SELECT MIN(logicArgument_6) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_6_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(logicArgument_6) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_6_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if logicArgument_6_min is not None and logicArgument_6_max is not None:
                 rangeSpreadHorizontal(logicArgument_6_min, logicArgument_6_max, 63.27, 532, 458.646, 30)
 
             cursor.execute("SELECT MIN(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_min = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_min = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_6_min = result_min[0] if result_min else None  # Первая строка из результата запроса
             cursor.execute("SELECT MAX(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?",
                            (userCategory,))  # SQL-запрос
-            result_max = cursor.fetchone()  # Сохраняем результат в переменную  
+            result_max = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_6_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if emotionsArgument_6_min is not None and emotionsArgument_6_max is not None:
                 rangeSpreadHorizontal(emotionsArgument_6_min, emotionsArgument_6_max, 63.27, 532, 762.315, 30)

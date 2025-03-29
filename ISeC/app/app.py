@@ -1,5 +1,6 @@
 from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
 from flaskext.mysql import MySQL
+from pymysql import Connection
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -53,13 +54,13 @@ def favicon():
 def test_db():
     try:
         conn = get_db_connection()
-        return str(conn.is_connected())
+        return str(conn.ping())
     except Exception as e:
         return str(e)
 
 
 # Функция подключение к беза данных
-def get_db_connection():
+def get_db_connection() -> Connection:
     return mysql.get_db()
 
 

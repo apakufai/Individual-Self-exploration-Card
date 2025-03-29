@@ -30,11 +30,11 @@ from openpyxl.utils import get_column_letter
 mysql = MySQL()
 
 application = Flask(__name__)
-application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
-application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSWORD"]
-application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
-application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
-application.config["MYSQL_DATABASE_PORT"] = os.environ["MYSQL_DATABASE_PORT"]
+application.config["MYSQL_DATABASE_USER"] = "u0200264_isec"
+application.config["MYSQL_DATABASE_PASSWORD"] = "yGSm3p3ziBLQrH2"
+application.config["MYSQL_DATABASE_DB"] = "u0200264_isec"
+application.config["MYSQL_DATABASE_HOST"] = "127.0.0.1"
+application.config["MYSQL_DATABASE_PORT"] = 3310
 
 mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов

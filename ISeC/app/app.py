@@ -36,7 +36,7 @@ application.config["MYSQL_DATABASE_DB"] = "u0200264_isec"
 application.config["MYSQL_DATABASE_HOST"] = "127.0.0.1"
 application.config["MYSQL_DATABASE_PORT"] = 3310
 
-mysql.init_app(application)
+# mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов
 application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
@@ -48,11 +48,6 @@ user_locks = {}  # Словарь для хранения блокировок �
 def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico',
                                mimetype='image/x-icon')
-
-
-@application.route('/ping')
-def favicon():
-    return "Pong"
 
 
 # Функция подключение к беза данных

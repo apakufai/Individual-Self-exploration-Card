@@ -52,12 +52,17 @@ def favicon():
 @application.route('/test_db')
 def test_db():
     conn = get_db_connection()
+    if isinstance(conn, str):
+        return conn
     return str(conn.is_connected())
 
 
 # Функция подключение к беза данных
 def get_db_connection():
-    return mysql.connect()
+    try:
+        return mysql.get_db()
+    except Exception as err:
+        return str(err)
 
 
 # Маршруты переходов для страниц

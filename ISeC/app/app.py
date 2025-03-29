@@ -54,7 +54,7 @@ def favicon():
 def test_db():
     try:
         conn = get_db_connection()
-        result = conn.cursor.fetchall()
+        result = conn.cursor().fetchall()
 
         for i in range(len(result)):
             print(result[i])

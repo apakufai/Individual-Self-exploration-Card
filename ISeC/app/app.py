@@ -36,7 +36,7 @@ application = Flask(__name__)
 # application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
 # application.config["MYSQL_DATABASE_PORT"] = os.environ["MYSQL_DATABASE_PORT"]
 
-mysql.init_app(application)
+# mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов
 application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
@@ -52,7 +52,7 @@ def favicon():
 
 @application.route('/test')
 def test_env():
-    return os.environ.get("MYSQL_DATABASE_DB")
+    return os.environ.get("MYSQL_DATABASE_DB", "None")
 
 
 # Функция подключение к беза данных

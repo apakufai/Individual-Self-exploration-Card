@@ -50,6 +50,11 @@ def favicon():
                                mimetype='image/x-icon')
 
 
+@application.route('/test')
+def test_env():
+    return os.environ["MYSQL_DATABASE_DB"]
+
+
 # Функция подключение к беза данных
 def get_db_connection():
     return mysql.connect()

@@ -33,7 +33,7 @@ jobs:
 
       - name: install requirements
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip install --upgrade pip && pip freeze | xargs pip uninstall -y && pip install -r www/isec.smart-skills.pro/requirements.txt" 
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip install --upgrade pip && pip uninstall -y $(pip freeze) && pip install -r www/isec.smart-skills.pro/requirements.txt" 
 
       - name: install envs
         run: |

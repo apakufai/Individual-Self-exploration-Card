@@ -54,7 +54,11 @@ def favicon():
 def test_db():
     try:
         conn = get_db_connection()
-        return str(conn.ping())
+
+        result = conn.cursor.fetchall()
+
+        for i in range(len(result)):
+            print(result[i])
     except Exception as e:
         return str(e)
 

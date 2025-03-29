@@ -54,7 +54,10 @@ def favicon():
 def test_db():
     try:
         conn = get_db_connection()
-        result = conn.cursor().fetchall()
+        cur = conn.cursor()
+
+        cur.execute('''SELECT user, host FROM mysql.user''')
+        result = cur.fetchall()
 
         for i in range(len(result)):
             print(result[i])

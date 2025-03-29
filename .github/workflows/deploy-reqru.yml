@@ -47,7 +47,7 @@ jobs:
 
       - name: install envs
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_USER_PLACEHOLDER|'${{secrets.MYSQL_DATABASE}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_USER_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_USER}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PASSWORD_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PASSWORD}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_DB_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_DB}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_HOST_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_HOST}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"

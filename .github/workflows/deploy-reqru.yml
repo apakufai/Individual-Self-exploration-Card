@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.SSH_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "ISeC/requirements.txt, ISeC/app/*"
+          source: "ISeC/requirements.txt, ISeC/app/"
           target: "www/isec.smart-skills.pro/"
           strip_components: 1
 

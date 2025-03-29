@@ -19,7 +19,7 @@ jobs:
 
       - name: Rm old files
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "rw -rf www/isec.smart-skills.pro"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "rm -rf www/isec.smart-skills.pro/*"
 
       - name: copy file via ssh
         uses: appleboy/scp-action@master
@@ -27,20 +27,35 @@ jobs:
           host: ${{ secrets.SSH_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "ISeC/requirements.txt, ISeC/app/"
+          source: "ISeC/app/"
           target: "www/isec.smart-skills.pro/"
+          strip_components: 2
+
+      - name: copy file via ssh
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "ISeC/requirements.txt"
+          target: "www/isec.smart-skills.pro/"
+          strip_components: 1
 
       - name: install requirements
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/python && pip freeze | xargs pip uninstall -y && pip install -r ~/www/isec.smart-skills.pro/requirements.txt" 
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip install --upgrade pip && pip uninstall -y $(pip freeze) && pip install -r www/isec.smart-skills.pro/requirements.txt" 
 
       - name: install envs
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "export MYSQL_DATABASE_USER=${{ secrets.SSH_USER }} MYSQL_DATABASE_PASSWORD=${{ secrets.MYSQL_DATABASE_PASSWORD }} MYSQL_DATABASE_DB=${{ secrets.MYSQL_DATABASE_DB }} MYSQL_DATABASE_HOST=${{secrets.MYSQL_DATABASE_HOST}} MYSQL_DATABASE_PORT=${{secrets.MYSQL_DATABASE_PORT}}"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_USER_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_USER}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PASSWORD_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PASSWORD}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_DB_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_DB}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_HOST_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_HOST}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PORT_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PORT}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
   
 
       - name: Restart app
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "touch ~/www/isec.smart-skills.pro/.restart-app"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "touch www/isec.smart-skills.pro/.restart-app"
         
         

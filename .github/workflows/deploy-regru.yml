@@ -47,7 +47,11 @@ jobs:
 
       - name: install envs
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && export MYSQL_DATABASE_USER=${{ secrets.SSH_USER }} MYSQL_DATABASE_PASSWORD=${{ secrets.MYSQL_DATABASE_PASSWORD }} MYSQL_DATABASE_DB=${{ secrets.MYSQL_DATABASE_DB }} MYSQL_DATABASE_HOST=${{secrets.MYSQL_DATABASE_HOST}} MYSQL_DATABASE_PORT=${{secrets.MYSQL_DATABASE_PORT}}"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PLACEHOLDER|'${{secrets.MYSQL_DATABASE}}'|g' passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PASSWORD_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PASSWORD}}'|g' passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_DB_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_DB}}'|g' passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_HOST_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_HOST}}'|g' passenger_wsgi.py"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PORT_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PORT}}'|g' passenger_wsgi.py"
   
 
       - name: Restart app

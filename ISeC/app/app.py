@@ -50,21 +50,6 @@ def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico',
                                mimetype='image/x-icon')
 
-@application.route('/test_db')
-def test_db():
-    try:
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute('''SELECT user, host FROM mysql.user''')
-        result = cur.fetchall()
-
-        for i in range(len(result)):
-            print(result[i])
-            return str(result[i])
-    except Exception as e:
-        return str(e)
-
 
 # Функция подключение к беза данных
 def get_db_connection() -> Connection:
@@ -80,35 +65,30 @@ def index():
 # Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
 @application.route('/check_code', methods=['POST'])
 def check_code():
-    try:
-        input_code = request.json.get('code')  # Получаем код из запроса
-        conn = get_db_connection()
-        if conn is None:
-            return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
-        cursor = conn.cursor()
-        cursor.execute('SELECT testGroup, dateFrom, dateUntil FROM ISeC_accessCodes WHERE code = ?', (input_code,))
-        result = cursor.fetchone()
-        conn.close()
-        if result:
-            test_group = result['testGroup']
-            date_from_str = result['dateFrom']
-            date_until_str = result['dateUntil']
-            # Преобразование строк в объекты даты
-            date_from = datetime.strptime(date_from_str, '%Y-%m-%d')
-            date_until = datetime.strptime(date_until_str, '%Y-%m-%d')
-            today = datetime.now()
-            # Проверка условий
-            if date_from > today:
-                return jsonify({'error': 'today_is_before_dateFrom'})
-            if date_until < today:
-                return jsonify({'error': 'today_is_after_dateUntil'})
-            return jsonify({'testGroup': test_group})  # Возвращаем testGroup
-        else:
-            return jsonify({'error': 'accessCode_not_found'})
-
-    except Exception as e:
-        return jsonify({'error': str(e)})
-        # Возвращаем сообщение, если код не найден
+    input_code = request.json.get('code')  # Получаем код из запроса
+    conn = get_db_connection()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    cursor.execute('SELECT testGroup, dateFrom, dateUntil FROM ISeC_accessCodes WHERE code = (%s)', (input_code,))
+    result = cursor.fetchone()
+    conn.close()
+    if result:
+        test_group = result['testGroup']
+        date_from_str = result['dateFrom']
+        date_until_str = result['dateUntil']
+        # Преобразование строк в объекты даты
+        date_from = datetime.strptime(date_from_str, '%Y-%m-%d')
+        date_until = datetime.strptime(date_until_str, '%Y-%m-%d')
+        today = datetime.now()
+        # Проверка условий
+        if date_from > today:
+            return jsonify({'error': 'today_is_before_dateFrom'})
+        if date_until < today:
+            return jsonify({'error': 'today_is_after_dateUntil'})
+        return jsonify({'testGroup': test_group})  # Возвращаем testGroup
+    else:
+        return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
 
 
 @application.route('/set_index_pass', methods=['POST'])

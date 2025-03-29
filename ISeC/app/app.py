@@ -1,4 +1,5 @@
 from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
+from flaskext.mysql import MySQL
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -26,49 +27,47 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
+mysql = MySQL()
 
+application = Flask(__name__)
+application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
+application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSWORD"]
+application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
+application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
+application.config["MYSQL_DATABASE_PORT"] = os.environ["MYSQL_DATABASE_PORT"]
 
-app = Flask(__name__)
-CORS(app)  # Разрешить CORS для всех маршрутов
-app.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
+mysql.init_app(application)
+CORS(application)  # Разрешить CORS для всех маршрутов
+application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
 user_locks = {}  # Словарь для хранения блокировок для каждого пользователя
 
 
-
 # Отображение фавикона
-@app.route('/favicon.ico')
+@application.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
+    return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico',
+                               mimetype='image/x-icon')
 
+
+@application.route('/ping')
+def favicon():
+    return "Pong"
 
 
 # Функция подключение к беза данных
 def get_db_connection():
-    try:
-        db_path = os.path.join(os.path.dirname(__file__), 'database/ISeC_database.db')
-        if not os.path.exists(db_path):
-            print(f"База данных не найдена по пути: {db_path}")
-        print("Попытка подключения к базе данных...")
-        conn = sqlite3.connect(db_path)  # Укажите путь к вашей базе данных
-        conn.row_factory = sqlite3.Row  # Позволяет обращаться к столбцам по именам
-        print("Подключение успешно.")
-        return conn
-    except sqlite3.Error as e:
-        print(f"Ошибка подключения к базе данных: {e}")
-        return None
-
+    return mysql.connect()
 
 
 # Маршруты переходов для страниц
-@app.route('/')
+@application.route('/')
 def index():
     return render_template('index.html')
 
 
-
 # Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
-@app.route('/check_code', methods=['POST'])
+@application.route('/check_code', methods=['POST'])
 def check_code():
     input_code = request.json.get('code')  # Получаем код из запроса
     conn = get_db_connection()
@@ -96,114 +95,128 @@ def check_code():
         return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
 
 
-@app.route('/set_index_pass', methods=['POST'])
+@application.route('/set_index_pass', methods=['POST'])
 def set_index_pass():
     data = request.get_json()
     if 'indexPass' in data and data['indexPass'] == True:
         session['indexPass'] = True
     return jsonify(success=True)
 
-@app.route('/user_data_input')
+
+@application.route('/user_data_input')
 def user_data_input():
     if 'indexPass' not in session or not session['indexPass']:
         return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
     return render_template('user_data_input.html')
 
-@app.route('/set_UDI_pass', methods=['POST'])
+
+@application.route('/set_UDI_pass', methods=['POST'])
 def set_UDI_pass():
     data = request.get_json()
     if 'UDIPass' in data and data['UDIPass'] == True:
         session['UDIPass'] = True
     return jsonify(success=True)
 
-@app.route('/test_1')
+
+@application.route('/test_1')
 def test_1():
     if 'UDIPass' not in session or not session['UDIPass']:
         return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
-@app.route('/set_test_1_pass', methods=['POST'])
+
+@application.route('/set_test_1_pass', methods=['POST'])
 def set_test_1_pass():
     data = request.get_json()
     if 'test1Pass' in data and data['test1Pass'] == True:
         session['test1Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_2')
+
+@application.route('/test_2')
 def test_2():
     if 'test1Pass' not in session or not session['test1Pass']:
         return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
     return render_template('test_2.html')
 
-@app.route('/set_test_2_pass', methods=['POST'])
+
+@application.route('/set_test_2_pass', methods=['POST'])
 def set_test_2_pass():
     data = request.get_json()
     if 'test2Pass' in data and data['test2Pass'] == True:
         session['test2Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_3')
+
+@application.route('/test_3')
 def test_3():
     if 'test2Pass' not in session or not session['test2Pass']:
         return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
     return render_template('test_3.html')
 
-@app.route('/set_test_3_pass', methods=['POST'])
+
+@application.route('/set_test_3_pass', methods=['POST'])
 def set_test_3_pass():
     data = request.get_json()
     if 'test3Pass' in data and data['test3Pass'] == True:
         session['test3Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_4')
+
+@application.route('/test_4')
 def test_4():
     if 'test3Pass' not in session or not session['test3Pass']:
         return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
     return render_template('test_4.html')
 
-@app.route('/set_test_4_pass', methods=['POST'])
+
+@application.route('/set_test_4_pass', methods=['POST'])
 def set_test_4_pass():
     data = request.get_json()
     if 'test4Pass' in data and data['test4Pass'] == True:
         session['test4Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_5')
+
+@application.route('/test_5')
 def test_5():
     if 'test4Pass' not in session or not session['test4Pass']:
         return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
     return render_template('test_5.html')
 
-@app.route('/set_test_5_pass', methods=['POST'])
+
+@application.route('/set_test_5_pass', methods=['POST'])
 def set_test_5_pass():
     data = request.get_json()
     if 'test5Pass' in data and data['test5Pass'] == True:
         session['test5Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_6')
+
+@application.route('/test_6')
 def test_6():
     if 'test5Pass' not in session or not session['test5Pass']:
         return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
     return render_template('test_6.html')
 
-@app.route('/set_test_6_pass', methods=['POST'])
+
+@application.route('/set_test_6_pass', methods=['POST'])
 def set_test_6_pass():
     data = request.get_json()
     if 'test6Pass' in data and data['test6Pass'] == True:
         session['test6Pass'] = True
     return jsonify(success=True)
 
-@app.route('/results')
+
+@application.route('/results')
 def results():
     if 'test6Pass' not in session or not session['test6Pass']:
         return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
     return render_template('results.html')
 
 
-
 # Функция проверки существования id респондента в базе (нужна для исключения дубликатов)
-@app.route('/check_user_id', methods=['POST'])
+@application.route('/check_user_id', methods=['POST'])
 def check_user_id():
     input_id = request.json.get('userId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -213,12 +226,12 @@ def check_user_id():
     try:
         cursor.execute('SELECT userId FROM ISeC_results WHERE userId = ?', (input_id,))
         result = cursor.fetchone()
-        
+
         if result:
             return jsonify({'found': True})  # Если id найден
         else:
             return jsonify({'found': False})  # Если id не найден
-            
+
     except sqlite3.OperationalError as e:
         if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
             return jsonify({'found': False})  # Если таблица не существует
@@ -229,7 +242,6 @@ def check_user_id():
         conn.close()
 
 
-    
 # Функция для отправки электронного письма с прикрепленным PDF-файлом
 def send_email(user_email, pdf_path, pdf_filename):
     # Настройки SMTP
@@ -250,7 +262,8 @@ def send_email(user_email, pdf_path, pdf_filename):
         part = MIMEBase('application', 'pdf')  # Указываем тип содержимого как PDF
         part.set_payload(attachment.read())  # Читаем содержимое файла
         encoders.encode_base64(part)  # Кодируем в base64
-        part.add_header('Content-Disposition', f'attachment; filename="{Header(pdf_filename, "utf-8").encode()}"')  # Указываем имя файла
+        part.add_header('Content-Disposition',
+                        f'attachment; filename="{Header(pdf_filename, "utf-8").encode()}"')  # Указываем имя файла
         msg.attach(part)  # Прикрепляем часть к сообщению
     # Отправляем email
     try:
@@ -262,11 +275,9 @@ def send_email(user_email, pdf_path, pdf_filename):
         print(f"Ошибка при отправке email: {e}")
 
 
-
 # Работа с итоговым PDF-файлом и занесение данных в базу
-@app.route('/generate_and_download_pdf', methods=['POST'])
+@application.route('/generate_and_download_pdf', methods=['POST'])
 def generate_and_download_pdf():
-
     # Локальный массив для хранения результатов
     ISeC_results_array = request.json
 
@@ -285,7 +296,7 @@ def generate_and_download_pdf():
 
     # Используем блокировку для предотвращения одновременной генерации
     with user_lock:
-        
+
         # Проверяем еще раз, существует ли файл, так как другой поток мог его создать
         if os.path.isfile(pdf_path):
             return send_file(pdf_path, as_attachment=True, download_name=pdf_filename)
@@ -306,14 +317,14 @@ def generate_and_download_pdf():
         insertData = bool(ISeC_results_array.get('insertData'))
 
         userGroup = str(ISeC_results_array.get('userGroup'))
-        
+
         userName = str(ISeC_results_array.get('userName'))
         userSurname = str(ISeC_results_array.get('userSurname'))
         userSex = str(ISeC_results_array.get('userSex'))
         userBirthyear = int(ISeC_results_array.get('userBirthyear'))
         userCategory = str(ISeC_results_array.get('userCategory'))
         userEmail = str(ISeC_results_array.get('userEmail'))
-        
+
         adaptation_1 = int(ISeC_results_array.get('adaptation_1'))
         compromise_1 = int(ISeC_results_array.get('compromise_1'))
         bidding_1 = int(ISeC_results_array.get('bidding_1'))
@@ -326,7 +337,7 @@ def generate_and_download_pdf():
         threatCount_1 = float(ISeC_results_array.get('threatCount_1'))
         logicArgumentCount_1 = float(ISeC_results_array.get('logicArgumentCount_1'))
         emotionsArgumentCount_1 = float(ISeC_results_array.get('emotionsArgumentCount_1'))
-        
+
         b1_q1_top = int(ISeC_results_array.get('b1_q1_top'))
         b1_q2_top = int(ISeC_results_array.get('b1_q2_top'))
         b1_q3_top = int(ISeC_results_array.get('b1_q3_top'))
@@ -391,7 +402,7 @@ def generate_and_download_pdf():
         adaptationCount_3 = float(ISeC_results_array.get('adaptationCount_3'))
         threatCount_3 = float(ISeC_results_array.get('threatCount_3'))
         cooperationCount_3 = float(ISeC_results_array.get('cooperationCount_3'))
-        
+
         b3_q1 = int(ISeC_results_array.get('b3_q1'))
         b3_q2 = int(ISeC_results_array.get('b3_q2'))
         b3_q3 = int(ISeC_results_array.get('b3_q3'))
@@ -409,7 +420,7 @@ def generate_and_download_pdf():
         strengthInstallationCount_4 = float(ISeC_results_array.get('strengthInstallationCount_4'))
         manipulationInstallationCount_4 = float(ISeC_results_array.get('manipulationInstallationCount_4'))
         negotiationsInstallationCount_4 = float(ISeC_results_array.get('negotiationsInstallationCount_4'))
-        
+
         b4_q1 = int(ISeC_results_array.get('b4_q1'))
         b4_q2 = int(ISeC_results_array.get('b4_q2'))
         b4_q3 = int(ISeC_results_array.get('b4_q3'))
@@ -437,7 +448,7 @@ def generate_and_download_pdf():
         logicArgumentCount_5 = float(ISeC_results_array.get('logicArgumentCount_5'))
         emotionsArgumentCount_5 = float(ISeC_results_array.get('emotionsArgumentCount_5'))
         avoidanceCount_5 = float(ISeC_results_array.get('avoidanceCount_5'))
-        
+
         b5_q1 = int(ISeC_results_array.get('b5_q1'))
         b5_q2 = int(ISeC_results_array.get('b5_q2'))
         b5_q3 = int(ISeC_results_array.get('b5_q3'))
@@ -455,7 +466,7 @@ def generate_and_download_pdf():
         emotionsArgument_6 = int(ISeC_results_array.get('emotionsArgument_6'))
         logicArgumentCount_6 = float(ISeC_results_array.get('logicArgumentCount_6'))
         emotionsArgumentCount_6 = float(ISeC_results_array.get('emotionsArgumentCount_6'))
-        
+
         b6_q1 = int(ISeC_results_array.get('b6_q1'))
         b6_q2 = int(ISeC_results_array.get('b6_q2'))
         b6_q3 = int(ISeC_results_array.get('b6_q3'))
@@ -497,12 +508,11 @@ def generate_and_download_pdf():
         if not os.path.isfile(font_path):  # Проверка на существование файла шрифта
             return f"Файл шрифта не найден по пути: {font_path}", 404
         pdfmetrics.registerFont(TTFont('Bahnschrift', font_path))  # Регистрация шрифта
-        
+
         # Создание холста
         can = canvas.Canvas(pdf_path, pagesize=A4)  # pdf_path для сохранения
         width, height = A4  # Размеры страницы
         can.setFont("Bahnschrift", 14)  # Установка шрифта и его размера
-
 
         # СТРАНИЦА 1
         image_path_1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_1.png")
@@ -527,7 +537,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение первой страницы
 
-
         # СТРАНИЦА 2
         image_path_2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_2.png")
         # Проверяем, существует ли изображение
@@ -536,7 +545,7 @@ def generate_and_download_pdf():
         # Добавляем изображение на страницу
         can.drawImage(image_path_2, 0, 0, width=width, height=height)
 
-            # Функция рисования личного результата на горизонтальной шкале
+        # Функция рисования личного результата на горизонтальной шкале
         def rangeResultHorizontal(range_name, range_x_start, range_x_end, range_y_start, range_divisionsCount):
             # Вычисляем координаты X для "палочки"
             x_start = range_x_start + (((range_x_end - range_x_start) / range_divisionsCount) * range_name)
@@ -548,7 +557,7 @@ def generate_and_download_pdf():
             yBottom = 12
             can.setStrokeColorRGB(200 / 255, 65 / 255, 85 / 255)  # Устанавливаем цвет линии
             can.setLineWidth(1)  # Устанавливаем ширину линии
-            can.setFillColorRGB(200 / 255, 65 / 255, 85 / 255) # Устанавливаем цвет заливки
+            can.setFillColorRGB(200 / 255, 65 / 255, 85 / 255)  # Устанавливаем цвет заливки
             circle_radius = 0.5  # Радиус круга в пунктах
             can.circle(x_start, y_start, circle_radius, stroke=0, fill=1)  # Рисуется круг диаметром 1 пункт
             # Основная линия
@@ -563,7 +572,9 @@ def generate_and_download_pdf():
             can.line(x_start + xRight, y_start + yCenter, x_start, y_start + yBottom)
 
             # Функция рисования разброса по категории на горизонтальной шкале
-        def rangeSpreadHorizontal(range_name_min, range_name_max, range_x_start, range_x_end, range_y_start, range_divisionsCount):
+
+        def rangeSpreadHorizontal(range_name_min, range_name_max, range_x_start, range_x_end, range_y_start,
+                                  range_divisionsCount):
             # Координаты
             x_start_min = range_x_start + (((range_x_end - range_x_start) / range_divisionsCount) * range_name_min)
             x_start_max = range_x_start + (((range_x_end - range_x_start) / range_divisionsCount) * range_name_max)
@@ -573,7 +584,7 @@ def generate_and_download_pdf():
             yCorner = 5
             can.setStrokeColorRGB(90 / 255, 127 / 255, 174 / 255)  # Устанавливаем цвет линии
             can.setLineWidth(1)  # Устанавливаем ширину линии
-            can.setFillColorRGB(90 / 255, 127 / 255, 174 / 255) # Устанавливаем цвет заливки
+            can.setFillColorRGB(90 / 255, 127 / 255, 174 / 255)  # Устанавливаем цвет заливки
             circle_radius = 0.5  # Радиус круга в пунктах
             # НАЧАЛО ОТРЕЗКА
             can.circle(x_start_min, y_start, circle_radius, stroke=0, fill=1)  # Рисуется круг диаметром 1 пункт
@@ -593,19 +604,23 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(adaptation_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(adaptation_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             adaptation_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(adaptation_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(adaptation_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             adaptation_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_1_min is not None and adaptation_1_max is not None:
                 rangeSpreadHorizontal(adaptation_1_min, adaptation_1_max, 69.033, 526.35, 517.673, 15)
 
-            cursor.execute("SELECT MIN(compromise_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(compromise_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             compromise_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(compromise_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(compromise_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             compromise_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if compromise_1_min is not None and compromise_1_max is not None:
@@ -619,39 +634,44 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение второй страницы
 
-
         # СТРАНИЦА 3
         image_path_3 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_3.png")
         if not os.path.exists(image_path_3):
             print(f"Изображение {image_path_3} не найдено.")
             return
         can.drawImage(image_path_3, 0, 0, width=width, height=height)
-            
+
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(bidding_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(bidding_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             bidding_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(bidding_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(bidding_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             bidding_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if bidding_1_min is not None and bidding_1_max is not None:
                 rangeSpreadHorizontal(bidding_1_min, bidding_1_max, 69.033, 526.35, 187.427, 15)
 
-            cursor.execute("SELECT MIN(threat_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(threat_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             threat_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(threat_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(threat_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             threat_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_1_min is not None and threat_1_max is not None:
                 rangeSpreadHorizontal(threat_1_min, threat_1_max, 69.033, 526.35, 406.910, 15)
 
-            cursor.execute("SELECT MIN(logicArgument_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(logicArgument_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             logicArgument_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(logicArgument_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(logicArgument_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             logicArgument_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if logicArgument_1_min is not None and logicArgument_1_max is not None:
@@ -667,7 +687,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение третьей страницы
 
-
         # СТРАНИЦА 4
         image_path_4 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_4.png")
         if not os.path.exists(image_path_4):
@@ -677,11 +696,13 @@ def generate_and_download_pdf():
 
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
-            
-            cursor.execute("SELECT MIN(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+
+            cursor.execute("SELECT MIN(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             emotionsArgument_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             emotionsArgument_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if emotionsArgument_1_min is not None and emotionsArgument_1_max is not None:
@@ -705,9 +726,9 @@ def generate_and_download_pdf():
             {"name": "Компромисс", "color": (90 / 255, 127 / 255, 174 / 255), "value": 10},
             {"name": "Приспособление", "color": (235 / 255, 188 / 255, 109 / 255), "value": 4},
         ]
-        current_y_left = start_y_left # Начальная позиция по Y для рисования каждой части графика в цикле for
+        current_y_left = start_y_left  # Начальная позиция по Y для рисования каждой части графика в цикле for
         for part_left in values_left:
-            if part_left["value"] > 0: # Проверяем, что значение больше 0
+            if part_left["value"] > 0:  # Проверяем, что значение больше 0
                 # Рассчитываем высоту на основе значения
                 height_left = (fullHeight_left * part_left["value"]) / sum(part["value"] for part in values_left)
                 can.setStrokeColorRGB(*part_left["color"])
@@ -728,9 +749,9 @@ def generate_and_download_pdf():
             {"name": "Компромисс", "color": (90 / 255, 127 / 255, 174 / 255), "value": compromise_1},
             {"name": "Приспособление", "color": (235 / 255, 188 / 255, 109 / 255), "value": adaptation_1},
         ]
-        current_y_right = start_y_right # Начальная позиция по Y для рисования каждой части графика в цикле for
+        current_y_right = start_y_right  # Начальная позиция по Y для рисования каждой части графика в цикле for
         for part_right in values_right:
-            if part_right["value"] > 0: # Проверяем, что значение больше 0
+            if part_right["value"] > 0:  # Проверяем, что значение больше 0
                 # Рассчитываем высоту на основе значения
                 height_right = (fullHeight_right * part_right["value"]) / sum(part["value"] for part in values_right)
                 can.setStrokeColorRGB(*part_right["color"])
@@ -740,7 +761,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение четвёртой страницы
 
-        
         # СТРАНИЦА 5
         image_path_5 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_5.png")
         if not os.path.exists(image_path_5):
@@ -768,23 +788,28 @@ def generate_and_download_pdf():
         resident_x, resident_y = 179.528, height - 674.409
         berserker_x, berserker_y = 429.921, height - 674.409
         # Отступы
-        axial_hei = 15 # Высота холма вертикальных линий
-        axial_wid = 40 # Ширина пика холма вертикальных линий
-        diagSmall_hei = 10 # Высота холма малых диагональных линий
-        diagSmall_wid = 30 # Ширина пика холма малых диагональных линий
-        diagBig_hei = 30 # Высота холма больших диагональных линий
-        diagBig_wid = 100 # Ширина пика холма больших диагональных линий
+        axial_hei = 15  # Высота холма вертикальных линий
+        axial_wid = 40  # Ширина пика холма вертикальных линий
+        diagSmall_hei = 10  # Высота холма малых диагональных линий
+        diagSmall_wid = 30  # Ширина пика холма малых диагональных линий
+        diagBig_hei = 30  # Высота холма больших диагональных линий
+        diagBig_wid = 100  # Ширина пика холма больших диагональных линий
         # Параметры оконечника стрелки
         arrow_length = 30  # Длина "крыльев" стрелки
         arrow_angle = math.radians(15)  # Угол в радианах
 
         # Душа-человек -> Виртуоз
         def soulman_to_virtuoso():
-            can.line(soulman_x, soulman_y, ((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei)
-            can.circle(((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, ((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei)
-            can.circle(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, virtuoso_x, virtuoso_y)
+            can.line(soulman_x, soulman_y, ((soulman_x + virtuoso_x) / 2) - axial_wid,
+                     ((soulman_y + virtuoso_y) / 2) + axial_hei)
+            can.circle(((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, 2.5,
+                       stroke=0, fill=1)
+            can.line(((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei,
+                     ((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei)
+            can.circle(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, 2.5,
+                       stroke=0, fill=1)
+            can.line(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) + axial_hei, virtuoso_x,
+                     virtuoso_y)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + virtuoso_x) / 2) + axial_wid
             line_end_y = ((soulman_y + virtuoso_y) / 2) + axial_hei
@@ -813,10 +838,14 @@ def generate_and_download_pdf():
 
         # Виртуоз -> Душа-человек
         def virtuoso_to_soulman():
-            can.line(virtuoso_x, virtuoso_y, ((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei)
-            can.circle(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei, ((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei)
-            can.circle(((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei, 2.5, stroke=0, fill=1)
+            can.line(virtuoso_x, virtuoso_y, ((soulman_x + virtuoso_x) / 2) + axial_wid,
+                     ((soulman_y + virtuoso_y) / 2) - axial_hei)
+            can.circle(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei, 2.5,
+                       stroke=0, fill=1)
+            can.line(((soulman_x + virtuoso_x) / 2) + axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei,
+                     ((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei)
+            can.circle(((soulman_x + virtuoso_x) / 2) - axial_wid, ((soulman_y + virtuoso_y) / 2) - axial_hei, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + virtuoso_x) / 2) - axial_wid
             line_end_y = ((soulman_y + virtuoso_y) / 2) - axial_hei
@@ -845,10 +874,14 @@ def generate_and_download_pdf():
 
         # Резидент -> Берсерк
         def resident_to_berserker():
-            can.line(resident_x, resident_y, ((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) + axial_hei)
-            can.circle(((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) + axial_hei, 2.5, stroke=0, fill=1)
-            can.line(((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) + axial_hei, ((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) + axial_hei)
-            can.circle(((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) + axial_hei, 2.5, stroke=0, fill=1)
+            can.line(resident_x, resident_y, ((resident_x + berserker_x) / 2) - axial_wid,
+                     ((resident_y + berserker_y) / 2) + axial_hei)
+            can.circle(((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) + axial_hei, 2.5,
+                       stroke=0, fill=1)
+            can.line(((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) + axial_hei,
+                     ((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) + axial_hei)
+            can.circle(((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) + axial_hei, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((resident_x + berserker_x) / 2) + axial_wid
             line_end_y = ((resident_y + berserker_y) / 2) + axial_hei
@@ -877,10 +910,14 @@ def generate_and_download_pdf():
 
         # Берсерк -> Резидент
         def berserker_to_resident():
-            can.line(berserker_x, berserker_y, ((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) - axial_hei)
-            can.circle(((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) - axial_hei, 2.5, stroke=0, fill=1)
-            can.line(((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) - axial_hei, ((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) - axial_hei)
-            can.circle(((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) - axial_hei, 2.5, stroke=0, fill=1)
+            can.line(berserker_x, berserker_y, ((resident_x + berserker_x) / 2) + axial_wid,
+                     ((resident_y + berserker_y) / 2) - axial_hei)
+            can.circle(((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) - axial_hei, 2.5,
+                       stroke=0, fill=1)
+            can.line(((resident_x + berserker_x) / 2) + axial_wid, ((resident_y + berserker_y) / 2) - axial_hei,
+                     ((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) - axial_hei)
+            can.circle(((resident_x + berserker_x) / 2) - axial_wid, ((resident_y + berserker_y) / 2) - axial_hei, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((resident_x + berserker_x) / 2) - axial_wid
             line_end_y = ((resident_y + berserker_y) / 2) - axial_hei
@@ -909,10 +946,14 @@ def generate_and_download_pdf():
 
         # Душа-человек -> Резидент
         def soulman_to_resident():
-            can.line(soulman_x, soulman_y, ((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) + axial_wid)
-            can.circle(((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) + axial_wid, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) + axial_wid, ((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) - axial_wid)
-            can.circle(((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) - axial_wid, 2.5, stroke=0, fill=1)
+            can.line(soulman_x, soulman_y, ((soulman_x + resident_x) / 2) - axial_hei,
+                     ((soulman_y + resident_y) / 2) + axial_wid)
+            can.circle(((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) + axial_wid, 2.5,
+                       stroke=0, fill=1)
+            can.line(((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) + axial_wid,
+                     ((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) - axial_wid)
+            can.circle(((soulman_x + resident_x) / 2) - axial_hei, ((soulman_y + resident_y) / 2) - axial_wid, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + resident_x) / 2) - axial_hei
             line_end_y = ((soulman_y + resident_y) / 2) - axial_wid
@@ -941,10 +982,14 @@ def generate_and_download_pdf():
 
         # Резидент -> Душа-человек
         def resident_to_soulman():
-            can.line(resident_x, resident_y, ((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) - axial_wid)
-            can.circle(((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) - axial_wid, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) - axial_wid, ((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) + axial_wid)
-            can.circle(((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) + axial_wid, 2.5, stroke=0, fill=1)
+            can.line(resident_x, resident_y, ((soulman_x + resident_x) / 2) + axial_hei,
+                     ((soulman_y + resident_y) / 2) - axial_wid)
+            can.circle(((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) - axial_wid, 2.5,
+                       stroke=0, fill=1)
+            can.line(((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) - axial_wid,
+                     ((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) + axial_wid)
+            can.circle(((soulman_x + resident_x) / 2) + axial_hei, ((soulman_y + resident_y) / 2) + axial_wid, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + resident_x) / 2) + axial_hei
             line_end_y = ((soulman_y + resident_y) / 2) + axial_wid
@@ -973,10 +1018,14 @@ def generate_and_download_pdf():
 
         # Виртуоз -> Берсерк
         def virtuoso_to_berserker():
-            can.line(virtuoso_x, virtuoso_y, ((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid)
-            can.circle(((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid, 2.5, stroke=0, fill=1)
-            can.line(((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid, ((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid)
-            can.circle(((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid, 2.5, stroke=0, fill=1)
+            can.line(virtuoso_x, virtuoso_y, ((virtuoso_x + berserker_x) / 2) - axial_hei,
+                     ((virtuoso_y + berserker_y) / 2) + axial_wid)
+            can.circle(((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid, 2.5,
+                       stroke=0, fill=1)
+            can.line(((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid,
+                     ((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid)
+            can.circle(((virtuoso_x + berserker_x) / 2) - axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((virtuoso_x + berserker_x) / 2) - axial_hei
             line_end_y = ((virtuoso_y + berserker_y) / 2) - axial_wid
@@ -1005,10 +1054,14 @@ def generate_and_download_pdf():
 
         # Берсерк -> Виртуоз
         def berserker_to_virtuoso():
-            can.line(berserker_x, berserker_y, ((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid)
-            can.circle(((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid, 2.5, stroke=0, fill=1)
-            can.line(((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid, ((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid)
-            can.circle(((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid, 2.5, stroke=0, fill=1)
+            can.line(berserker_x, berserker_y, ((virtuoso_x + berserker_x) / 2) + axial_hei,
+                     ((virtuoso_y + berserker_y) / 2) - axial_wid)
+            can.circle(((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid, 2.5,
+                       stroke=0, fill=1)
+            can.line(((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) - axial_wid,
+                     ((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid)
+            can.circle(((virtuoso_x + berserker_x) / 2) + axial_hei, ((virtuoso_y + berserker_y) / 2) + axial_wid, 2.5,
+                       stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((virtuoso_x + berserker_x) / 2) + axial_hei
             line_end_y = ((virtuoso_y + berserker_y) / 2) + axial_wid
@@ -1037,10 +1090,15 @@ def generate_and_download_pdf():
 
         # Душа-человек -> Политик
         def soulman_to_politician():
-            can.line(soulman_x, soulman_y, ((soulman_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((soulman_y + politician_y) / 2) + diagSmall_wid)
-            can.circle(((soulman_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((soulman_y + politician_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((soulman_y + politician_y) / 2) + diagSmall_wid, ((soulman_x + politician_x) / 2) + diagSmall_wid, ((soulman_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei)
-            can.circle(((soulman_x + politician_x) / 2) + diagSmall_wid, ((soulman_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(soulman_x, soulman_y, ((soulman_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((soulman_y + politician_y) / 2) + diagSmall_wid)
+            can.circle(((soulman_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                       ((soulman_y + politician_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(((soulman_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((soulman_y + politician_y) / 2) + diagSmall_wid, ((soulman_x + politician_x) / 2) + diagSmall_wid,
+                     ((soulman_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei)
+            can.circle(((soulman_x + politician_x) / 2) + diagSmall_wid,
+                       ((soulman_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + politician_x) / 2) + diagSmall_wid
             line_end_y = ((soulman_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei
@@ -1069,10 +1127,15 @@ def generate_and_download_pdf():
 
         # Политик -> Душа-человек
         def politician_to_soulman():
-            can.line(politician_x, politician_y, ((soulman_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((soulman_y + politician_y) / 2) - diagSmall_wid)
-            can.circle(((soulman_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((soulman_y + politician_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((soulman_y + politician_y) / 2) - diagSmall_wid, ((soulman_x + politician_x) / 2) - diagSmall_wid, ((soulman_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
-            can.circle(((soulman_x + politician_x) / 2) - diagSmall_wid, ((soulman_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(politician_x, politician_y, ((soulman_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((soulman_y + politician_y) / 2) - diagSmall_wid)
+            can.circle(((soulman_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                       ((soulman_y + politician_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(((soulman_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((soulman_y + politician_y) / 2) - diagSmall_wid, ((soulman_x + politician_x) / 2) - diagSmall_wid,
+                     ((soulman_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
+            can.circle(((soulman_x + politician_x) / 2) - diagSmall_wid,
+                       ((soulman_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + politician_x) / 2) - diagSmall_wid
             line_end_y = ((soulman_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei
@@ -1101,10 +1164,16 @@ def generate_and_download_pdf():
 
         # Политик -> Берсерк
         def politician_to_berserker():
-            can.line(politician_x, politician_y, ((politician_x + berserker_x) / 2) - diagSmall_wid + diagSmall_hei, ((politician_y + berserker_y) / 2) + diagSmall_wid)
-            can.circle(((politician_x + berserker_x) / 2) - diagSmall_wid + diagSmall_hei, ((politician_y + berserker_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
-            can.line(((politician_x + berserker_x) / 2) - diagSmall_wid + diagSmall_hei, ((politician_y + berserker_y) / 2) + diagSmall_wid, ((politician_x + berserker_x) / 2) + diagSmall_wid, ((politician_y + berserker_y) / 2) - diagSmall_wid + diagSmall_hei)
-            can.circle(((politician_x + berserker_x) / 2) + diagSmall_wid, ((politician_y + berserker_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(politician_x, politician_y, ((politician_x + berserker_x) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((politician_y + berserker_y) / 2) + diagSmall_wid)
+            can.circle(((politician_x + berserker_x) / 2) - diagSmall_wid + diagSmall_hei,
+                       ((politician_y + berserker_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(((politician_x + berserker_x) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((politician_y + berserker_y) / 2) + diagSmall_wid,
+                     ((politician_x + berserker_x) / 2) + diagSmall_wid,
+                     ((politician_y + berserker_y) / 2) - diagSmall_wid + diagSmall_hei)
+            can.circle(((politician_x + berserker_x) / 2) + diagSmall_wid,
+                       ((politician_y + berserker_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((politician_x + berserker_x) / 2) + diagSmall_wid
             line_end_y = ((politician_y + berserker_y) / 2) - diagSmall_wid + diagSmall_hei
@@ -1133,10 +1202,16 @@ def generate_and_download_pdf():
 
         # Берсерк -> Политик
         def berserker_to_politician():
-            can.line(berserker_x, berserker_y, ((politician_x + berserker_x) / 2) + diagSmall_wid - diagSmall_hei, ((politician_y + berserker_y) / 2) - diagSmall_wid)
-            can.circle(((politician_x + berserker_x) / 2) + diagSmall_wid - diagSmall_hei, ((politician_y + berserker_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
-            can.line(((politician_x + berserker_x) / 2) + diagSmall_wid - diagSmall_hei, ((politician_y + berserker_y) / 2) - diagSmall_wid, ((politician_x + berserker_x) / 2) - diagSmall_wid, ((politician_y + berserker_y) / 2) + diagSmall_wid - diagSmall_hei)
-            can.circle(((politician_x + berserker_x) / 2) - diagSmall_wid, ((politician_y + berserker_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(berserker_x, berserker_y, ((politician_x + berserker_x) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((politician_y + berserker_y) / 2) - diagSmall_wid)
+            can.circle(((politician_x + berserker_x) / 2) + diagSmall_wid - diagSmall_hei,
+                       ((politician_y + berserker_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(((politician_x + berserker_x) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((politician_y + berserker_y) / 2) - diagSmall_wid,
+                     ((politician_x + berserker_x) / 2) - diagSmall_wid,
+                     ((politician_y + berserker_y) / 2) + diagSmall_wid - diagSmall_hei)
+            can.circle(((politician_x + berserker_x) / 2) - diagSmall_wid,
+                       ((politician_y + berserker_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((politician_x + berserker_x) / 2) - diagSmall_wid
             line_end_y = ((politician_y + berserker_y) / 2) + diagSmall_wid - diagSmall_hei
@@ -1165,10 +1240,16 @@ def generate_and_download_pdf():
 
         # Резидент -> Политик
         def resident_to_politician():
-            can.line(resident_x, resident_y, ((resident_x + politician_x) / 2) - diagSmall_wid, ((resident_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei)
-            can.circle(((resident_x + politician_x) / 2) - diagSmall_wid, ((resident_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
-            can.line(((resident_x + politician_x) / 2) - diagSmall_wid, ((resident_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, ((resident_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((resident_y + politician_y) / 2) + diagSmall_wid)
-            can.circle(((resident_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((resident_y + politician_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(resident_x, resident_y, ((resident_x + politician_x) / 2) - diagSmall_wid,
+                     ((resident_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei)
+            can.circle(((resident_x + politician_x) / 2) - diagSmall_wid,
+                       ((resident_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(((resident_x + politician_x) / 2) - diagSmall_wid,
+                     ((resident_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((resident_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((resident_y + politician_y) / 2) + diagSmall_wid)
+            can.circle(((resident_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                       ((resident_y + politician_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((resident_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei
             line_end_y = ((resident_y + politician_y) / 2) + diagSmall_wid
@@ -1197,10 +1278,16 @@ def generate_and_download_pdf():
 
         # Политик -> Резидент
         def politician_to_resident():
-            can.line(politician_x, politician_y, ((resident_x + politician_x) / 2) + diagSmall_wid, ((resident_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
-            can.circle(((resident_x + politician_x) / 2) + diagSmall_wid, ((resident_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
-            can.line(((resident_x + politician_x) / 2) + diagSmall_wid, ((resident_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, ((resident_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((resident_y + politician_y) / 2) - diagSmall_wid)
-            can.circle(((resident_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((resident_y + politician_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(politician_x, politician_y, ((resident_x + politician_x) / 2) + diagSmall_wid,
+                     ((resident_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
+            can.circle(((resident_x + politician_x) / 2) + diagSmall_wid,
+                       ((resident_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(((resident_x + politician_x) / 2) + diagSmall_wid,
+                     ((resident_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((resident_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((resident_y + politician_y) / 2) - diagSmall_wid)
+            can.circle(((resident_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                       ((resident_y + politician_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((resident_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei
             line_end_y = ((resident_y + politician_y) / 2) - diagSmall_wid
@@ -1229,10 +1316,16 @@ def generate_and_download_pdf():
 
         # Политик -> Виртуоз
         def politician_to_virtuoso():
-            can.line(politician_x, politician_y, ((virtuoso_x + politician_x) / 2) - diagSmall_wid, ((virtuoso_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei)
-            can.circle(((virtuoso_x + politician_x) / 2) - diagSmall_wid, ((virtuoso_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
-            can.line(((virtuoso_x + politician_x) / 2) - diagSmall_wid, ((virtuoso_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, ((virtuoso_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((virtuoso_y + politician_y) / 2) + diagSmall_wid)
-            can.circle(((virtuoso_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei, ((virtuoso_y + politician_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(politician_x, politician_y, ((virtuoso_x + politician_x) / 2) - diagSmall_wid,
+                     ((virtuoso_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei)
+            can.circle(((virtuoso_x + politician_x) / 2) - diagSmall_wid,
+                       ((virtuoso_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(((virtuoso_x + politician_x) / 2) - diagSmall_wid,
+                     ((virtuoso_y + politician_y) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((virtuoso_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                     ((virtuoso_y + politician_y) / 2) + diagSmall_wid)
+            can.circle(((virtuoso_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei,
+                       ((virtuoso_y + politician_y) / 2) + diagSmall_wid, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((virtuoso_x + politician_x) / 2) + diagSmall_wid - diagSmall_hei
             line_end_y = ((virtuoso_y + politician_y) / 2) + diagSmall_wid
@@ -1261,10 +1354,16 @@ def generate_and_download_pdf():
 
         # Виртуоз -> Политик
         def virtuoso_to_politician():
-            can.line(virtuoso_x, virtuoso_y, ((virtuoso_x + politician_x) / 2) + diagSmall_wid, ((virtuoso_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
-            can.circle(((virtuoso_x + politician_x) / 2) + diagSmall_wid, ((virtuoso_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
-            can.line(((virtuoso_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((virtuoso_y + politician_y) / 2) - diagSmall_wid, ((virtuoso_x + politician_x) / 2) + diagSmall_wid, ((virtuoso_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
-            can.circle(((virtuoso_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei, ((virtuoso_y + politician_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
+            can.line(virtuoso_x, virtuoso_y, ((virtuoso_x + politician_x) / 2) + diagSmall_wid,
+                     ((virtuoso_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
+            can.circle(((virtuoso_x + politician_x) / 2) + diagSmall_wid,
+                       ((virtuoso_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei, 2.5, stroke=0, fill=1)
+            can.line(((virtuoso_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                     ((virtuoso_y + politician_y) / 2) - diagSmall_wid,
+                     ((virtuoso_x + politician_x) / 2) + diagSmall_wid,
+                     ((virtuoso_y + politician_y) / 2) + diagSmall_wid - diagSmall_hei)
+            can.circle(((virtuoso_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei,
+                       ((virtuoso_y + politician_y) / 2) - diagSmall_wid, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((virtuoso_x + politician_x) / 2) - diagSmall_wid + diagSmall_hei
             line_end_y = ((virtuoso_y + politician_y) / 2) - diagSmall_wid
@@ -1293,10 +1392,15 @@ def generate_and_download_pdf():
 
         # Душа-человек -> Берсерк
         def soulman_to_berserker():
-            can.line(soulman_x, soulman_y, ((soulman_x + berserker_x) / 2) - diagBig_wid + diagBig_hei, ((soulman_y + berserker_y) / 2) + diagBig_wid)
-            can.circle(((soulman_x + berserker_x) / 2) - diagBig_wid + diagBig_hei, ((soulman_y + berserker_y) / 2) + diagBig_wid, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + berserker_x) / 2) - diagBig_wid + diagBig_hei, ((soulman_y + berserker_y) / 2) + diagBig_wid, ((soulman_x + berserker_x) / 2) + diagBig_wid, ((soulman_y + berserker_y) / 2) - diagBig_wid + diagBig_hei)
-            can.circle(((soulman_x + berserker_x) / 2) + diagBig_wid, ((soulman_y + berserker_y) / 2) - diagBig_wid + diagBig_hei, 2.5, stroke=0, fill=1)
+            can.line(soulman_x, soulman_y, ((soulman_x + berserker_x) / 2) - diagBig_wid + diagBig_hei,
+                     ((soulman_y + berserker_y) / 2) + diagBig_wid)
+            can.circle(((soulman_x + berserker_x) / 2) - diagBig_wid + diagBig_hei,
+                       ((soulman_y + berserker_y) / 2) + diagBig_wid, 2.5, stroke=0, fill=1)
+            can.line(((soulman_x + berserker_x) / 2) - diagBig_wid + diagBig_hei,
+                     ((soulman_y + berserker_y) / 2) + diagBig_wid, ((soulman_x + berserker_x) / 2) + diagBig_wid,
+                     ((soulman_y + berserker_y) / 2) - diagBig_wid + diagBig_hei)
+            can.circle(((soulman_x + berserker_x) / 2) + diagBig_wid,
+                       ((soulman_y + berserker_y) / 2) - diagBig_wid + diagBig_hei, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + berserker_x) / 2) + diagBig_wid
             line_end_y = ((soulman_y + berserker_y) / 2) - diagBig_wid + diagBig_hei
@@ -1325,10 +1429,15 @@ def generate_and_download_pdf():
 
         # Берсерк -> Душа-человек
         def berserker_to_soulman():
-            can.line(berserker_x, berserker_y, ((soulman_x + berserker_x) / 2) + diagBig_wid - diagBig_hei, ((soulman_y + berserker_y) / 2) - diagBig_wid)
-            can.circle(((soulman_x + berserker_x) / 2) + diagBig_wid - diagBig_hei, ((soulman_y + berserker_y) / 2) - diagBig_wid, 2.5, stroke=0, fill=1)
-            can.line(((soulman_x + berserker_x) / 2) + diagBig_wid - diagBig_hei, ((soulman_y + berserker_y) / 2) - diagBig_wid, ((soulman_x + berserker_x) / 2) - diagBig_wid, ((soulman_y + berserker_y) / 2) + diagBig_wid - diagBig_hei)
-            can.circle(((soulman_x + berserker_x) / 2) - diagBig_wid, ((soulman_y + berserker_y) / 2) + diagBig_wid - diagBig_hei, 2.5, stroke=0, fill=1)
+            can.line(berserker_x, berserker_y, ((soulman_x + berserker_x) / 2) + diagBig_wid - diagBig_hei,
+                     ((soulman_y + berserker_y) / 2) - diagBig_wid)
+            can.circle(((soulman_x + berserker_x) / 2) + diagBig_wid - diagBig_hei,
+                       ((soulman_y + berserker_y) / 2) - diagBig_wid, 2.5, stroke=0, fill=1)
+            can.line(((soulman_x + berserker_x) / 2) + diagBig_wid - diagBig_hei,
+                     ((soulman_y + berserker_y) / 2) - diagBig_wid, ((soulman_x + berserker_x) / 2) - diagBig_wid,
+                     ((soulman_y + berserker_y) / 2) + diagBig_wid - diagBig_hei)
+            can.circle(((soulman_x + berserker_x) / 2) - diagBig_wid,
+                       ((soulman_y + berserker_y) / 2) + diagBig_wid - diagBig_hei, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((soulman_x + berserker_x) / 2) - diagBig_wid
             line_end_y = ((soulman_y + berserker_y) / 2) + diagBig_wid - diagBig_hei
@@ -1357,10 +1466,16 @@ def generate_and_download_pdf():
 
         # Резидент -> Виртуоз
         def resident_to_virtuoso():
-            can.line(resident_x, resident_y, ((virtuoso_x + resident_x) / 2) - diagBig_wid, ((virtuoso_y + resident_y) / 2) - diagBig_wid + diagBig_hei)
-            can.circle(((virtuoso_x + resident_x) / 2) - diagBig_wid, ((virtuoso_y + resident_y) / 2) - diagBig_wid + diagBig_hei, 2.5, stroke=0, fill=1)
-            can.line(((virtuoso_x + resident_x) / 2) - diagBig_wid, ((virtuoso_y + resident_y) / 2) - diagBig_wid + diagBig_hei, ((virtuoso_x + resident_x) / 2) + diagBig_wid - diagBig_hei, ((virtuoso_y + resident_y) / 2) + diagBig_wid)
-            can.circle(((virtuoso_x + resident_x) / 2) + diagBig_wid - diagBig_hei, ((virtuoso_y + resident_y) / 2) + diagBig_wid, 2.5, stroke=0, fill=1)
+            can.line(resident_x, resident_y, ((virtuoso_x + resident_x) / 2) - diagBig_wid,
+                     ((virtuoso_y + resident_y) / 2) - diagBig_wid + diagBig_hei)
+            can.circle(((virtuoso_x + resident_x) / 2) - diagBig_wid,
+                       ((virtuoso_y + resident_y) / 2) - diagBig_wid + diagBig_hei, 2.5, stroke=0, fill=1)
+            can.line(((virtuoso_x + resident_x) / 2) - diagBig_wid,
+                     ((virtuoso_y + resident_y) / 2) - diagBig_wid + diagBig_hei,
+                     ((virtuoso_x + resident_x) / 2) + diagBig_wid - diagBig_hei,
+                     ((virtuoso_y + resident_y) / 2) + diagBig_wid)
+            can.circle(((virtuoso_x + resident_x) / 2) + diagBig_wid - diagBig_hei,
+                       ((virtuoso_y + resident_y) / 2) + diagBig_wid, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((virtuoso_x + resident_x) / 2) + diagBig_wid - diagBig_hei
             line_end_y = ((virtuoso_y + resident_y) / 2) + diagBig_wid
@@ -1389,10 +1504,15 @@ def generate_and_download_pdf():
 
         # Виртуоз -> Резидент
         def virtuoso_to_resident():
-            can.line(virtuoso_x, virtuoso_y, ((virtuoso_x + resident_x) / 2) + diagBig_wid, ((virtuoso_y + resident_y) / 2) + diagBig_wid - diagBig_hei)
-            can.circle(((virtuoso_x + resident_x) / 2) + diagBig_wid, ((virtuoso_y + resident_y) / 2) + diagBig_wid - diagBig_hei, 2.5, stroke=0, fill=1)
-            can.line(((virtuoso_x + resident_x) / 2) - diagBig_wid + diagBig_hei, ((virtuoso_y + resident_y) / 2) - diagBig_wid, ((virtuoso_x + resident_x) / 2) + diagBig_wid, ((virtuoso_y + resident_y) / 2) + diagBig_wid - diagBig_hei)
-            can.circle(((virtuoso_x + resident_x) / 2) - diagBig_wid + diagBig_hei, ((virtuoso_y + resident_y) / 2) - diagBig_wid, 2.5, stroke=0, fill=1)
+            can.line(virtuoso_x, virtuoso_y, ((virtuoso_x + resident_x) / 2) + diagBig_wid,
+                     ((virtuoso_y + resident_y) / 2) + diagBig_wid - diagBig_hei)
+            can.circle(((virtuoso_x + resident_x) / 2) + diagBig_wid,
+                       ((virtuoso_y + resident_y) / 2) + diagBig_wid - diagBig_hei, 2.5, stroke=0, fill=1)
+            can.line(((virtuoso_x + resident_x) / 2) - diagBig_wid + diagBig_hei,
+                     ((virtuoso_y + resident_y) / 2) - diagBig_wid, ((virtuoso_x + resident_x) / 2) + diagBig_wid,
+                     ((virtuoso_y + resident_y) / 2) + diagBig_wid - diagBig_hei)
+            can.circle(((virtuoso_x + resident_x) / 2) - diagBig_wid + diagBig_hei,
+                       ((virtuoso_y + resident_y) / 2) - diagBig_wid, 2.5, stroke=0, fill=1)
             # Координаты конца третьей линии
             line_end_x = ((virtuoso_x + resident_x) / 2) - diagBig_wid + diagBig_hei
             line_end_y = ((virtuoso_y + resident_y) / 2) - diagBig_wid
@@ -1432,7 +1552,7 @@ def generate_and_download_pdf():
             # Сортируем ключи по значениям в порядке убывания
             sorted_keys_2 = sorted(variables, key=variables.get, reverse=True)
             return sorted_keys_2, variables
-            
+
         # Вызов функции sort_variables_2
         sorted_result, variables = sort_variables_2(adaptation_2, compromise_2, threat_2, cooperation_2, avoidance_2)
         # Проверяем переходы между значениями
@@ -1489,7 +1609,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение пятой страницы
 
-
         # СТРАНИЦА 6
         image_path_6 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_6.png")
         if not os.path.exists(image_path_6):
@@ -1500,19 +1619,23 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(adaptation_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(adaptation_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             adaptation_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(adaptation_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(adaptation_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             adaptation_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_2_min is not None and adaptation_2_max is not None:
                 rangeSpreadHorizontal(adaptation_2_min, adaptation_2_max, 62.242, 532.995, 406.290, 36)
 
-            cursor.execute("SELECT MIN(compromise_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(compromise_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             compromise_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(compromise_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(compromise_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             compromise_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if compromise_2_min is not None and compromise_2_max is not None:
@@ -1526,7 +1649,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение шестой страницы
 
-
         # СТРАНИЦА 7
         image_path_7 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_7.png")
         if not os.path.exists(image_path_7):
@@ -1537,19 +1659,23 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(threat_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(threat_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             threat_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(threat_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(threat_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             threat_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_2_min is not None and threat_2_max is not None:
                 rangeSpreadHorizontal(threat_2_min, threat_2_max, 62.242, 532.995, 372.274, 36)
 
-            cursor.execute("SELECT MIN(cooperation_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(cooperation_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             cooperation_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(cooperation_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(cooperation_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             cooperation_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if cooperation_2_min is not None and cooperation_2_max is not None:
@@ -1563,7 +1689,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение седьмой страницы
 
-
         # СТРАНИЦА 8
         image_path_8 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_8.png")
         if not os.path.exists(image_path_8):
@@ -1574,10 +1699,12 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(avoidance_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(avoidance_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             avoidance_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(avoidance_2) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(avoidance_2) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             avoidance_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if avoidance_2_min is not None and avoidance_2_max is not None:
@@ -1588,7 +1715,6 @@ def generate_and_download_pdf():
             rangeResultHorizontal(avoidance_2, 62.242, 532.995, 405.865, 36)
 
         can.showPage()  # Завершение восьмой страницы
-
 
         # СТРАНИЦА 9
         image_path_9 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_9.png")
@@ -1601,13 +1727,13 @@ def generate_and_download_pdf():
         value_2_lowest = variables[sorted_result[4]]
         value_2_subtraction = value_2_highest - value_2_lowest
         if value_2_subtraction < 10:
-            can.drawString(257, height - 407.777, str(" " + str(value_2_subtraction)))  # Печатаем разницу с пробелом перед числом
+            can.drawString(257, height - 407.777,
+                           str(" " + str(value_2_subtraction)))  # Печатаем разницу с пробелом перед числом
         else:
             can.drawString(257, height - 407.777, str(value_2_subtraction))  # Печатаем разницу
 
         can.showPage()  # Завершение девятой страницы
 
-        
         # СТРАНИЦА 10
         image_path_10 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_10.png")
         if not os.path.exists(image_path_10):
@@ -1615,7 +1741,7 @@ def generate_and_download_pdf():
             return
         can.drawImage(image_path_10, 0, 0, width=width, height=height)
 
-            # Функция рисования личного результата на вертикальной шкале
+        # Функция рисования личного результата на вертикальной шкале
         def rangeResultVertical(range_name, range_y_start, range_y_end, range_x_start, range_divisionsCount):
             # Координаты
             x_start = range_x_start
@@ -1627,7 +1753,7 @@ def generate_and_download_pdf():
             xRight = -12
             can.setStrokeColorRGB(200 / 255, 65 / 255, 85 / 255)  # Устанавливаем цвет линии
             can.setLineWidth(1)  # Устанавливаем ширину линии
-            can.setFillColorRGB(200 / 255, 65 / 255, 85 / 255) # Устанавливаем цвет заливки
+            can.setFillColorRGB(200 / 255, 65 / 255, 85 / 255)  # Устанавливаем цвет заливки
             # Рисуем круг диаметром 1 пункт
             circle_radius = 0.5  # Радиус круга в пунктах
             can.circle(x_start, y_start, circle_radius, stroke=0, fill=1)  # Рисуем круг
@@ -1643,10 +1769,14 @@ def generate_and_download_pdf():
             can.line(x_start + xCenter, y_start + yTop, x_start + xRight, y_start)
 
             # Функция рисования разброса по категории на вертикальной шкале
-        def rangeSpreadVertical(range_name_min, range_name_max, range_y_start, range_y_end, range_x_start, range_divisionsCount):
+
+        def rangeSpreadVertical(range_name_min, range_name_max, range_y_start, range_y_end, range_x_start,
+                                range_divisionsCount):
             # Координаты
-            y_start_min = height - (range_y_start + (((range_y_end - range_y_start) / range_divisionsCount) * range_name_min))
-            y_start_max = height - (range_y_start + (((range_y_end - range_y_start) / range_divisionsCount) * range_name_max))
+            y_start_min = height - (
+                    range_y_start + (((range_y_end - range_y_start) / range_divisionsCount) * range_name_min))
+            y_start_max = height - (
+                    range_y_start + (((range_y_end - range_y_start) / range_divisionsCount) * range_name_max))
             x_start = range_x_start
             # Координаты
             xTopLine = 10
@@ -1654,7 +1784,7 @@ def generate_and_download_pdf():
             xCorner = 5
             can.setStrokeColorRGB(90 / 255, 127 / 255, 174 / 255)  # Устанавливаем цвет линии
             can.setLineWidth(1)  # Устанавливаем ширину линии
-            can.setFillColorRGB(90 / 255, 127 / 255, 174 / 255) # Устанавливаем цвет заливки
+            can.setFillColorRGB(90 / 255, 127 / 255, 174 / 255)  # Устанавливаем цвет заливки
             circle_radius = 0.5  # Радиус круга в пунктах
             # НАЧАЛО ОТРЕЗКА
             can.circle(x_start, y_start_min, circle_radius, stroke=0, fill=1)  # Рисуется круг диаметром 1 пункт
@@ -1674,28 +1804,34 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(adaptation_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(adaptation_3) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             adaptation_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(adaptation_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(adaptation_3) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             adaptation_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_3_min is not None and adaptation_3_max is not None:
                 rangeSpreadVertical(adaptation_3_min, adaptation_3_max, 779.91, 312.05, 391.33, 27)
 
-            cursor.execute("SELECT MIN(threat_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(threat_3) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             threat_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(threat_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(threat_3) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             threat_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_3_min is not None and threat_3_max is not None:
                 rangeSpreadVertical(threat_3_min, threat_3_max, 779.91, 312.05, 455.11, 27)
 
-            cursor.execute("SELECT MIN(cooperation_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(cooperation_3) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             cooperation_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(cooperation_3) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(cooperation_3) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             cooperation_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if cooperation_3_min is not None and cooperation_3_max is not None:
@@ -1711,7 +1847,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение десятой страницы
 
-
         # СТРАНИЦА 11
         image_path_11 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_11.png")
         if not os.path.exists(image_path_11):
@@ -1721,7 +1856,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение одиннадцатой страницы
 
-
         # СТРАНИЦА 12
         image_path_12 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_12.png")
         if not os.path.exists(image_path_12):
@@ -1730,7 +1864,6 @@ def generate_and_download_pdf():
         can.drawImage(image_path_12, 0, 0, width=width, height=height)
 
         can.showPage()  # Завершение двенадцатой страницы
-
 
         # СТРАНИЦА 13
         image_path_13 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_13.png")
@@ -1743,9 +1876,11 @@ def generate_and_download_pdf():
         can.drawString(250.429, height - 321.496, str(negotiationsInstallation_4))  # Деловая модель
         understandingPercentage = understandingOfStyles_4 * 100 / 30
         if (understandingPercentage).is_integer():
-            can.drawString(189.178, height - 355.088, f"{int(understandingPercentage)}%")  # Понимание стилей целое, выводим без десятичных
+            can.drawString(189.178, height - 355.088,
+                           f"{int(understandingPercentage)}%")  # Понимание стилей целое, выводим без десятичных
         else:
-            can.drawString(189.178, height - 355.088, f"{(understandingPercentage) :.2f}%")  # Понимание стилей дробное, выводим с двумя знаками
+            can.drawString(189.178, height - 355.088,
+                           f"{(understandingPercentage) :.2f}%")  # Понимание стилей дробное, выводим с двумя знаками
         # Устанавливаем начальные и конечные координаты графика
         start_x_tactics = 56.693
         start_y_tactics = height - 412.522
@@ -1755,9 +1890,9 @@ def generate_and_download_pdf():
         fullWidth_tactics = end_x_tactics - start_x_tactics
         # Определяем значения для каждой части графика
         values_tactics = [
-            {"name": "Силовая", "color": (200/255, 65/255, 85/255), "value": strengthInstallation_4},
-            {"name": "Манипулятивная", "color": (90/255, 127/255, 174/255), "value": manipulationInstallation_4},
-            {"name": "Деловая", "color": (235/255, 188/255, 109/255), "value": negotiationsInstallation_4},
+            {"name": "Силовая", "color": (200 / 255, 65 / 255, 85 / 255), "value": strengthInstallation_4},
+            {"name": "Манипулятивная", "color": (90 / 255, 127 / 255, 174 / 255), "value": manipulationInstallation_4},
+            {"name": "Деловая", "color": (235 / 255, 188 / 255, 109 / 255), "value": negotiationsInstallation_4},
         ]
         # Начальная позиция по X для рисования в цикле for каждой части графика
         current_x_tactics = start_x_tactics
@@ -1765,14 +1900,14 @@ def generate_and_download_pdf():
         for part_tactics in values_tactics:
             if part_tactics["value"] > 0:  # Проверяем, что значение больше 0
                 # Рассчитывается ширина на основе значения
-                width_tactics_value = (fullWidth_tactics * part_tactics["value"]) / sum(part["value"] for part in values_tactics)
+                width_tactics_value = (fullWidth_tactics * part_tactics["value"]) / sum(
+                    part["value"] for part in values_tactics)
                 can.setStrokeColorRGB(*part_tactics["color"])
                 can.setLineWidth(width_tactics)
                 can.line(current_x_tactics, start_y_tactics, current_x_tactics + width_tactics_value, start_y_tactics)
                 current_x_tactics += width_tactics_value  # Увеличиваем текущую позицию по X
 
         can.showPage()  # Завершение тринадцатой страницы
-
 
         # СТРАНИЦА 14
         image_path_14 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_14.png")
@@ -1783,7 +1918,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение четырнадцатой страницы
 
-
         # СТРАНИЦА 15
         image_path_15 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_15.png")
         if not os.path.exists(image_path_15):
@@ -1792,7 +1926,6 @@ def generate_and_download_pdf():
         can.drawImage(image_path_15, 0, 0, width=width, height=height)
 
         can.showPage()  # Завершение пятнадцатой страницы
-
 
         # СТРАНИЦА 16
         image_path_16 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_16.png")
@@ -1804,19 +1937,23 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(logicArgument_6) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(logicArgument_6) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             logicArgument_6_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(logicArgument_6) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(logicArgument_6) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             logicArgument_6_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if logicArgument_6_min is not None and logicArgument_6_max is not None:
                 rangeSpreadHorizontal(logicArgument_6_min, logicArgument_6_max, 63.27, 532, 458.646, 30)
 
-            cursor.execute("SELECT MIN(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_min = cursor.fetchone()  # Сохраняем результат в переменную  
             emotionsArgument_6_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?", (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?",
+                           (userCategory,))  # SQL-запрос
             result_max = cursor.fetchone()  # Сохраняем результат в переменную  
             emotionsArgument_6_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if emotionsArgument_6_min is not None and emotionsArgument_6_max is not None:
@@ -1830,7 +1967,6 @@ def generate_and_download_pdf():
 
         can.showPage()  # Завершение шестнадцатой страницы
 
-
         # СТРАНИЦА 17
         image_path_17 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_17.png")
         if not os.path.exists(image_path_17):
@@ -1838,8 +1974,9 @@ def generate_and_download_pdf():
             return
         can.drawImage(image_path_17, 0, 0, width=width, height=height)
         # Цвет шкал
-        scale_color_red = (200/255, 65/255, 85/255)
-        scale_color_blue = (90/255, 127/255, 174/255)
+        scale_color_red = (200 / 255, 65 / 255, 85 / 255)
+        scale_color_blue = (90 / 255, 127 / 255, 174 / 255)
+
         def scalesIntegr(color, scale_y_height, result, total):
             # Общие параметры шкал
             csale_width = 26.701
@@ -1850,30 +1987,31 @@ def generate_and_download_pdf():
             can.setStrokeColor(color)
             can.setLineWidth(csale_width)
             can.line(csale_x_start, scale_y_height, csale_filling, scale_y_height)
+
         # Параметры шкалы "приспособление"
-        scalesIntegr(scale_color_red, height-321.543, adaptationCount, 29)
+        scalesIntegr(scale_color_red, height - 321.543, adaptationCount, 29)
         # Параметры шкалы "компромисс"
-        scalesIntegr(scale_color_blue, height-360.877, compromiseCount, 17)
+        scalesIntegr(scale_color_blue, height - 360.877, compromiseCount, 17)
         # Параметры шкалы "торги"
-        scalesIntegr(scale_color_red, height-400.261, biddingCount, 15)
+        scalesIntegr(scale_color_red, height - 400.261, biddingCount, 15)
         # Параметры шкалы "угроза"
-        scalesIntegr(scale_color_blue, height-439.644, threatCount, 26)
+        scalesIntegr(scale_color_blue, height - 439.644, threatCount, 26)
         # Параметры шкалы "логика как аргумент"
-        scalesIntegr(scale_color_red, height-479.028, logicArgumentCount, 23)
+        scalesIntegr(scale_color_red, height - 479.028, logicArgumentCount, 23)
         # Параметры шкалы "эмоции как аргумент"
-        scalesIntegr(scale_color_blue, height-518.412, emotionsArgumentCount, 26)
+        scalesIntegr(scale_color_blue, height - 518.412, emotionsArgumentCount, 26)
         # Параметры шкалы "понимание стилей"
-        scalesIntegr(scale_color_red, height-557.795, understandingOfStyles_4, 32)
+        scalesIntegr(scale_color_red, height - 557.795, understandingOfStyles_4, 32)
         # Параметры шкалы "установка на силу"
-        scalesIntegr(scale_color_blue, height-597.179, strengthInstallationCount, 16)
+        scalesIntegr(scale_color_blue, height - 597.179, strengthInstallationCount, 16)
         # Параметры шкалы "установка на манипуляцию"
-        scalesIntegr(scale_color_red, height-636.563, manipulationInstallationCount, 16)
+        scalesIntegr(scale_color_red, height - 636.563, manipulationInstallationCount, 16)
         # Параметры шкалы "установка на деловые переговоры"
-        scalesIntegr(scale_color_blue, height-675.946, negotiationsInstallationCount, 16)
+        scalesIntegr(scale_color_blue, height - 675.946, negotiationsInstallationCount, 16)
         # Параметры шкалы "сотрудничество"
-        scalesIntegr(scale_color_red, height-715.330, cooperationCount, 21)
+        scalesIntegr(scale_color_red, height - 715.330, cooperationCount, 21)
         # Параметры шкалы "избегание"
-        scalesIntegr(scale_color_blue, height-754.714, avoidanceCount, 16)
+        scalesIntegr(scale_color_blue, height - 754.714, avoidanceCount, 16)
 
         can.showPage()  # Завершение семнадцатой страницы
 
@@ -1971,7 +2109,8 @@ def generate_and_download_pdf():
                 userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
 
                 adaptation_1, compromise_1, bidding_1, threat_1, logicArgument_1, emotionsArgument_1,
-                adaptationCount_1, compromiseCount_1, biddingCount_1, threatCount_1, logicArgumentCount_1, emotionsArgumentCount_1,
+                adaptationCount_1, compromiseCount_1, biddingCount_1, threatCount_1, logicArgumentCount_1,
+                emotionsArgumentCount_1,
                 b1_q1_top, b1_q2_top, b1_q3_top, b1_q4_top, b1_q5_top, b1_q6_top, b1_q7_top, b1_q8_top,
                 b1_q9_top, b1_q10_top, b1_q11_top, b1_q12_top, b1_q13_top, b1_q14_top, b1_q15_top,
 
@@ -2000,12 +2139,12 @@ def generate_and_download_pdf():
                 logicArgumentCount_6, emotionsArgumentCount_6,
                 b6_q1, b6_q2, b6_q3, b6_q4, b6_q5, b6_q6, b6_q7, b6_q8, b6_q9, b6_q10
             ))
-            
+
         # Сохранение изменений и закрытие соединения
         conn.commit()
         cursor.close()
         conn.close()
-        
+
         # # Отладочные выводы
         # print(f"PDF path: {pdf_path}")
         # print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
@@ -2014,16 +2153,17 @@ def generate_and_download_pdf():
         if not os.path.isfile(pdf_path):
             return jsonify({"message": "PDF-файл не найден."}), 404
 
-        if  insertData and not receiveByEmail and downloadToPC:
+        if insertData and not receiveByEmail and downloadToPC:
             response = send_file(pdf_path, as_attachment=True)
             # Кодируем имя файла в utf-8
             encoded_filename = urllib.parse.quote(pdf_filename)
-            response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
+            response.headers[
+                'Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return response  # Возвращаем только response
 
-        if  insertData and receiveByEmail and not downloadToPC:
+        if insertData and receiveByEmail and not downloadToPC:
             try:
                 send_email(userEmail, pdf_path, pdf_filename)
             except Exception as e:
@@ -2032,7 +2172,7 @@ def generate_and_download_pdf():
             threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return '', 200
 
-        if  insertData and receiveByEmail and downloadToPC:
+        if insertData and receiveByEmail and downloadToPC:
             try:
                 send_email(userEmail, pdf_path, pdf_filename)
             except Exception as e:
@@ -2040,12 +2180,13 @@ def generate_and_download_pdf():
             response = send_file(pdf_path, as_attachment=True)
             # Кодируем имя файла в utf-8
             encoded_filename = urllib.parse.quote(pdf_filename)
-            response.headers['Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
+            response.headers[
+                'Content-Disposition'] = f'attachment; filename="{encoded_filename}"'  # Указываем заголовок для скачивания
             # Запускаем таймер на удаление блокировки и файла через 3 минуты
             threading.Timer(180, cleanup_ISeC, args=[userId, pdf_path]).start()
             return response  # Возвращаем только response
 
-        if  not insertData and receiveByEmail and not downloadToPC:
+        if not insertData and receiveByEmail and not downloadToPC:
             try:
                 emailToSend = str(ISeC_results_array.get('emailToSend'))
                 send_email(emailToSend, pdf_path, pdf_filename)
@@ -2059,10 +2200,8 @@ def generate_and_download_pdf():
         return jsonify({"error": "PDF-файл не был отправлен и не был скачан"}), 404
 
 
-
 # Удаление PDF-файла из временной папки и id пользователя из словаря блокировок
 def cleanup_ISeC(userId, pdf_path):
-
     # Удаляем PDF-файл
     if userId in user_locks:
         del user_locks[userId]
@@ -2074,9 +2213,8 @@ def cleanup_ISeC(userId, pdf_path):
         # print(f"PDF-файл {pdf_path} удален.")  # Отладочный вывод
 
 
-
 # Очистка сессии после скачивания pdf-файла
-@app.route('/clear_session', methods=['POST'])
+@application.route('/clear_session', methods=['POST'])
 def clear_session():
     data = request.get_json()
     if 'clearSession' in data and data['clearSession'] == True:
@@ -2092,7 +2230,6 @@ def clear_session():
     return jsonify(success=True)
 
 
-
 # ------------------------------------------------
 # ------------ КАБИНЕТ АДМИНИСТРАТОРА ------------
 # ------------------------------------------------
@@ -2101,8 +2238,9 @@ def clear_session():
 def cab_hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+
 # Маршрут для авторизации
-@app.route('/cab_login', methods=['GET', 'POST'])
+@application.route('/cab_login', methods=['GET', 'POST'])
 def cab_login():
     if request.method == 'POST':
         adminLogin = request.form['adminLogin']
@@ -2110,7 +2248,7 @@ def cab_login():
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину
-        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', 
+        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?',
                             (adminLogin,)).fetchone()
         if user is None:
             # Если пользователь не найден
@@ -2132,23 +2270,24 @@ def cab_login():
         return "sucsess"
     return render_template('cab_login.html')
 
+
 # Маршрут для выхода из системы
-@app.route('/cab_logout')
+@application.route('/cab_logout')
 def cab_logout():
     session.pop('admin_data', None)
     return redirect(url_for('cab_login'))
 
 
-
 # Маршрут для главной страницы кабинета администратора
-@app.route('/cab_archive')
+@application.route('/cab_archive')
 def cab_archive():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     return render_template('cab_archive.html')
 
+
 # Внесение дополнительных адресов в БД
-@app.route('/cab_add_resend', methods=['POST'])
+@application.route('/cab_add_resend', methods=['POST'])
 def cab_add_resend():
     # Инициализация базы данных и создание таблицы, если она не существует
     conn = get_db_connection()
@@ -2178,8 +2317,9 @@ def cab_add_resend():
         cursor.close()
         conn.close()
 
+
 # Маршрут для получения данных пользователя по userId
-@app.route('/cab_get_respondent_data', methods=['POST'])
+@application.route('/cab_get_respondent_data', methods=['POST'])
 def cab_get_respondent_data():
     data = request.get_json()
     if not data or 'userId' not in data:
@@ -2279,7 +2419,7 @@ def cab_get_respondent_data():
             'adaptationCount_3': respondent_data['adaptationCount_3'],
             'threatCount_3': respondent_data['threatCount_3'],
             'cooperationCount_3': respondent_data['cooperationCount_3'],
-            
+
             'b3_q1': respondent_data['b3_q1'],
             'b3_q2': respondent_data['b3_q2'],
             'b3_q3': respondent_data['b3_q3'],
@@ -2297,7 +2437,7 @@ def cab_get_respondent_data():
             'strengthInstallationCount_4': respondent_data['strengthInstallationCount_4'],
             'manipulationInstallationCount_4': respondent_data['manipulationInstallationCount_4'],
             'negotiationsInstallationCount_4': respondent_data['negotiationsInstallationCount_4'],
-            
+
             'b4_q1': respondent_data['b4_q1'],
             'b4_q2': respondent_data['b4_q2'],
             'b4_q3': respondent_data['b4_q3'],
@@ -2325,7 +2465,7 @@ def cab_get_respondent_data():
             'logicArgumentCount_5': respondent_data['logicArgumentCount_5'],
             'emotionsArgumentCount_5': respondent_data['emotionsArgumentCount_5'],
             'avoidanceCount_5': respondent_data['avoidanceCount_5'],
-            
+
             'b5_q1': respondent_data['b5_q1'],
             'b5_q2': respondent_data['b5_q2'],
             'b5_q3': respondent_data['b5_q3'],
@@ -2338,12 +2478,12 @@ def cab_get_respondent_data():
             'b5_q10': respondent_data['b5_q10'],
             'b5_q11': respondent_data['b5_q11'],
             'b5_q12': respondent_data['b5_q12'],
-            
+
             'logicArgument_6': respondent_data['logicArgument_6'],
             'emotionsArgument_6': respondent_data['emotionsArgument_6'],
             'logicArgumentCount_6': respondent_data['logicArgumentCount_6'],
             'emotionsArgumentCount_6': respondent_data['emotionsArgumentCount_6'],
-            
+
             'b6_q1': respondent_data['b6_q1'],
             'b6_q2': respondent_data['b6_q2'],
             'b6_q3': respondent_data['b6_q3'],
@@ -2360,9 +2500,8 @@ def cab_get_respondent_data():
         return jsonify({"error": "Данные не найдены"}), 404
 
 
-
 # Маршрут для страницы кодов доступа
-@app.route('/cab_codes')
+@application.route('/cab_codes')
 def cab_codes():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2401,12 +2540,13 @@ def cab_codes():
     # Возврат отсортированного списка
     return render_template('cab_codes.html', codesRows=sorted_codes_list)
 
+
 # Проверка существования кодов доступа в базе данных перед созданием/обновлением
-@app.route('/cab_check_code', methods=['POST'])
+@application.route('/cab_check_code', methods=['POST'])
 def cab_check_code():
     action = request.json.get('action')  # Операция
     isGroupInDB = False  # Проверка на наличие группы в базе данных
-    isCodeInDB = False    # Проверка на наличие кода доступа в базе данных
+    isCodeInDB = False  # Проверка на наличие кода доступа в базе данных
     input_codeId = request.json.get('codeId')  # Получаем ID кода из запроса
     input_group = request.json.get('testGroup')  # Получаем группу из запроса
     input_code = request.json.get('code')  # Получаем код из запроса
@@ -2428,7 +2568,8 @@ def cab_check_code():
                 isCodeInDB = True
         elif action == "update":
             # Проверка на существование группы, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?', (input_group, input_codeId))
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?',
+                           (input_group, input_codeId))
             result = cursor.fetchone()
             if result:
                 isGroupInDB = True
@@ -2442,8 +2583,9 @@ def cab_check_code():
         conn.close()
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
+
 # Проверка существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_code_id', methods=['POST'])
+@application.route('/cab_check_code_id', methods=['POST'])
 def cab_check_code_id():
     input_id = request.json.get('codeId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -2453,12 +2595,12 @@ def cab_check_code_id():
     try:
         cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE codeId = ?', (input_id,))
         result = cursor.fetchone()
-        
+
         if result:
             return jsonify({'found': True})  # Если id найден
         else:
             return jsonify({'found': False})  # Если id не найден
-            
+
     except sqlite3.OperationalError as e:
         if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
             return jsonify({'found': False})  # Если таблица не существует
@@ -2468,8 +2610,9 @@ def cab_check_code_id():
         cursor.close()
         conn.close()
 
+
 # Создание нового кода доступа
-@app.route('/cab_create_code', methods=['POST'])
+@application.route('/cab_create_code', methods=['POST'])
 def cab_create_code():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2501,8 +2644,9 @@ def cab_create_code():
         conn.close()
     return redirect(url_for('cab_codes'))
 
+
 # Изменение кодов доступа
-@app.route('/cab_update_code/<code_id>', methods=['POST'])
+@application.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2529,8 +2673,9 @@ def cab_update_code(code_id):
         conn.close()
     return redirect(url_for('cab_codes'))
 
+
 # Удаление кодов доступа
-@app.route('/cab_delete_code/<code_id>', methods=['POST'])
+@application.route('/cab_delete_code/<code_id>', methods=['POST'])
 def cab_delete_code(code_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2544,15 +2689,15 @@ def cab_delete_code(code_id):
     return redirect(url_for('cab_codes'))
 
 
-
 # Маршрут для страницы аналитики
-@app.route('/cab_analysis')
+@application.route('/cab_analysis')
 def cab_analysis():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     data = cab_get_analysis_data()
     processed_data, total_rows = cab_process_analysis_data(data)
     return render_template('cab_analysis.html', analysis_data=processed_data, total_rows=total_rows)
+
 
 # Функция получения данных из БД
 def cab_get_analysis_data():
@@ -2575,6 +2720,7 @@ def cab_get_analysis_data():
     cursor.close()
     conn.close()
     return data
+
 
 # Функция формирования сводных результатов в виде списка
 def cab_process_analysis_data(data):
@@ -2620,44 +2766,49 @@ def cab_process_analysis_data(data):
     for question_number in range(1, 16):
         for value in range(1, 5):
             count_value = count_dict_1[question_number][value]
-            result.append([f"Б.1 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+            result.append([f"Б.1 В.{question_number}", value, count_value,
+                           f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     # Формируем результаты для b2_
     for question_number in range(1, 31):
         for value in range(1, 5):
             count_value = count_dict_2[question_number][value]
-            result.append([f"Б.2 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+            result.append([f"Б.2 В.{question_number}", value, count_value,
+                           f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     # Формируем результаты для b3_
     for question_number in range(1, 10):
         for value in range(1, 4):  # Убедитесь, что здесь 3 строки
             count_value = count_dict_3[question_number][value]
-            result.append([f"Б.3 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+            result.append([f"Б.3 В.{question_number}", value, count_value,
+                           f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     # Формируем результаты для b4_
     for question_number in range(1, 17):
         for value in range(1, 4):  # 3 строки
             count_value = count_dict_4[question_number][value]
-            result.append([f"Б.4 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+            result.append([f"Б.4 В.{question_number}", value, count_value,
+                           f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     # Формируем результаты для b5_
     for question_number in range(1, 13):
         for value in range(1, 4):  # 3 строки
             count_value = count_dict_5[question_number][value]
-            result.append([f"Б.5 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+            result.append([f"Б.5 В.{question_number}", value, count_value,
+                           f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     # Формируем результаты для b6_
     for question_number in range(1, 11):
         for value in range(1, 5):  # 4 строки
             count_value = count_dict_6[question_number][value]
-            result.append([f"Б.6 В.{question_number}", value, count_value, f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
+            result.append([f"Б.6 В.{question_number}", value, count_value,
+                           f"{round(count_value / total_rows * 100, 1) if total_rows > 0 else 0}%"])
 
     return result, total_rows
 
 
-
 # Маршрут для страницы выборок
-@app.route('/cab_excelgen')
+@application.route('/cab_excelgen')
 def cab_excelgen():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2665,7 +2816,8 @@ def cab_excelgen():
     categories = get_unique_categories()  # Получаем уникальные категории
     sorted_groups = sort_groups_by_date(groups)  # Сортируем группы по дате
     return render_template('cab_excelgen.html', groups=sorted_groups, categories=categories)
-    
+
+
 # Выбор всех наименований групп из БД
 def get_unique_groups():
     conn = get_db_connection()
@@ -2675,6 +2827,7 @@ def get_unique_groups():
     cursor.close()
     conn.close()
     return [group[0] for group in groups]  # Преобразуем в список
+
 
 # Выбор всех наименований категорий из БД
 def get_unique_categories():
@@ -2686,6 +2839,7 @@ def get_unique_categories():
     conn.close()
     return sorted([category[0] for category in categories])  # Преобразуем в список и сортируем по алфавиту
 
+
 # Сортировка групп по дате
 def sort_groups_by_date(groups):
     def extract_date(group_name):
@@ -2694,10 +2848,13 @@ def sort_groups_by_date(groups):
             date_str = match.group(1)
             return datetime.strptime(date_str, '%d.%m.%Y')  # Преобразуем строку в объект datetime
         return datetime.min  # Если дата не найдена, возвращаем минимальную дату
-    return sorted(groups, key=extract_date, reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
+
+    return sorted(groups, key=extract_date,
+                  reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
+
 
 # Создание sql-запроса из данных на html-странице
-@app.route('/cab_generate_query', methods=['POST'])
+@application.route('/cab_generate_query', methods=['POST'])
 def cab_generate_query():
     # Проверяем, существует ли директория 'temp', и, если нет, создаем её
     directory = 'temp'
@@ -2769,7 +2926,8 @@ def cab_generate_query():
         "understandingOfStyles_4", "strengthInstallation_4", "manipulationInstallation_4", "negotiationsInstallation_4",
         "adaptation_5", "bidding_5", "logicArgument_5", "emotionsArgument_5", "avoidance_5",
         "logicArgument_6", "emotionsArgumentCount_6",
-        "Прс_ИШ", "Кмп_ИШ", "Трг_ИШ", "Угр_ИШ", "Лгк_ИШ", "Эмц_ИШ", "ПСт_ИШ", "Сил_ИШ", "Ман_ИШ", "Дел_ИШ", "Стр_ИШ", "Изб_ИШ"
+        "Прс_ИШ", "Кмп_ИШ", "Трг_ИШ", "Угр_ИШ", "Лгк_ИШ", "Эмц_ИШ", "ПСт_ИШ", "Сил_ИШ", "Ман_ИШ", "Дел_ИШ", "Стр_ИШ",
+        "Изб_ИШ"
     ]].rename(columns={
         "userGroup": "Группа",
         "userCategory": "Категория",
@@ -2811,8 +2969,6 @@ def cab_generate_query():
 
     # Задаем путь к файлу в папке temp
     excel_path = os.path.join(temp_dir, f'{formatted_time}.xlsx')  # Путь к файлу в папке temp
-
-
 
     # Сохраняем DataFrame в Excel с использованием openpyxl как движка
     with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
@@ -2866,7 +3022,8 @@ def cab_generate_query():
                 print(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")  # Отладочный вывод
 
         # Устанавливаем ширину для каждого столбца от A до AO
-        ws.column_dimensions[column_letter].width = max(ws.column_dimensions[column_letter].width, max_length, default_min_width)
+        ws.column_dimensions[column_letter].width = max(ws.column_dimensions[column_letter].width, max_length,
+                                                        default_min_width)
 
         # Устанавливаем выравнивание для всех ячеек в столбце
         for cell in ws[column_letter]:
@@ -2882,7 +3039,9 @@ def cab_generate_query():
     threading.Timer(3, delete_excel, args=(excel_path,)).start()
 
     # Возвращаем Excel-файл пользователю
-    return send_file(excel_path, as_attachment=True, download_name=f"{formatted_time}.xlsx")  # Отправляем файл как вложение
+    return send_file(excel_path, as_attachment=True,
+                     download_name=f"{formatted_time}.xlsx")  # Отправляем файл как вложение
+
 
 # Функция для удаления excel-файла
 def delete_excel(file_path):
@@ -2890,16 +3049,16 @@ def delete_excel(file_path):
         os.remove(file_path)
 
 
-
 # Маршрут для страницы администраторов
-@app.route('/cab_admins')
+@application.route('/cab_admins')
 def cab_admins():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     conn = get_db_connection()
     cursor = conn.cursor()
     # Получение данных из таблицы ISeC_adminAccounts
-    cursor.execute("SELECT adminId, login, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil FROM ISeC_adminAccounts")
+    cursor.execute(
+        "SELECT adminId, login, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil FROM ISeC_adminAccounts")
     access_codes = cursor.fetchall()
     # Закрытие соединения
     cursor.close()
@@ -2931,12 +3090,13 @@ def cab_admins():
     # Возврат отсортированного списка и данных администратора
     return render_template('cab_admins.html', adminData=admin_data, adminsRows=admins_list)
 
+
 # Проверка существования администраторов в базе данных перед созданием/обновлением
-@app.route('/cab_check_admin', methods=['POST'])
+@application.route('/cab_check_admin', methods=['POST'])
 def cab_check_admin():
     action = request.json.get('action')  # Операция
     isLoginInDB = False  # Проверка на наличие логина в базе данных
-    isAdminNameInDB = False    # Проверка на наличие имени администратора в базе данных
+    isAdminNameInDB = False  # Проверка на наличие имени администратора в базе данных
     input_adminId = request.json.get('adminId')  # Получаем ID администроатора из запроса
     input_login = request.json.get('login')  # Получаем логин из запроса
     input_adminName = request.json.get('adminName')  # Получаем логин из запроса
@@ -2958,12 +3118,14 @@ def cab_check_admin():
                 isAdminNameInDB = True
         elif action == "update":
             # Проверка на существование логина, исключая текущий adminId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ? AND adminId != ?', (input_login, input_adminId))
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ? AND adminId != ?',
+                           (input_login, input_adminId))
             result = cursor.fetchone()
             if result:
                 isLoginInDB = True
             # Проверка на существование имени администратора, исключая текущий adminId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = ? AND adminId != ?', (input_adminName, input_adminId))
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = ? AND adminId != ?',
+                           (input_adminName, input_adminId))
             result = cursor.fetchone()
             if result:
                 isAdminNameInDB = True
@@ -2972,8 +3134,9 @@ def cab_check_admin():
         conn.close()  # Закрываем соединение
     return jsonify({'isLoginInDB': isLoginInDB, 'isAdminNameInDB': isAdminNameInDB})
 
+
 # Проверка существования id администратора в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_admin_id', methods=['POST'])
+@application.route('/cab_check_admin_id', methods=['POST'])
 def cab_check_admin_id():
     input_adminId = request.json.get('adminId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -2983,12 +3146,12 @@ def cab_check_admin_id():
     try:
         cursor.execute('SELECT adminId FROM ISeC_adminAccounts WHERE adminId = ?', (input_adminId,))
         result = cursor.fetchone()
-        
+
         if result:
             return jsonify({'found': True})  # Если id найден
         else:
             return jsonify({'found': False})  # Если id не найден
-            
+
     except sqlite3.OperationalError as e:
         if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
             return jsonify({'found': False})  # Если таблица не существует
@@ -2998,8 +3161,9 @@ def cab_check_admin_id():
         cursor.close()
         conn.close()
 
+
 # Создание нового администратора
-@app.route('/cab_create_admin', methods=['POST'])
+@application.route('/cab_create_admin', methods=['POST'])
 def cab_create_admin():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3018,7 +3182,8 @@ def cab_create_admin():
     start_date = data.get('start_date')
     end_date = data.get('end_date')
 
-    if not all([admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date]):
+    if not all([admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access,
+                start_date, end_date]):
         return jsonify({'error': 'Отсутствующие поля'}), 400  # Возвращаем статус 400, если поля отсутствуют
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -3028,7 +3193,8 @@ def cab_create_admin():
             INSERT INTO ISeC_adminAccounts
             (adminId, login, password, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-        """, (admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date))
+        """, (admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access,
+              start_date, end_date))
         conn.commit()
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
@@ -3037,8 +3203,9 @@ def cab_create_admin():
         conn.close()
     return redirect(url_for('cab_admins'))
 
+
 # Изменение администраторов
-@app.route('/cab_update_admin/<admin_id>', methods=['POST'])
+@application.route('/cab_update_admin/<admin_id>', methods=['POST'])
 def cab_update_admin(admin_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3062,14 +3229,17 @@ def cab_update_admin(admin_id):
                 UPDATE ISeC_adminAccounts
                 SET login = ?, adminName = ?, archiveAccess = ?, codesAccess = ?, analysisAccess = ?, excelgenAccess = ?, dateFrom = ?, dateUntil = ?
                 WHERE adminId = ?
-            """, (login, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date, admin_id))
+            """, (
+                login, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date,
+                admin_id))
         else:  # Если пароль передан, хешируем его и обновляем
             password_hashed = cab_hash_password(password)
             cursor.execute("""
                 UPDATE ISeC_adminAccounts
                 SET login = ?, password = ?, adminName = ?, archiveAccess = ?, codesAccess = ?, analysisAccess = ?, excelgenAccess = ?, dateFrom = ?, dateUntil = ?
                 WHERE adminId = ?
-            """, (login, password_hashed, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date, admin_id))
+            """, (login, password_hashed, admin_name, archive_access, codes_access, analysis_access, excelgen_access,
+                  start_date, end_date, admin_id))
         conn.commit()
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
@@ -3078,8 +3248,9 @@ def cab_update_admin(admin_id):
         conn.close()
     return redirect(url_for('cab_admins'))
 
+
 # Удаление администраторов
-@app.route('/cab_delete_admin/<admin_id>', methods=['POST'])
+@application.route('/cab_delete_admin/<admin_id>', methods=['POST'])
 def cab_delete_admin(admin_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3092,8 +3263,9 @@ def cab_delete_admin(admin_id):
     conn.close()
     return redirect(url_for('cab_admins'))
 
+
 # Изменение главного администратора
-@app.route('/cab_update_main_admin', methods=['POST'])
+@application.route('/cab_update_main_admin', methods=['POST'])
 def cab_update_main_admin():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3132,7 +3304,8 @@ def cab_update_main_admin():
         conn.close()
     return redirect(url_for('cab_admins'))
 
-@app.route('/download_emaildata', methods=['POST'])
+
+@application.route('/download_emaildata', methods=['POST'])
 def download_emaildata():
     # Подключение к базе данных
     conn = get_db_connection()
@@ -3177,12 +3350,12 @@ def download_emaildata():
     # Отправка файла на скачивание
     return send_file(txt_path, as_attachment=True)
 
+
 # Функция для удаления txt-файла
 def delete_txt(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
 
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(host='0.0.0.0')

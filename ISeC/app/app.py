@@ -49,6 +49,11 @@ def favicon():
     return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico',
                                mimetype='image/x-icon')
 
+@application.route('/test_db')
+def test_db():
+    conn = get_db_connection()
+    return str(conn.is_connected())
+
 
 # Функция подключение к беза данных
 def get_db_connection():

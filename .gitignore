@@ -1,6 +1,6 @@
 .venv
 .idea
-.sql_data
+sql_data
 .env
 id_rsa
 id_rsa.pub

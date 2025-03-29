@@ -29,14 +29,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "ISeC/requirements.txt, ISeC/app/"
           target: "www/isec.smart-skills.pro/"
+          strip_components: 1
 
       - name: install requirements
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip freeze | xargs pip uninstall -y && pip install -r ~/www/isec.smart-skills.pro/requirements.txt" 
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip freeze | xargs pip uninstall -y && pip install -r www/isec.smart-skills.pro/requirements.txt" 
 
       - name: install envs
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "export MYSQL_DATABASE_USER=${{ secrets.SSH_USER }} MYSQL_DATABASE_PASSWORD=${{ secrets.MYSQL_DATABASE_PASSWORD }} MYSQL_DATABASE_DB=${{ secrets.MYSQL_DATABASE_DB }} MYSQL_DATABASE_HOST=${{secrets.MYSQL_DATABASE_HOST}} MYSQL_DATABASE_PORT=${{secrets.MYSQL_DATABASE_PORT}}"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && export MYSQL_DATABASE_USER=${{ secrets.SSH_USER }} MYSQL_DATABASE_PASSWORD=${{ secrets.MYSQL_DATABASE_PASSWORD }} MYSQL_DATABASE_DB=${{ secrets.MYSQL_DATABASE_DB }} MYSQL_DATABASE_HOST=${{secrets.MYSQL_DATABASE_HOST}} MYSQL_DATABASE_PORT=${{secrets.MYSQL_DATABASE_PORT}}"
   
 
       - name: Restart app

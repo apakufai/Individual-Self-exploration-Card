@@ -38,7 +38,6 @@
 
 	<main name="descr_UDI">
 
-
 		<!-- ВСПЛЫВАЮЩЕЕ ОКНО -->
 		<div class="popup_error" id="popup_error_UDI">
 			<div class="popup_error_content">
@@ -47,7 +46,6 @@
 				<button class="close_btn_error" id="closeBtn_UDI">Закрыть</button>
 			</div>
 		</div>
-
 
 		<!-- ВСПЛЫВАЮЩЕЕ ОКНО С ПОЛИТИКОЙ ВВОДА ДАННЫХ -->
 		<div class="popup_question" id="popup_UDI_question">
@@ -140,15 +138,15 @@
 					});
 
 					// Получение элементов справки
-					const questionButton = document.querySelector('.btn_question');
+					const question_button = document.querySelector('.btn_question');
 					const popup_UDI_question = document.getElementById('popup_UDI_question');
-					const closeButton = document.getElementById('closeBtn_UDI_question');
+					const close_button = document.getElementById('closeBtn_UDI_question');
 					// Обработчик события нажатия на кнопку вопроса
-					questionButton.addEventListener('click', function () {
+					question_button.addEventListener('click', function () {
 						popup_UDI_question.style.display = 'flex'; // Изменяем стиль на 'flex'
 					});
 					// Обработчик события нажатия на кнопку закрытия
-					closeButton.addEventListener('click', function () {
+					close_button.addEventListener('click', function () {
 						popup_UDI_question.style.display = 'none'; // Скрываем всплывающее сообщение
 					});
 

@@ -18,7 +18,8 @@
 			</div>
 			<div class="input-group">
 				<label class="login_label" for="adminAccess">Пароль</label>
-				<input type="password" class="login_input" id="adminAccess" name="adminAccess" placeholder="" autocomplete="off">
+				<input type="password" class="login_input" id="adminAccess" name="adminAccess" placeholder=""
+					autocomplete="off">
 			</div>
 			<button class="enter_btn" type="submit">Войти</button>
 		</form>
@@ -26,52 +27,58 @@
 
 	<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 	<script>
-		document.getElementById('loginForm').addEventListener('submit', function (event) {
 
-			event.preventDefault(); // Предотвращаем стандартное поведение формы
+		document.addEventListener('DOMContentLoaded', function () {
 
-			// Сбрасываем плейсхолдеры
-			document.getElementById('adminLogin').placeholder = '';
-			document.getElementById('adminAccess').placeholder = '';
+			document.getElementById('loginForm').addEventListener('submit', function (event) {
 
-			let valid = true;
+				event.preventDefault(); // Предотвращаем стандартное поведение формы
 
-			// Проверка логина
-			const adminLogin = document.getElementById('adminLogin').value;
-			if (!adminLogin) {
-				document.getElementById('adminLogin').placeholder = 'Пожалуйста, заполните логин.';
-				valid = false;
-			}
+				// Сбрасываем плейсхолдеры
+				document.getElementById('adminLogin').placeholder = '';
+				document.getElementById('adminAccess').placeholder = '';
 
-			// Проверка пароля
-			const adminAccess = document.getElementById('adminAccess').value;
-			if (!adminAccess) {
-				document.getElementById('adminAccess').placeholder = 'Пожалуйста, заполните пароль.';
-				valid = false;
-			}
+				let valid = true;
 
-			// Если форма валидна, отправляем данные на сервер
-			if (valid) {
-				const formData = new FormData(this);
-				fetch(this.action, {
-					method: 'POST',
-					body: formData
-				})
-					.then(response => response.text())
-					.then(data => {
-						if (data === "userNotFound") {
-							alert("Такой пользователь не найден");
-						} else if (data === "passwordIsWrong") {
-							alert("Введённый пароль неверен");
-						} else if (data === "sucsess") {
-							window.location.href = "/cab_archive";
-						}
+				// Проверка логина
+				const adminLogin = document.getElementById('adminLogin').value;
+				if (!adminLogin) {
+					document.getElementById('adminLogin').placeholder = 'Пожалуйста, заполните логин.';
+					valid = false;
+				}
+
+				// Проверка пароля
+				const adminAccess = document.getElementById('adminAccess').value;
+				if (!adminAccess) {
+					document.getElementById('adminAccess').placeholder = 'Пожалуйста, заполните пароль.';
+					valid = false;
+				}
+
+				// Если форма валидна, отправляем данные на сервер
+				if (valid) {
+					const formData = new FormData(this);
+					fetch(this.action, {
+						method: 'POST',
+						body: formData
 					})
-					.catch(error => {
-						console.error('Ошибка:', error);
-					});
-			}
+						.then(response => response.text())
+						.then(data => {
+							if (data === "userNotFound") {
+								alert("Такой пользователь не найден");
+							} else if (data === "passwordIsWrong") {
+								alert("Введённый пароль неверен");
+							} else if (data === "sucsess") {
+								window.location.href = "/cab_archive";
+							}
+						})
+						.catch(error => {
+							console.error('Ошибка:', error);
+						});
+				}
+			});
+			
 		});
+
 	</script>
 
 </body>

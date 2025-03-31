@@ -18,7 +18,7 @@
 				Привет, <a href="{{ url_for('index') }}">{{ session['admin_data']['adminName'] }}</a> |
 				<a href="{{ url_for('index') }}">Тест</a> |
 				<a href="{{ url_for('cab_logout') }}">Выйти</a>
-			</span>	
+			</span>
 		</div>
 	</header>
 
@@ -46,7 +46,7 @@
 			</button>
 		</div>
 
-        {% if session.admin_data.codesAccess == 'true' %}
+		{% if session.admin_data.codesAccess == 'true' %}
 		<div class="central_codes">
 
 			<table>
@@ -101,7 +101,8 @@
 							{{ codesRow.test_group[:10] }}
 						</td>
 						<td class="entrycode_block_td_1">
-							<input type="text" name="test_group" value="{{ codesRow.test_group[11:] }}" autocomplete="off">
+							<input type="text" name="test_group" value="{{ codesRow.test_group[11:] }}"
+								autocomplete="off">
 						</td>
 						<td class="entrycode_block_td_2">
 							<input type="text" name="code" value="{{ codesRow.code }}" autocomplete="off">
@@ -123,34 +124,16 @@
 			</table>
 
 		</div>
-        {% else %}
-        <span class="access_blocked">У Вас нет доступа к этой странице</span>
-        {% endif %}
+		{% else %}
+		<span class="access_blocked">У Вас нет доступа к этой странице</span>
+		{% endif %}
 
 		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>
 
-			document.getElementById('btn_cab_archive').addEventListener('click', function () {
-				window.location.href = '/cab_archive';
-			});
+			document.addEventListener('DOMContentLoaded', function () {
 
-			document.getElementById('btn_cab_codes').addEventListener('click', function () {
-				window.location.href = '/cab_codes';
-			});
-
-			document.getElementById('btn_cab_analysis').addEventListener('click', function () {
-				window.location.href = '/cab_analysis';
-			});
-
-			document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
-				window.location.href = '/cab_excelgen';
-			});
-
-			document.getElementById('btn_cab_admins').addEventListener('click', function () {
-				window.location.href = '/cab_admins';
-			});
-
-			document.addEventListener('DOMContentLoaded', function () {  // Для отображения сегодняшней даты
+				// Для отображения сегодняшней даты
 				const today = new Date();
 				const day = String(today.getDate()).padStart(2, '0');
 				const month = String(today.getMonth() + 1).padStart(2, '0'); // Январь - 0
@@ -160,12 +143,33 @@
 				// Заполнение ячейки датой
 				const dateCell = document.getElementById('entrycode_block_td_0');
 				dateCell.textContent = formattedDate;
+
+				document.getElementById('btn_cab_archive').addEventListener('click', function () {
+					window.location.href = '/cab_archive';
+				});
+
+				document.getElementById('btn_cab_codes').addEventListener('click', function () {
+					window.location.href = '/cab_codes';
+				});
+
+				document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+					window.location.href = '/cab_analysis';
+				});
+
+				document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+					window.location.href = '/cab_excelgen';
+				});
+
+				document.getElementById('btn_cab_admins').addEventListener('click', function () {
+					window.location.href = '/cab_admins';
+				});
+
 			});
 
 			function confirmUpdateCode() {
 				return confirm(`Сохранить изменения?`);
 			}
-			
+
 			function confirmDeleteCode(testGroup) {
 				return confirm(`Удалить группу ${testGroup}?`);
 			}

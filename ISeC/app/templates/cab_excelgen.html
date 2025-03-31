@@ -147,35 +147,39 @@
 		<script src="{{ url_for('static', filename='js/functions_adminCab.js') }}"></script>
 		<script>
 
-			document.getElementById('btn_cab_archive').addEventListener('click', function () {
-				window.location.href = '/cab_archive';
-			});
+			document.addEventListener('DOMContentLoaded', function () {
 
-			document.getElementById('btn_cab_codes').addEventListener('click', function () {
-				window.location.href = '/cab_codes';
-			});
-
-			document.getElementById('btn_cab_analysis').addEventListener('click', function () {
-				window.location.href = '/cab_analysis';
-			});
-
-			document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
-				window.location.href = '/cab_excelgen';
-			});
-
-			document.getElementById('btn_cab_admins').addEventListener('click', function () {
-				window.location.href = '/cab_admins';
-			});
-
-			document.getElementById('show_all_groups').addEventListener('click', function () {
-				// Получаем все элементы с классом group-item
-				const groups = document.querySelectorAll('.group-item.hidden_groups');
-				// Показываем все скрытые элементы
-				groups.forEach(function (group) {
-					group.classList.remove('hidden_groups');
+				document.getElementById('show_all_groups').addEventListener('click', function () {
+					// Получаем все элементы с классом group-item
+					const groups = document.querySelectorAll('.group-item.hidden_groups');
+					// Показываем все скрытые элементы
+					groups.forEach(function (group) {
+						group.classList.remove('hidden_groups');
+					});
+					// Скрываем кнопку после нажатия
+					this.classList.add('hidden-button');
 				});
-				// Скрываем кнопку после нажатия
-				this.classList.add('hidden-button');
+
+				document.getElementById('btn_cab_archive').addEventListener('click', function () {
+					window.location.href = '/cab_archive';
+				});
+
+				document.getElementById('btn_cab_codes').addEventListener('click', function () {
+					window.location.href = '/cab_codes';
+				});
+
+				document.getElementById('btn_cab_analysis').addEventListener('click', function () {
+					window.location.href = '/cab_analysis';
+				});
+
+				document.getElementById('btn_cab_excelgen').addEventListener('click', function () {
+					window.location.href = '/cab_excelgen';
+				});
+
+				document.getElementById('btn_cab_admins').addEventListener('click', function () {
+					window.location.href = '/cab_admins';
+				});
+
 			});
 
 			function confirmExcelgen() {

@@ -1,4 +1,6 @@
 from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
+from flaskext.mysql import MySQL
+from pymysql import Connection
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -26,49 +28,45 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
+mysql = MySQL()
 
+application = Flask(__name__)
+application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
+application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSWORD"]
+application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
+application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
+application.config["MYSQL_DATABASE_PORT"] = int(os.environ["MYSQL_DATABASE_PORT"])
 
-app = Flask(__name__)
-CORS(app)  # Разрешить CORS для всех маршрутов
-app.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
+mysql.init_app(application)
+CORS(application)  # Разрешить CORS для всех маршрутов
+application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
 user_locks = {}  # Словарь для хранения блокировок для каждого пользователя
 
 
 
 # Отображение фавикона
-@app.route('/favicon.ico')
+@application.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
+    return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
 
 
 
 # Функция подключение к беза данных
-def get_db_connection():
-    try:
-        db_path = os.path.join(os.path.dirname(__file__), 'database/ISeC_database.db')
-        if not os.path.exists(db_path):
-            print(f"База данных не найдена по пути: {db_path}")
-        print("Попытка подключения к базе данных...")
-        conn = sqlite3.connect(db_path)  # Путь к базе данных
-        conn.row_factory = sqlite3.Row  # Позволяет обращаться к столбцам по именам
-        print("Подключение успешно.")
-        return conn
-    except sqlite3.Error as e:
-        print(f"Ошибка подключения к базе данных: {e}")
-        return None
+def get_db_connection() -> Connection:
+    return mysql.get_db()
 
 
 
 # Маршруты переходов для страниц
-@app.route('/')
+@application.route('/')
 def index():
     return render_template('index.html')
 
 
 
 # Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
-@app.route('/check_code', methods=['POST'])
+@application.route('/check_code', methods=['POST'])
 def check_code():
     input_code = request.json.get('code')  # Получаем код из запроса
     conn = get_db_connection()
@@ -96,105 +94,105 @@ def check_code():
         return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
 
 
-@app.route('/set_index_pass', methods=['POST'])
+@application.route('/set_index_pass', methods=['POST'])
 def set_index_pass():
     data = request.get_json()
     if 'indexPass' in data and data['indexPass'] == True:
         session['indexPass'] = True
     return jsonify(success=True)
 
-@app.route('/user_data_input')
+@application.route('/user_data_input')
 def user_data_input():
     if 'indexPass' not in session or not session['indexPass']:
         return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
     return render_template('user_data_input.html')
 
-@app.route('/set_UDI_pass', methods=['POST'])
+@application.route('/set_UDI_pass', methods=['POST'])
 def set_UDI_pass():
     data = request.get_json()
     if 'UDIPass' in data and data['UDIPass'] == True:
         session['UDIPass'] = True
     return jsonify(success=True)
 
-@app.route('/test_1')
+@application.route('/test_1')
 def test_1():
     if 'UDIPass' not in session or not session['UDIPass']:
         return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
-@app.route('/set_test_1_pass', methods=['POST'])
+@application.route('/set_test_1_pass', methods=['POST'])
 def set_test_1_pass():
     data = request.get_json()
     if 'test1Pass' in data and data['test1Pass'] == True:
         session['test1Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_2')
+@application.route('/test_2')
 def test_2():
     if 'test1Pass' not in session or not session['test1Pass']:
         return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
     return render_template('test_2.html')
 
-@app.route('/set_test_2_pass', methods=['POST'])
+@application.route('/set_test_2_pass', methods=['POST'])
 def set_test_2_pass():
     data = request.get_json()
     if 'test2Pass' in data and data['test2Pass'] == True:
         session['test2Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_3')
+@application.route('/test_3')
 def test_3():
     if 'test2Pass' not in session or not session['test2Pass']:
         return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
     return render_template('test_3.html')
 
-@app.route('/set_test_3_pass', methods=['POST'])
+@application.route('/set_test_3_pass', methods=['POST'])
 def set_test_3_pass():
     data = request.get_json()
     if 'test3Pass' in data and data['test3Pass'] == True:
         session['test3Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_4')
+@application.route('/test_4')
 def test_4():
     if 'test3Pass' not in session or not session['test3Pass']:
         return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
     return render_template('test_4.html')
 
-@app.route('/set_test_4_pass', methods=['POST'])
+@application.route('/set_test_4_pass', methods=['POST'])
 def set_test_4_pass():
     data = request.get_json()
     if 'test4Pass' in data and data['test4Pass'] == True:
         session['test4Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_5')
+@application.route('/test_5')
 def test_5():
     if 'test4Pass' not in session or not session['test4Pass']:
         return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
     return render_template('test_5.html')
 
-@app.route('/set_test_5_pass', methods=['POST'])
+@application.route('/set_test_5_pass', methods=['POST'])
 def set_test_5_pass():
     data = request.get_json()
     if 'test5Pass' in data and data['test5Pass'] == True:
         session['test5Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_6')
+@application.route('/test_6')
 def test_6():
     if 'test5Pass' not in session or not session['test5Pass']:
         return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
     return render_template('test_6.html')
 
-@app.route('/set_test_6_pass', methods=['POST'])
+@application.route('/set_test_6_pass', methods=['POST'])
 def set_test_6_pass():
     data = request.get_json()
     if 'test6Pass' in data and data['test6Pass'] == True:
         session['test6Pass'] = True
     return jsonify(success=True)
 
-@app.route('/results')
+@application.route('/results')
 def results():
     if 'test6Pass' not in session or not session['test6Pass']:
         return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
@@ -203,7 +201,7 @@ def results():
 
 
 # Функция проверки существования id респондента в базе (нужна для исключения дубликатов)
-@app.route('/check_user_id', methods=['POST'])
+@application.route('/check_user_id', methods=['POST'])
 def check_user_id():
     input_id = request.json.get('userId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -270,7 +268,7 @@ def send_email(user_email, pdf_path, pdf_filename):
 
 
 # Работа с итоговым PDF-файлом и занесение данных в базу
-@app.route('/generate_and_download_pdf', methods=['POST'])
+@application.route('/generate_and_download_pdf', methods=['POST'])
 def generate_and_download_pdf():
 
     # Локальный массив для хранения результатов
@@ -555,7 +553,7 @@ def generate_and_download_pdf():
             yBottom = 12
             can.setStrokeColorRGB(200 / 255, 65 / 255, 85 / 255)  # Устанавливаем цвет линии
             can.setLineWidth(1)  # Устанавливаем ширину линии
-            can.setFillColorRGB(200 / 255, 65 / 255, 85 / 255) # Устанавливаем цвет заливки
+            can.setFillColorRGB(200 / 255, 65 / 255, 85 / 255)  # Устанавливаем цвет заливки
             circle_radius = 0.5  # Радиус круга в пунктах
             can.circle(x_start, y_start, circle_radius, stroke=0, fill=1)  # Рисуется круг диаметром 1 пункт
             # Основная линия
@@ -2083,7 +2081,7 @@ def cleanup_ISeC(userId, pdf_path):
 
 
 # Очистка сессии после скачивания pdf-файла
-@app.route('/clear_session', methods=['POST'])
+@application.route('/clear_session', methods=['POST'])
 def clear_session():
     data = request.get_json()
     if 'clearSession' in data and data['clearSession'] == True:
@@ -2109,7 +2107,7 @@ def cab_hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 # Маршрут для авторизации
-@app.route('/cab_login', methods=['GET', 'POST'])
+@application.route('/cab_login', methods=['GET', 'POST'])
 def cab_login():
     if request.method == 'POST':
         adminLogin = request.form['adminLogin']
@@ -2140,7 +2138,7 @@ def cab_login():
     return render_template('cab_login.html')
 
 # Маршрут для выхода из системы
-@app.route('/cab_logout')
+@application.route('/cab_logout')
 def cab_logout():
     session.pop('admin_data', None)
     return redirect(url_for('cab_login'))
@@ -2148,14 +2146,14 @@ def cab_logout():
 
 
 # Маршрут для главной страницы кабинета администратора
-@app.route('/cab_archive')
+@application.route('/cab_archive')
 def cab_archive():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     return render_template('cab_archive.html')
 
 # Внесение дополнительных адресов в БД
-@app.route('/cab_add_resend', methods=['POST'])
+@application.route('/cab_add_resend', methods=['POST'])
 def cab_add_resend():
     # Инициализация базы данных и создание таблицы, если она не существует
     conn = get_db_connection()
@@ -2188,7 +2186,7 @@ def cab_add_resend():
         conn.close()
 
 # Маршрут для получения данных пользователя по userId
-@app.route('/cab_get_respondent_data', methods=['POST'])
+@application.route('/cab_get_respondent_data', methods=['POST'])
 def cab_get_respondent_data():
     data = request.get_json()
     if not data or 'userId' not in data:
@@ -2371,7 +2369,7 @@ def cab_get_respondent_data():
 
 
 # Маршрут для страницы кодов доступа
-@app.route('/cab_codes')
+@application.route('/cab_codes')
 def cab_codes():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2411,7 +2409,7 @@ def cab_codes():
     return render_template('cab_codes.html', codesRows=sorted_codes_list)
 
 # Проверка существования кодов доступа в базе данных перед созданием/обновлением
-@app.route('/cab_check_code', methods=['POST'])
+@application.route('/cab_check_code', methods=['POST'])
 def cab_check_code():
     action = request.json.get('action')  # Операция
     isGroupInDB = False  # Проверка на наличие группы в базе данных
@@ -2452,7 +2450,7 @@ def cab_check_code():
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
 # Проверка существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_code_id', methods=['POST'])
+@application.route('/cab_check_code_id', methods=['POST'])
 def cab_check_code_id():
     input_id = request.json.get('codeId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -2478,7 +2476,7 @@ def cab_check_code_id():
         conn.close()
 
 # Создание нового кода доступа
-@app.route('/cab_create_code', methods=['POST'])
+@application.route('/cab_create_code', methods=['POST'])
 def cab_create_code():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2511,7 +2509,7 @@ def cab_create_code():
     return redirect(url_for('cab_codes'))
 
 # Изменение кодов доступа
-@app.route('/cab_update_code/<code_id>', methods=['POST'])
+@application.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2539,7 +2537,7 @@ def cab_update_code(code_id):
     return redirect(url_for('cab_codes'))
 
 # Удаление кодов доступа
-@app.route('/cab_delete_code/<code_id>', methods=['POST'])
+@application.route('/cab_delete_code/<code_id>', methods=['POST'])
 def cab_delete_code(code_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2555,7 +2553,7 @@ def cab_delete_code(code_id):
 
 
 # Маршрут для страницы аналитики
-@app.route('/cab_analysis')
+@application.route('/cab_analysis')
 def cab_analysis():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2666,7 +2664,7 @@ def cab_process_analysis_data(data):
 
 
 # Маршрут для страницы выборок
-@app.route('/cab_excelgen')
+@application.route('/cab_excelgen')
 def cab_excelgen():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2706,7 +2704,7 @@ def sort_groups_by_date(groups):
     return sorted(groups, key=extract_date, reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
 
 # Создание sql-запроса из данных на html-странице
-@app.route('/cab_generate_query', methods=['POST'])
+@application.route('/cab_generate_query', methods=['POST'])
 def cab_generate_query():
     # Проверяем, существует ли директория 'temp', и, если нет, создаем её
     directory = 'temp'
@@ -2901,7 +2899,7 @@ def delete_excel(file_path):
 
 
 # Маршрут для страницы администраторов
-@app.route('/cab_admins')
+@application.route('/cab_admins')
 def cab_admins():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2941,7 +2939,7 @@ def cab_admins():
     return render_template('cab_admins.html', adminData=admin_data, adminsRows=admins_list)
 
 # Проверка существования администраторов в базе данных перед созданием/обновлением
-@app.route('/cab_check_admin', methods=['POST'])
+@application.route('/cab_check_admin', methods=['POST'])
 def cab_check_admin():
     action = request.json.get('action')  # Операция
     isLoginInDB = False  # Проверка на наличие логина в базе данных
@@ -2982,7 +2980,7 @@ def cab_check_admin():
     return jsonify({'isLoginInDB': isLoginInDB, 'isAdminNameInDB': isAdminNameInDB})
 
 # Проверка существования id администратора в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_admin_id', methods=['POST'])
+@application.route('/cab_check_admin_id', methods=['POST'])
 def cab_check_admin_id():
     input_adminId = request.json.get('adminId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -3008,7 +3006,7 @@ def cab_check_admin_id():
         conn.close()
 
 # Создание нового администратора
-@app.route('/cab_create_admin', methods=['POST'])
+@application.route('/cab_create_admin', methods=['POST'])
 def cab_create_admin():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3047,7 +3045,7 @@ def cab_create_admin():
     return redirect(url_for('cab_admins'))
 
 # Изменение администраторов
-@app.route('/cab_update_admin/<admin_id>', methods=['POST'])
+@application.route('/cab_update_admin/<admin_id>', methods=['POST'])
 def cab_update_admin(admin_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3088,7 +3086,7 @@ def cab_update_admin(admin_id):
     return redirect(url_for('cab_admins'))
 
 # Удаление администраторов
-@app.route('/cab_delete_admin/<admin_id>', methods=['POST'])
+@application.route('/cab_delete_admin/<admin_id>', methods=['POST'])
 def cab_delete_admin(admin_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3102,7 +3100,7 @@ def cab_delete_admin(admin_id):
     return redirect(url_for('cab_admins'))
 
 # Изменение главного администратора
-@app.route('/cab_update_main_admin', methods=['POST'])
+@application.route('/cab_update_main_admin', methods=['POST'])
 def cab_update_main_admin():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3141,7 +3139,7 @@ def cab_update_main_admin():
         conn.close()
     return redirect(url_for('cab_admins'))
 
-@app.route('/download_emaildata', methods=['POST'])
+@application.route('/download_emaildata', methods=['POST'])
 def download_emaildata():
     # Подключение к базе данных
     conn = get_db_connection()
@@ -3192,6 +3190,5 @@ def delete_txt(file_path):
         os.remove(file_path)
 
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(host='0.0.0.0')

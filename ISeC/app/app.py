@@ -2217,7 +2217,7 @@ def cab_login():
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину
-        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?',
+        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s',
                             (adminLogin,)).fetchone()
         if user is None:
             # Если пользователь не найден
@@ -2296,7 +2296,7 @@ def cab_get_respondent_data():
     if not data or 'userId' not in data:
         return "Invalid input", 400  # Возвращаем ошибку, если входные данные некорректны
     conn = get_db_connection()
-    respondent_data = conn.execute('SELECT * FROM ISeC_results WHERE userId = ?', (data.get('userId'),)).fetchone()
+    respondent_data = conn.execute('SELECT * FROM ISeC_results WHERE userId = %s', (data.get('userId'),)).fetchone()
     conn.close()
 
     if respondent_data is None:

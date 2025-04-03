@@ -28,6 +28,10 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
+import mysql.connector
+from flask_mysqldb import MySQL  # Убедитесь, что вы используете правильный импорт для MySQL
+
+
 mysql = MySQL()
 
 application = Flask(__name__)
@@ -53,7 +57,11 @@ def favicon():
 
 # Функция подключение к беза данных
 def get_db_connection() -> Connection:
-    return mysql.get_db()
+    try:
+        return mysql.get_db()
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
 
 
 # Маршруты переходов для страниц
@@ -70,7 +78,7 @@ def check_code():
     if conn is None:
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
-    cursor.execute('SELECT testGroup, dateFrom, dateUntil FROM ISeC_accessCodes WHERE code = (%s)', (input_code,))
+    cursor.execute('SELECT testGroup, dateFrom, dateUntil FROM u0200264_isec.ISeC_accessCodes WHERE code = %s', (input_code,))
     result = cursor.fetchone()
     conn.close()
     if result:
@@ -220,16 +228,16 @@ def check_user_id():
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT userId FROM ISeC_results WHERE userId = ?', (input_id,))
+        cursor.execute('SELECT userId FROM u0200264_isec.ISeC_results WHERE userId = %s', (input_id,))
         result = cursor.fetchone()
 
         if result:
             return jsonify({'found': True})  # Если id найден
         else:
             return jsonify({'found': False})  # Если id не найден
-
-    except sqlite3.OperationalError as e:
-        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
+        
+    except mysql.connector.Error as e:  # Обрабатываем все ошибки MySQL
+        if e.errno == 1146:  # Код ошибки для отсутствующей таблицы
             return jsonify({'found': False})  # Если таблица не существует
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
@@ -304,7 +312,7 @@ def generate_and_download_pdf():
         cursor = conn.cursor()
 
         # Проверка на существование таблицы "ISeC_results"
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='ISeC_results';")
+        cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'u0200264_isec' AND table_name = 'ISeC_results';")
         ISeC_results_exists = cursor.fetchone()
 
         # Переменные из JSON-файла
@@ -600,23 +608,18 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(adaptation_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(adaptation_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(adaptation_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(adaptation_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_1_min is not None and adaptation_1_max is not None:
                 rangeSpreadHorizontal(adaptation_1_min, adaptation_1_max, 69.033, 526.35, 517.673, 15)
-
-            cursor.execute("SELECT MIN(compromise_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(compromise_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(compromise_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(compromise_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if compromise_1_min is not None and compromise_1_max is not None:
@@ -640,34 +643,27 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(bidding_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(bidding_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             bidding_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(bidding_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(bidding_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             bidding_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if bidding_1_min is not None and bidding_1_max is not None:
                 rangeSpreadHorizontal(bidding_1_min, bidding_1_max, 69.033, 526.35, 187.427, 15)
-
-            cursor.execute("SELECT MIN(threat_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(threat_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             threat_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(threat_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(threat_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             threat_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_1_min is not None and threat_1_max is not None:
                 rangeSpreadHorizontal(threat_1_min, threat_1_max, 69.033, 526.35, 406.910, 15)
 
-            cursor.execute("SELECT MIN(logicArgument_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(logicArgument_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(logicArgument_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(logicArgument_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if logicArgument_1_min is not None and logicArgument_1_max is not None:
@@ -693,12 +689,10 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(emotionsArgument_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_1_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(emotionsArgument_1) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(emotionsArgument_1) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_1_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if emotionsArgument_1_min is not None and emotionsArgument_1_max is not None:
@@ -1615,23 +1609,18 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(adaptation_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(adaptation_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(adaptation_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(adaptation_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_2_min is not None and adaptation_2_max is not None:
                 rangeSpreadHorizontal(adaptation_2_min, adaptation_2_max, 62.242, 532.995, 406.290, 36)
-
-            cursor.execute("SELECT MIN(compromise_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(compromise_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(compromise_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(compromise_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             compromise_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if compromise_2_min is not None and compromise_2_max is not None:
@@ -1655,23 +1644,19 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(threat_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(threat_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             threat_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(threat_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(threat_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             threat_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_2_min is not None and threat_2_max is not None:
                 rangeSpreadHorizontal(threat_2_min, threat_2_max, 62.242, 532.995, 372.274, 36)
 
-            cursor.execute("SELECT MIN(cooperation_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(cooperation_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(cooperation_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(cooperation_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if cooperation_2_min is not None and cooperation_2_max is not None:
@@ -1695,12 +1680,10 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(avoidance_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(avoidance_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             avoidance_2_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(avoidance_2) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(avoidance_2) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             avoidance_2_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if avoidance_2_min is not None and avoidance_2_max is not None:
@@ -1800,34 +1783,28 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(adaptation_3) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(adaptation_3) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(adaptation_3) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(adaptation_3) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             adaptation_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if adaptation_3_min is not None and adaptation_3_max is not None:
                 rangeSpreadVertical(adaptation_3_min, adaptation_3_max, 779.91, 312.05, 391.33, 27)
 
-            cursor.execute("SELECT MIN(threat_3) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(threat_3) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             threat_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(threat_3) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(threat_3) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             threat_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if threat_3_min is not None and threat_3_max is not None:
                 rangeSpreadVertical(threat_3_min, threat_3_max, 779.91, 312.05, 455.11, 27)
 
-            cursor.execute("SELECT MIN(cooperation_3) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(cooperation_3) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_3_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(cooperation_3) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(cooperation_3) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             cooperation_3_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if cooperation_3_min is not None and cooperation_3_max is not None:
@@ -1933,23 +1910,19 @@ def generate_and_download_pdf():
         # ЗНАЧЕНИЯ РАЗБРОСА ЗНАЧЕНИЙ ПО КАТЕГОРИИ
         if ISeC_results_exists and userCategory is not None and userCategory != "-":
 
-            cursor.execute("SELECT MIN(logicArgument_6) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(logicArgument_6) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_6_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(logicArgument_6) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(logicArgument_6) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             logicArgument_6_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if logicArgument_6_min is not None and logicArgument_6_max is not None:
                 rangeSpreadHorizontal(logicArgument_6_min, logicArgument_6_max, 63.27, 532, 458.646, 30)
 
-            cursor.execute("SELECT MIN(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MIN(emotionsArgument_6) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_min = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_6_min = result_min[0] if result_min else None  # Первая строка из результата запроса
-            cursor.execute("SELECT MAX(emotionsArgument_6) FROM ISeC_results WHERE userCategory = ?",
-                           (userCategory,))  # SQL-запрос
+            cursor.execute("SELECT MAX(emotionsArgument_6) FROM u0200264_isec.ISeC_results WHERE userCategory = %s", (userCategory,))
             result_max = cursor.fetchone()  # Сохраняем результат в переменную
             emotionsArgument_6_max = result_max[0] if result_max else None  # Первая строка из результата запроса
             if emotionsArgument_6_min is not None and emotionsArgument_6_max is not None:
@@ -2018,36 +1991,36 @@ def generate_and_download_pdf():
         if not ISeC_results_exists:
             # SQL-запрос для создания таблицы, если она не существует
             create_table_ISeC_results = '''
-            CREATE TABLE IF NOT EXISTS ISeC_results (
+            CREATE TABLE IF NOT EXISTS u0200264_isec.ISeC_results (
                 userId TEXT PRIMARY KEY, userGroup TEXT, userName TEXT, userSurname TEXT, userSex TEXT, userBirthyear INTEGER, userCategory TEXT, userEmail TEXT,
                 adaptation_1 INTEGER, compromise_1 INTEGER, bidding_1 INTEGER, threat_1 INTEGER, logicArgument_1 INTEGER, emotionsArgument_1 INTEGER,
-                adaptationCount_1 REAL, compromiseCount_1 REAL, biddingCount_1 REAL, threatCount_1 REAL, logicArgumentCount_1 REAL, emotionsArgumentCount_1 REAL,
+                adaptationCount_1 FLOAT, compromiseCount_1 FLOAT, biddingCount_1 FLOAT, threatCount_1 FLOAT, logicArgumentCount_1 FLOAT, emotionsArgumentCount_1 FLOAT,
                 b1_q1_top INTEGER, b1_q2_top INTEGER, b1_q3_top INTEGER, b1_q4_top INTEGER, b1_q5_top INTEGER, b1_q6_top INTEGER, b1_q7_top INTEGER, b1_q8_top INTEGER,
                 b1_q9_top INTEGER, b1_q10_top INTEGER, b1_q11_top INTEGER, b1_q12_top INTEGER, b1_q13_top INTEGER, b1_q14_top INTEGER, b1_q15_top INTEGER,
 
                 adaptation_2 INTEGER, compromise_2 INTEGER, threat_2 INTEGER, cooperation_2 INTEGER, avoidance_2 INTEGER,
-                adaptationCount_2 REAL, compromiseCount_2 REAL, threatCount_2 REAL, cooperationCount_2 REAL, avoidanceCount_2 REAL,
+                adaptationCount_2 FLOAT, compromiseCount_2 FLOAT, threatCount_2 FLOAT, cooperationCount_2 FLOAT, avoidanceCount_2 FLOAT,
                 b2_q1_top INTEGER, b2_q2_top INTEGER, b2_q3_top INTEGER, b2_q4_top INTEGER, b2_q5_top INTEGER, b2_q6_top INTEGER, b2_q7_top INTEGER, b2_q8_top INTEGER,
                 b2_q9_top INTEGER, b2_q10_top INTEGER, b2_q11_top INTEGER, b2_q12_top INTEGER, b2_q13_top INTEGER, b2_q14_top INTEGER, b2_q15_top INTEGER, b2_q16_top INTEGER,
                 b2_q17_top INTEGER, b2_q18_top INTEGER, b2_q19_top INTEGER, b2_q20_top INTEGER, b2_q21_top INTEGER, b2_q22_top INTEGER, b2_q23_top INTEGER, b2_q24_top INTEGER,
                 b2_q25_top INTEGER, b2_q26_top INTEGER, b2_q27_top INTEGER, b2_q28_top INTEGER, b2_q29_top INTEGER, b2_q30_top INTEGER,
 
                 adaptation_3 INTEGER, threat_3 INTEGER, cooperation_3 INTEGER,
-                adaptationCount_3 REAL, threatCount_3 REAL, cooperationCount_3 REAL,
+                adaptationCount_3 FLOAT, threatCount_3 FLOAT, cooperationCount_3 FLOAT,
                 b3_q1 INTEGER, b3_q2 INTEGER, b3_q3 INTEGER, b3_q4 INTEGER, b3_q5 INTEGER, b3_q6 INTEGER, b3_q7 INTEGER, b3_q8 INTEGER, b3_q9 INTEGER,
 
                 understandingOfStyles_4 INTEGER, strengthInstallation_4 INTEGER, manipulationInstallation_4 INTEGER, negotiationsInstallation_4 INTEGER,
-                strengthInstallationCount_4 REAL, manipulationInstallationCount_4 REAL, negotiationsInstallationCount_4 REAL,
+                strengthInstallationCount_4 FLOAT, manipulationInstallationCount_4 FLOAT, negotiationsInstallationCount_4 FLOAT,
                 b4_q1 INTEGER, b4_q2 INTEGER, b4_q3 INTEGER, b4_q4 INTEGER, b4_q5 INTEGER, b4_q6 INTEGER, b4_q7 INTEGER, b4_q8 INTEGER,
                 b4_q9 INTEGER, b4_q10 INTEGER, b4_q11 INTEGER, b4_q12 INTEGER, b4_q13 INTEGER, b4_q14 INTEGER, b4_q15 INTEGER, b4_q16 INTEGER,
 
                 adaptation_5 INTEGER, bidding_5 INTEGER, logicArgument_5 INTEGER, emotionsArgument_5 INTEGER, avoidance_5 INTEGER,
-                adaptationCount_5 REAL, biddingCount_5 REAL, logicArgumentCount_5 REAL, emotionsArgumentCount_5 REAL, avoidanceCount_5 REAL,
+                adaptationCount_5 FLOAT, biddingCount_5 FLOAT, logicArgumentCount_5 FLOAT, emotionsArgumentCount_5 FLOAT, avoidanceCount_5 FLOAT,
                 b5_q1 INTEGER, b5_q2 INTEGER, b5_q3 INTEGER, b5_q4 INTEGER, b5_q5 INTEGER, b5_q6 INTEGER, b5_q7 INTEGER, b5_q8 INTEGER,
                 b5_q9 INTEGER, b5_q10 INTEGER, b5_q11 INTEGER, b5_q12 INTEGER,
 
                 logicArgument_6 INTEGER, emotionsArgument_6 INTEGER,
-                logicArgumentCount_6 REAL, emotionsArgumentCount_6 REAL,
+                logicArgumentCount_6 FLOAT, emotionsArgumentCount_6 FLOAT,
                 b6_q1 INTEGER, b6_q2 INTEGER, b6_q3 INTEGER, b6_q4 INTEGER, b6_q5 INTEGER, b6_q6 INTEGER, b6_q7 INTEGER, b6_q8 INTEGER, b6_q9 INTEGER, b6_q10 INTEGER
 
             );
@@ -2056,14 +2029,14 @@ def generate_and_download_pdf():
             cursor.execute(create_table_ISeC_results)
 
         # Проверка на существование записи с данным userId
-        cursor.execute("SELECT COUNT(*) FROM ISeC_results WHERE userId = ?", (userId,))
+        cursor.execute("SELECT COUNT(*) FROM u0200264_isec.ISeC_results WHERE userId = %s", (userId,))
         exists = cursor.fetchone()[0] > 0
 
         if exists:
             print("Данные уже существуют в базе")  # Выводим сообщение в консоль, если запись уже существует
         elif insertData:
             # SQL-запрос для вставки данных
-            sql = '''INSERT INTO ISeC_results (
+            sql = '''INSERT INTO u0200264_isec.ISeC_results (
                 userId, userGroup, userName, userSurname, userSex, userBirthyear, userCategory, userEmail,
                 adaptation_1, compromise_1, bidding_1, threat_1, logicArgument_1, emotionsArgument_1,
                 adaptationCount_1, compromiseCount_1, biddingCount_1, threatCount_1, logicArgumentCount_1, emotionsArgumentCount_1,
@@ -2095,10 +2068,10 @@ def generate_and_download_pdf():
                 logicArgumentCount_6, emotionsArgumentCount_6,
                 b6_q1, b6_q2, b6_q3, b6_q4, b6_q5, b6_q6, b6_q7, b6_q8, b6_q9, b6_q10
                 
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
 
             # Выполнение запроса с передачей значений
             cursor.execute(sql, (
@@ -2289,7 +2262,7 @@ def cab_add_resend():
     conn = get_db_connection()
     cursor = conn.cursor()
     # Проверка на существование таблицы "resends"
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='resends';")
+    cursor.execute("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = 'u0200264_isec' AND table_name = 'resends';")
     resends_exists = cursor.fetchone()
     # Если таблицы нет, создаем её
     if not resends_exists:
@@ -2303,15 +2276,17 @@ def cab_add_resend():
     email = request.json.get('email')
     if not email:
         return "Поле почты пустое"
+
     try:
-        cursor.execute('INSERT INTO resends (email) VALUES (?)', (email,))
+        cursor.execute('INSERT INTO resends (email) VALUES (%s)', (email,))
         conn.commit()
         return "Электронная почта добавлена"
-    except sqlite3.IntegrityError:
+    except mysql.connector.IntegrityError:  # Убедитесь, что используете правильный импорт для MySQL
         return "Электронная почта уже существует"
     finally:
         cursor.close()
         conn.close()
+
 
 
 # Маршрут для получения данных пользователя по userId
@@ -2503,9 +2478,15 @@ def cab_codes():
         return redirect(url_for('cab_login'))
     conn = get_db_connection()
     cursor = conn.cursor()
+    
     # Получение данных из таблицы ISeC_accessCodes
-    cursor.execute("SELECT codeId, testGroup, code, dateFrom, dateUntil FROM ISeC_accessCodes")
-    access_codes = cursor.fetchall()
+    try:
+        cursor.execute("SELECT codeId, testGroup, code, dateFrom, dateUntil FROM ISeC_accessCodes")
+        access_codes = cursor.fetchall()
+    except mysql.connector.Error as e:
+        # Обработка ошибок MySQL
+        return jsonify({'error': 'database_error', 'message': str(e)})
+
     # Закрытие курсора и соединения
     cursor.close()
     conn.close()
@@ -2553,30 +2534,34 @@ def cab_check_code():
     try:
         if action == "create":
             # Проверка на существование группы
-            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ?', (input_group,))
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = %s', (input_group,))
             result = cursor.fetchone()
             if result:
                 isGroupInDB = True
             # Проверка на существование кода
-            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = ?', (input_code,))
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = %s', (input_code,))
             result = cursor.fetchone()
             if result:
                 isCodeInDB = True
         elif action == "update":
             # Проверка на существование группы, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = ? AND codeId != ?',
-                           (input_group, input_codeId))
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE testGroup = %s AND codeId != %s', (input_group, input_codeId))
             result = cursor.fetchone()
             if result:
                 isGroupInDB = True
             # Проверка на существование кода, исключая текущий codeId
-            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = ? AND codeId != ?', (input_code, input_codeId))
+            cursor.execute('SELECT * FROM ISeC_accessCodes WHERE code = %s AND codeId != %s', (input_code, input_codeId))
             result = cursor.fetchone()
             if result:
                 isCodeInDB = True
+
+    except mysql.connector.Error as e:
+        return jsonify({'error': 'database_error', 'message': str(e)})
+
     finally:
         cursor.close()
         conn.close()
+
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
 
@@ -2589,7 +2574,7 @@ def cab_check_code_id():
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE codeId = ?', (input_id,))
+        cursor.execute('SELECT codeId FROM ISeC_accessCodes WHERE codeId = %s', (input_id,))
         result = cursor.fetchone()
 
         if result:
@@ -2597,8 +2582,8 @@ def cab_check_code_id():
         else:
             return jsonify({'found': False})  # Если id не найден
 
-    except sqlite3.OperationalError as e:
-        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
+    except mysql.connector.Error as e:  # Обрабатываем все ошибки MySQL
+        if e.errno == 1146:  # Код ошибки для отсутствующей таблицы
             return jsonify({'found': False})  # Если таблица не существует
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
@@ -2630,10 +2615,10 @@ def cab_create_code():
         cursor.execute("""
             INSERT INTO ISeC_accessCodes
             (codeId, testGroup, code, dateFrom, dateUntil)
-            VALUES (?, ?, ?, ?, ?);
+            VALUES (%s, %s, %s, %s, %s);
         """, (code_id, test_group, code, start_date, end_date))
         conn.commit()
-    except Exception as e:
+    except mysql.connector.Error as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
     finally:
         cursor.close()
@@ -2658,11 +2643,11 @@ def cab_update_code(code_id):
     try:
         cursor.execute("""
             UPDATE ISeC_accessCodes
-            SET testGroup = ?, code = ?, dateFrom = ?, dateUntil = ?
-            WHERE codeId = ?
+            SET testGroup = %s, code = %s, dateFrom = %s, dateUntil = %s
+            WHERE codeId = %s
         """, (test_group, code, start_date, end_date, code_id))
         conn.commit()
-    except Exception as e:
+    except mysql.connector.Error as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
     finally:
         cursor.close()
@@ -2678,7 +2663,7 @@ def cab_delete_code(code_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     # Удаление записи из базы данных по code_id
-    cursor.execute("DELETE FROM ISeC_accessCodes WHERE codeId = ?", (code_id,))
+    cursor.execute("DELETE FROM ISeC_accessCodes WHERE codeId = %s", (code_id,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -2844,7 +2829,6 @@ def sort_groups_by_date(groups):
             date_str = match.group(1)
             return datetime.strptime(date_str, '%d.%m.%Y')  # Преобразуем строку в объект datetime
         return datetime.min  # Если дата не найдена, возвращаем минимальную дату
-
     return sorted(groups, key=extract_date,
                   reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
 
@@ -2871,19 +2855,19 @@ def cab_generate_query():
     params = []
 
     if groups:
-        query += " AND userGroup IN ({})".format(', '.join(['?'] * len(groups)))
+        query += " AND userGroup IN ({})".format(', '.join(['%s'] * len(groups)))
         params.extend(groups)
     if categories:
-        query += " AND userCategory IN ({})".format(', '.join(['?'] * len(categories)))
+        query += " AND userCategory IN ({})".format(', '.join(['%s'] * len(categories)))
         params.extend(categories)
     if sex and sex != "Оба":
-        query += " AND userSex = ?"
+        query += " AND userSex = %s"
         params.append(sex)
     if year_from:
-        query += " AND userBirthyear >= ?"
+        query += " AND userBirthyear >= %s"
         params.append(year_from)
     if year_until:
-        query += " AND userBirthyear <= ?"
+        query += " AND userBirthyear <= %s"
         params.append(year_until)
 
     cursor.execute(query, params)  # Выполняем запрос с параметрами
@@ -3103,25 +3087,25 @@ def cab_check_admin():
     try:
         if action == "create":
             # Проверка на существование логина
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', (input_login,))
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s', (input_login,))
             result = cursor.fetchone()
             if result:
                 isLoginInDB = True
             # Проверка на существование имени администратора
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = ?', (input_adminName,))
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = %s', (input_adminName,))
             result = cursor.fetchone()
             if result:
                 isAdminNameInDB = True
         elif action == "update":
             # Проверка на существование логина, исключая текущий adminId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ? AND adminId != ?',
-                           (input_login, input_adminId))
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s AND adminId != %s',
+                        (input_login, input_adminId))
             result = cursor.fetchone()
             if result:
                 isLoginInDB = True
             # Проверка на существование имени администратора, исключая текущий adminId
-            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = ? AND adminId != ?',
-                           (input_adminName, input_adminId))
+            cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE adminName = %s AND adminId != %s',
+                        (input_adminName, input_adminId))
             result = cursor.fetchone()
             if result:
                 isAdminNameInDB = True
@@ -3140,7 +3124,7 @@ def cab_check_admin_id():
         return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT adminId FROM ISeC_adminAccounts WHERE adminId = ?', (input_adminId,))
+        cursor.execute('SELECT adminId FROM ISeC_adminAccounts WHERE adminId = %s', (input_adminId,))
         result = cursor.fetchone()
 
         if result:
@@ -3148,8 +3132,8 @@ def cab_check_admin_id():
         else:
             return jsonify({'found': False})  # Если id не найден
 
-    except sqlite3.OperationalError as e:
-        if 'no such table' in str(e):  # Проверяем, является ли ошибка связанной с отсутствием таблицы
+    except mysql.connector.Error as e:  # Обрабатываем все ошибки MySQL
+        if e.errno == 1146:  # Код ошибки для отсутствующей таблицы
             return jsonify({'found': False})  # Если таблица не существует
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
@@ -3188,9 +3172,9 @@ def cab_create_admin():
         cursor.execute("""
             INSERT INTO ISeC_adminAccounts
             (adminId, login, password, adminName, archiveAccess, codesAccess, analysisAccess, excelgenAccess, dateFrom, dateUntil)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """, (admin_id, login, password, admin_name, archive_access, codes_access, analysis_access, excelgen_access,
-              start_date, end_date))
+            start_date, end_date))
         conn.commit()
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
@@ -3223,8 +3207,8 @@ def cab_update_admin(admin_id):
         if password is None:  # Если пароль не передан, обновляем без изменения пароля
             cursor.execute("""
                 UPDATE ISeC_adminAccounts
-                SET login = ?, adminName = ?, archiveAccess = ?, codesAccess = ?, analysisAccess = ?, excelgenAccess = ?, dateFrom = ?, dateUntil = ?
-                WHERE adminId = ?
+                SET login = %s, adminName = %s, archiveAccess = %s, codesAccess = %s, analysisAccess = %s, excelgenAccess = %s, dateFrom = %s, dateUntil = %s
+                WHERE adminId = %s
             """, (
                 login, admin_name, archive_access, codes_access, analysis_access, excelgen_access, start_date, end_date,
                 admin_id))
@@ -3232,10 +3216,10 @@ def cab_update_admin(admin_id):
             password_hashed = cab_hash_password(password)
             cursor.execute("""
                 UPDATE ISeC_adminAccounts
-                SET login = ?, password = ?, adminName = ?, archiveAccess = ?, codesAccess = ?, analysisAccess = ?, excelgenAccess = ?, dateFrom = ?, dateUntil = ?
-                WHERE adminId = ?
+                SET login = %s, password = %s, adminName = %s, archiveAccess = %s, codesAccess = %s, analysisAccess = %s, excelgenAccess = %s, dateFrom = %s, dateUntil = %s
+                WHERE adminId = %s
             """, (login, password_hashed, admin_name, archive_access, codes_access, analysis_access, excelgen_access,
-                  start_date, end_date, admin_id))
+                start_date, end_date, admin_id))
         conn.commit()
     except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
@@ -3253,7 +3237,7 @@ def cab_delete_admin(admin_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     # Удаление записи из базы данных по admin_id
-    cursor.execute("DELETE FROM ISeC_adminAccounts WHERE adminId = ?", (admin_id,))
+    cursor.execute("DELETE FROM ISeC_adminAccounts WHERE adminId = %s", (admin_id,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -3282,14 +3266,14 @@ def cab_update_main_admin():
         if password is None:  # Если пароль не передан, обновляем без изменения пароля
             cursor.execute("""
                 UPDATE ISeC_adminAccounts
-                SET login = ?, adminName = ?
+                SET login = %s, adminName = %s
                 WHERE adminId = 'admin'
             """, (login, admin_name))
         else:  # Если пароль передан, хешируем его и обновляем
             password_hashed = cab_hash_password(password)
             cursor.execute("""
                 UPDATE ISeC_adminAccounts
-                SET login = ?, password = ?, adminName = ?
+                SET login = %s, password = %s, adminName = %s
                 WHERE adminId = 'admin'
             """, (login, password_hashed, admin_name))
         conn.commit()
@@ -3311,17 +3295,20 @@ def download_emaildata():
     try:
         cursor.execute("SELECT DISTINCT userEmail FROM ISeC_results WHERE userEmail != '-'")
         emails1 = [row[0] for row in cursor.fetchall()]
-    except sqlite3.Error:
+    except mysql.connector.Error as e:
+        print(f"Ошибка MySQL: {e}")
         emails1 = []
 
     # Получение уникальных email из resends
     try:
         cursor.execute("SELECT DISTINCT email FROM resends")
         emails2 = [row[0] for row in cursor.fetchall()]
-    except sqlite3.Error:
+    except mysql.connector.Error as e:
+        print(f"Ошибка MySQL: {e}")
         emails2 = []
 
     # Закрытие соединения с БД
+    cursor.close()
     conn.close()
 
     # Проверка на пустые списки

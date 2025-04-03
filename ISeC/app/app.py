@@ -29,6 +29,8 @@ from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
 import mysql.connector
+from flask_mysqldb import MySQL  # Убедитесь, что вы используете правильный импорт для MySQL
+
 
 mysql = MySQL()
 
@@ -55,7 +57,11 @@ def favicon():
 
 # Функция подключение к беза данных
 def get_db_connection() -> Connection:
-    return mysql.get_db()
+    try:
+        return mysql.get_db()
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
 
 
 # Маршруты переходов для страниц

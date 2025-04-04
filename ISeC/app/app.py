@@ -48,11 +48,7 @@ log = logging.getLogger("root")
 log.setLevel(logging.INFO)
 log.addHandler(my_handler)
 
-
-
 mysql = MySQL()
-
-log.info("Init")
 
 application = Flask(__name__)
 application.config["MYSQL_DATABASE_USER"] = os.environ["MYSQL_DATABASE_USER"]
@@ -60,6 +56,8 @@ application.config["MYSQL_DATABASE_PASSWORD"] = os.environ["MYSQL_DATABASE_PASSW
 application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
 application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
 application.config["MYSQL_DATABASE_PORT"] = int(os.environ["MYSQL_DATABASE_PORT"])
+
+application.logger.addHandler(my_handler)
 
 mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов

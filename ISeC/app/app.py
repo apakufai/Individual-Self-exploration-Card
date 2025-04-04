@@ -33,20 +33,21 @@ from openpyxl.utils import get_column_letter
 
 from flaskext.mysql import MySQL
 
-log_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-my_handler = RotatingFileHandler(
-    os.environ["LOGFILE_PATH"],
-    mode='a',
-    maxBytes=5*1024*1024,
-    backupCount=2,
-    encoding=None,
-    delay=0
-)
-my_handler.setFormatter(log_formatter)
-my_handler.setLevel(logging.INFO)
 log = logging.getLogger("root")
-log.setLevel(logging.INFO)
-log.addHandler(my_handler)
+if (log_file := os.environ.get("LOGFILE_PATH")) is not None:
+    log_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    my_handler = RotatingFileHandler(
+        log_file,
+        mode='a',
+        maxBytes=5*1024*1024,
+        backupCount=2,
+        encoding=None,
+        delay=0
+    )
+    my_handler.setFormatter(log_formatter)
+    my_handler.setLevel(logging.INFO)
+    log.setLevel(logging.INFO)
+    log.addHandler(my_handler)
 
 mysql = MySQL()
 
@@ -85,7 +86,6 @@ def get_db_connection() -> Connection:
 # Маршруты переходов для страниц
 @application.route('/')
 def index():
-    log.info("test me")
     return render_template('index.html')
 
 

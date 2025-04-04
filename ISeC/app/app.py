@@ -1,39 +1,37 @@
+import hashlib  # Для хеширования данных
 import logging
-from logging.handlers import RotatingFileHandler
-
-from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
-from flaskext.mysql import MySQL
-from pymysql import Connection
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 import math
 import os
 import re
-from flask_cors import CORS
-import threading  # Таймер
-import sqlite3  # Подключение к базе данных
 import secrets  # Генерация секретного ключа
-import urllib.parse  # Для кодирования заголовка
-import hashlib  # Для хеширования данных
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
+import threading  # Таймер
+import urllib.parse  # Для кодирования заголовка
+from datetime import datetime
 from email import encoders
 from email.header import Header
-from datetime import datetime
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from logging.handlers import RotatingFileHandler
 
 import pandas as pd
+from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
+from flask.logging import default_handler
+from flask_cors import CORS
+from flaskext.mysql import MySQL
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
+from pymysql import Connection
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 
-from flaskext.mysql import MySQL
+log = logging.getLogger(__name__)
+log.addHandler(default_handler)
 
-log = logging.getLogger("root")
 if (log_file := os.environ.get("LOGFILE_PATH")) is not None:
     log_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     my_handler = RotatingFileHandler(
@@ -45,8 +43,8 @@ if (log_file := os.environ.get("LOGFILE_PATH")) is not None:
         delay=0
     )
     my_handler.setFormatter(log_formatter)
-    my_handler.setLevel(logging.INFO)
-    log.setLevel(logging.INFO)
+    my_handler.setLevel(logging.DEBUG)
+    log.setLevel(logging.DEBUG)
     log.addHandler(my_handler)
 
 mysql = MySQL()
@@ -58,7 +56,6 @@ application.config["MYSQL_DATABASE_DB"] = os.environ["MYSQL_DATABASE_DB"]
 application.config["MYSQL_DATABASE_HOST"] = os.environ["MYSQL_DATABASE_HOST"]
 application.config["MYSQL_DATABASE_PORT"] = int(os.environ["MYSQL_DATABASE_PORT"])
 
-application.logger.addHandler(my_handler)
 
 mysql.init_app(application)
 CORS(application)  # Разрешить CORS для всех маршрутов

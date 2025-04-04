@@ -18,6 +18,7 @@ services:
       - isec-db
 
   isec-db:
+    container_name: isec-db
     platform: linux/x86_64
     image: mysql:5.7
     restart: always

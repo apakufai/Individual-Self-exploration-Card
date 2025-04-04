@@ -1,3 +1,6 @@
+import logging
+from logging.handlers import RotatingFileHandler
+
 from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
 from flaskext.mysql import MySQL
 from pymysql import Connection
@@ -29,6 +32,15 @@ from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
 from flaskext.mysql import MySQL
+
+# log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
+# log_file = "www/isec.smart-skills.pro/log"
+# my_handler = RotatingFileHandler(log_file, mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
+# my_handler.setFormatter(log_formatter)
+# my_handler.setLevel(logging.INFO)
+# app_log = logging.getLogger("root")
+# app_log.setLevel(logging.INFO)
+# app_log.addHandler(my_handler)
 
 
 mysql = MySQL()
@@ -2281,7 +2293,7 @@ def cab_add_resend():
         cursor.execute('INSERT INTO resends (email) VALUES (%s)', (email,))
         conn.commit()
         return "Электронная почта добавлена"
-    except mysql.connector.IntegrityError:  # Убедитесь, что используете правильный импорт для MySQL
+    except Exception:  # Убедитесь, что используете правильный импорт для MySQL
         return "Электронная почта уже существует"
     finally:
         cursor.close()

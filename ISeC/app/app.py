@@ -2216,7 +2216,9 @@ def cab_login():
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину
-        user = conn.cursor().execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s', (adminLogin,)).fetchone()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s', (adminLogin,))
+        user = cursor.fetchone()
         if user is None:
             # Если пользователь не найден
             return "userNotFound"

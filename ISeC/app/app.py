@@ -28,8 +28,7 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
-import mysql.connector
-from flask_mysqldb import MySQL  # Убедитесь, что вы используете правильный импорт для MySQL
+from flaskext.mysql import MySQL
 
 
 mysql = MySQL()
@@ -59,7 +58,7 @@ def favicon():
 def get_db_connection() -> Connection:
     try:
         return mysql.get_db()
-    except mysql.connector.Error as err:
+    except Exception as err:
         print(f"Error: {err}")
         return None
 
@@ -236,8 +235,8 @@ def check_user_id():
         else:
             return jsonify({'found': False})  # Если id не найден
         
-    except mysql.connector.Error as e:  # Обрабатываем все ошибки MySQL
-        if e.errno == 1146:  # Код ошибки для отсутствующей таблицы
+    except Exception as e:  # Обрабатываем все ошибки MySQL
+        if hasattr(e, "errno") and e.errno == 1146:  # Код ошибки для отсутствующей таблицы
             return jsonify({'found': False})  # Если таблица не существует
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
@@ -2217,7 +2216,7 @@ def cab_login():
         # Подключение к базе данных
         conn = get_db_connection()
         # Сначала ищем пользователя по логину
-        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s', (adminLogin,)).fetchone()
+        user = conn.cursor().execute('SELECT * FROM ISeC_adminAccounts WHERE login = %s', (adminLogin,)).fetchone()
         if user is None:
             # Если пользователь не найден
             return "userNotFound"
@@ -2482,7 +2481,7 @@ def cab_codes():
     try:
         cursor.execute("SELECT codeId, testGroup, code, dateFrom, dateUntil FROM ISeC_accessCodes")
         access_codes = cursor.fetchall()
-    except mysql.connector.Error as e:
+    except Exception as e:
         # Обработка ошибок MySQL
         return jsonify({'error': 'database_error', 'message': str(e)})
 
@@ -2554,7 +2553,7 @@ def cab_check_code():
             if result:
                 isCodeInDB = True
 
-    except mysql.connector.Error as e:
+    except Exception as e:
         return jsonify({'error': 'database_error', 'message': str(e)})
 
     finally:
@@ -2581,7 +2580,7 @@ def cab_check_code_id():
         else:
             return jsonify({'found': False})  # Если id не найден
 
-    except mysql.connector.Error as e:  # Обрабатываем все ошибки MySQL
+    except Exception as e:  # Обрабатываем все ошибки MySQL
         if e.errno == 1146:  # Код ошибки для отсутствующей таблицы
             return jsonify({'found': False})  # Если таблица не существует
         else:
@@ -2617,7 +2616,7 @@ def cab_create_code():
             VALUES (%s, %s, %s, %s, %s);
         """, (code_id, test_group, code, start_date, end_date))
         conn.commit()
-    except mysql.connector.Error as e:
+    except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
     finally:
         cursor.close()
@@ -2646,7 +2645,7 @@ def cab_update_code(code_id):
             WHERE codeId = %s
         """, (test_group, code, start_date, end_date, code_id))
         conn.commit()
-    except mysql.connector.Error as e:
+    except Exception as e:
         return jsonify({'error': str(e)}), 500  # Возвращаем статус 500 в случае ошибки
     finally:
         cursor.close()
@@ -3131,8 +3130,8 @@ def cab_check_admin_id():
         else:
             return jsonify({'found': False})  # Если id не найден
 
-    except mysql.connector.Error as e:  # Обрабатываем все ошибки MySQL
-        if e.errno == 1146:  # Код ошибки для отсутствующей таблицы
+    except Exception as e:  # Обрабатываем все ошибки MySQL
+        if  hasattr(e, "errno") and e.errno == 1146:  # Код ошибки для отсутствующей таблицы
             return jsonify({'found': False})  # Если таблица не существует
         else:
             return jsonify({'error': 'database_error', 'message': str(e)})  # Обработка других ошибок базы данных
@@ -3294,7 +3293,7 @@ def download_emaildata():
     try:
         cursor.execute("SELECT DISTINCT userEmail FROM ISeC_results WHERE userEmail != '-'")
         emails1 = [row[0] for row in cursor.fetchall()]
-    except mysql.connector.Error as e:
+    except Exception as e:
         print(f"Ошибка MySQL: {e}")
         emails1 = []
 
@@ -3302,7 +3301,7 @@ def download_emaildata():
     try:
         cursor.execute("SELECT DISTINCT email FROM resends")
         emails2 = [row[0] for row in cursor.fetchall()]
-    except mysql.connector.Error as e:
+    except Exception as e:
         print(f"Ошибка MySQL: {e}")
         emails2 = []
 

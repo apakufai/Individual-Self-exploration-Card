@@ -1,5 +1,6 @@
 services:
   isec:
+    container_name: isec
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,6 +11,7 @@ services:
        MYSQL_DATABASE_DB: db
        MYSQL_DATABASE_HOST: isec-db
        MYSQL_DATABASE_PORT: 3306
+       LOGFILE_PATH: log
 
     ports:
       - 8000:8000

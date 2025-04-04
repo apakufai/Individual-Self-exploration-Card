@@ -85,6 +85,7 @@ def get_db_connection() -> Connection:
 # Маршруты переходов для страниц
 @application.route('/')
 def index():
+    log.info("test me")
     return render_template('index.html')
 
 

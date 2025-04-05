@@ -65,16 +65,19 @@ def favicon():
 # Функция подключение к беза данных
 def get_db_connection():
     try:
-        db_path = os.path.join(os.path.dirname(__file__), os.environ.get("DB_PATH", 'database/ISeC_database.db'))
+        if (path := os.environ.get("DB_PATH")) is not None:
+            db_path = path
+        else:
+            db_path = os.path.join(os.path.dirname(__file__), 'database/ISeC_database.db')
         if not os.path.exists(db_path):
-            print(f"База данных не найдена по пути: {db_path}")
-        print("Попытка подключения к базе данных...")
+            log.info(f"База данных не найдена по пути: {db_path}")
+        log.info("Попытка подключения к базе данных...")
         conn = sqlite3.connect(db_path)  # Укажите путь к вашей базе данных
         conn.row_factory = sqlite3.Row  # Позволяет обращаться к столбцам по именам
-        print("Подключение успешно.")
+        log.info("Подключение успешно.")
         return conn
     except sqlite3.Error as e:
-        print(f"Ошибка подключения к базе данных: {e}")
+        log.info(f"Ошибка подключения к базе данных: {e}")
         return None
 
 
@@ -278,7 +281,7 @@ def send_email(user_email, pdf_path, pdf_filename):
             server.login(smtp_user, smtp_password)  # Аутентификация в почтовом ящике
             server.send_message(msg)  # Отправляем сообщение
     except Exception as e:
-        print(f"Ошибка при отправке email: {e}")
+        log.info(f"Ошибка при отправке email: {e}")
 
 
 
@@ -527,7 +530,7 @@ def generate_and_download_pdf():
         image_path_1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_1.png")
         # Проверяем, существует ли изображение
         if not os.path.exists(image_path_1):
-            print(f"Изображение {image_path_1} не найдено.")
+            log.info(f"Изображение {image_path_1} не найдено.")
         # Добавляем изображение на страницу
         can.drawImage(image_path_1, 0, 0, width=width, height=height)
 
@@ -551,7 +554,7 @@ def generate_and_download_pdf():
         image_path_2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_2.png")
         # Проверяем, существует ли изображение
         if not os.path.exists(image_path_2):
-            print(f"Изображение {image_path_2} не найдено.")
+            log.info(f"Изображение {image_path_2} не найдено.")
         # Добавляем изображение на страницу
         can.drawImage(image_path_2, 0, 0, width=width, height=height)
 
@@ -642,7 +645,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 3
         image_path_3 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_3.png")
         if not os.path.exists(image_path_3):
-            print(f"Изображение {image_path_3} не найдено.")
+            log.info(f"Изображение {image_path_3} не найдено.")
             return
         can.drawImage(image_path_3, 0, 0, width=width, height=height)
             
@@ -690,7 +693,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 4
         image_path_4 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_4.png")
         if not os.path.exists(image_path_4):
-            print(f"Изображение {image_path_4} не найдено.")
+            log.info(f"Изображение {image_path_4} не найдено.")
             return
         can.drawImage(image_path_4, 0, 0, width=width, height=height)
 
@@ -763,7 +766,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 5
         image_path_5 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_5.png")
         if not os.path.exists(image_path_5):
-            print(f"Изображение {image_path_5} не найдено.")
+            log.info(f"Изображение {image_path_5} не найдено.")
             return
         can.drawImage(image_path_5, 0, 0, width=width, height=height)
         if adaptation_2 is not None:  # Проверяем, что adaptation_2 не None
@@ -1512,7 +1515,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 6
         image_path_6 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_6.png")
         if not os.path.exists(image_path_6):
-            print(f"Изображение {image_path_6} не найдено.")
+            log.info(f"Изображение {image_path_6} не найдено.")
             return
         can.drawImage(image_path_6, 0, 0, width=width, height=height)
 
@@ -1549,7 +1552,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 7
         image_path_7 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_7.png")
         if not os.path.exists(image_path_7):
-            print(f"Изображение {image_path_7} не найдено.")
+            log.info(f"Изображение {image_path_7} не найдено.")
             return
         can.drawImage(image_path_7, 0, 0, width=width, height=height)
 
@@ -1586,7 +1589,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 8
         image_path_8 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_8.png")
         if not os.path.exists(image_path_8):
-            print(f"Изображение {image_path_8} не найдено.")
+            log.info(f"Изображение {image_path_8} не найдено.")
             return
         can.drawImage(image_path_8, 0, 0, width=width, height=height)
 
@@ -1612,7 +1615,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 9
         image_path_9 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_9.png")
         if not os.path.exists(image_path_9):
-            print(f"Изображение {image_path_9} не найдено.")
+            log.info(f"Изображение {image_path_9} не найдено.")
             return
         can.drawImage(image_path_9, 0, 0, width=width, height=height)
         # Вычленяем значения из sorted_result[0] и sorted_result[4] для подсчёта разницы между минимумом и максимумом
@@ -1630,7 +1633,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 10
         image_path_10 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_10.png")
         if not os.path.exists(image_path_10):
-            print(f"Изображение {image_path_10} не найдено.")
+            log.info(f"Изображение {image_path_10} не найдено.")
             return
         can.drawImage(image_path_10, 0, 0, width=width, height=height)
 
@@ -1734,7 +1737,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 11
         image_path_11 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_11.png")
         if not os.path.exists(image_path_11):
-            print(f"Изображение {image_path_11} не найдено.")
+            log.info(f"Изображение {image_path_11} не найдено.")
             return
         can.drawImage(image_path_11, 0, 0, width=width, height=height)
 
@@ -1744,7 +1747,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 12
         image_path_12 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_12.png")
         if not os.path.exists(image_path_12):
-            print(f"Изображение {image_path_12} не найдено.")
+            log.info(f"Изображение {image_path_12} не найдено.")
             return
         can.drawImage(image_path_12, 0, 0, width=width, height=height)
 
@@ -1754,7 +1757,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 13
         image_path_13 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_13.png")
         if not os.path.exists(image_path_13):
-            print(f"Изображение {image_path_13} не найдено.")
+            log.info(f"Изображение {image_path_13} не найдено.")
             return
         can.drawImage(image_path_13, 0, 0, width=width, height=height)
         can.drawString(249.658, height - 254.288, str(strengthInstallation_4))  # Силовая модель
@@ -1796,7 +1799,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 14
         image_path_14 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_14.png")
         if not os.path.exists(image_path_14):
-            print(f"Изображение {image_path_14} не найдено.")
+            log.info(f"Изображение {image_path_14} не найдено.")
             return
         can.drawImage(image_path_14, 0, 0, width=width, height=height)
 
@@ -1806,7 +1809,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 15
         image_path_15 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_15.png")
         if not os.path.exists(image_path_15):
-            print(f"Изображение {image_path_15} не найдено.")
+            log.info(f"Изображение {image_path_15} не найдено.")
             return
         can.drawImage(image_path_15, 0, 0, width=width, height=height)
 
@@ -1816,7 +1819,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 16
         image_path_16 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_16.png")
         if not os.path.exists(image_path_16):
-            print(f"Изображение {image_path_16} не найдено.")
+            log.info(f"Изображение {image_path_16} не найдено.")
             return
         can.drawImage(image_path_16, 0, 0, width=width, height=height)
 
@@ -1853,7 +1856,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 17
         image_path_17 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_17.png")
         if not os.path.exists(image_path_17):
-            print(f"Изображение {image_path_17} не найдено.")
+            log.info(f"Изображение {image_path_17} не найдено.")
             return
         can.drawImage(image_path_17, 0, 0, width=width, height=height)
         # Цвет шкал
@@ -1898,7 +1901,7 @@ def generate_and_download_pdf():
 
         # Сохранение документа
         can.save()
-        # print(f"PDF-файл успешно создан: {pdf_path}")  # Отладочный вывод
+        # log.info(f"PDF-файл успешно создан: {pdf_path}")  # Отладочный вывод
 
         if not ISeC_results_exists:
             # SQL-запрос для создания таблицы, если она не существует
@@ -1945,7 +1948,7 @@ def generate_and_download_pdf():
         exists = cursor.fetchone()[0] > 0
 
         if exists:
-            print("Данные уже существуют в базе")  # Выводим сообщение в консоль, если запись уже существует
+            log.info("Данные уже существуют в базе")  # Выводим сообщение в консоль, если запись уже существует
         elif insertData:
             # SQL-запрос для вставки данных
             sql = '''INSERT INTO ISeC_results (
@@ -2026,8 +2029,8 @@ def generate_and_download_pdf():
         conn.close()
         
         # # Отладочные выводы
-        # print(f"PDF path: {pdf_path}")
-        # print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
+        # log.info(f"PDF path: {pdf_path}")
+        # log.info(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
 
         # Проверяем, существует ли файл перед отправкой
         if not os.path.isfile(pdf_path):
@@ -2085,12 +2088,12 @@ def cleanup_ISeC(userId, pdf_path):
     # Удаляем PDF-файл
     if userId in user_locks:
         del user_locks[userId]
-        # print(f"Блокировка для пользователя {userId} удалена.")  # Отладочный вывод
+        # log.info(f"Блокировка для пользователя {userId} удалена.")  # Отладочный вывод
 
     # Удаляем userId из словаря блокировок
     if os.path.isfile(pdf_path):
         os.remove(pdf_path)
-        # print(f"PDF-файл {pdf_path} удален.")  # Отладочный вывод
+        # log.info(f"PDF-файл {pdf_path} удален.")  # Отладочный вывод
 
 
 
@@ -2882,7 +2885,7 @@ def cab_generate_query():
                     if cell_length > max_length:
                         max_length = cell_length
             except Exception as e:
-                print(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")  # Отладочный вывод
+                log.info(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")  # Отладочный вывод
 
         # Устанавливаем ширину для каждого столбца от A до AO
         ws.column_dimensions[column_letter].width = max(ws.column_dimensions[column_letter].width, max_length, default_min_width)

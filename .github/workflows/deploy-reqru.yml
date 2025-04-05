@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.SSH_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "ISeC/app/"
+          source: "ISeC/app/,!ISeC/app/database"
           target: "www/isec.smart-skills.pro/"
           strip_components: 2
 
@@ -43,16 +43,7 @@ jobs:
 
       - name: install requirements
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip install --upgrade pip && pip uninstall -y $(pip freeze) && pip install -r www/isec.smart-skills.pro/requirements.txt" 
-
-      - name: install envs
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_USER_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_USER}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PASSWORD_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PASSWORD}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_DB_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_DB}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_HOST_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_HOST}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "sed -i 's|MYSQL_DATABASE_PORT_PLACEHOLDER|'${{secrets.MYSQL_DATABASE_PORT}}'|g' www/isec.smart-skills.pro/passenger_wsgi.py"
-  
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "source /var/www/u0200264/data/flaskenv/bin/activate && pip install --upgrade pip && pip uninstall -y $(pip freeze) && pip install -r www/isec.smart-skills.pro/requirements.txt"   
 
       - name: Restart app
         run: |

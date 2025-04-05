@@ -26,6 +26,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "ISeC/app/database/ISeC_database.db"
           target: "/var/www/u0200264/data/database/"
-          strip_components: 2
+          strip_components: 3
 
 

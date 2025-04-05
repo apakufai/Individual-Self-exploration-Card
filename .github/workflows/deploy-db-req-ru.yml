@@ -20,7 +20,7 @@ jobs:
 
       - name: create db folder
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "mkdir /var/www/u0200264/data/database"   
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "mkdir /var/www/u0200264/data/database || true"   
 
 
       - name: copy file via ssh

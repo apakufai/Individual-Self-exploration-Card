@@ -15,12 +15,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           host=${{secrets.SSH_IP}}
           hosts="$(dig +short "$host" | grep -v '\.$' | sed -z 's|\n|,|g')$host"
-          ssh-keyscan -H "$hosts" > ~/.ssh/known_hosts
-          
-
-      - name: create db folder
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }}  -t "mkdir /var/www/u0200264/data/database || true"   
+          ssh-keyscan -H "$hosts" > ~/.ssh/known_hosts 
 
 
       - name: copy file via ssh

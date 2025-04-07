@@ -2137,8 +2137,10 @@ def cab_login():
         hashed_password = cab_hash_password(request.form['adminAccess'])
         # Подключение к базе данных
         conn = get_db_connection()
+        if conn is None:
+            return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
         # Сначала ищем пользователя по логину
-        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', 
+        user = cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', 
                             (adminLogin,)).fetchone()
         if user is None:
             # Если пользователь не найден
@@ -2156,6 +2158,7 @@ def cab_login():
             'analysisAccess': user['analysisAccess'],
             'excelgenAccess': user['excelgenAccess']
         }  # Сохраняем данные в сессии
+        cursor.close()
         conn.close()
         return "sucsess"
     return render_template('cab_login.html')
@@ -2213,7 +2216,11 @@ def cab_get_respondent_data():
     if not data or 'userId' not in data:
         return "Invalid input", 400  # Возвращаем ошибку, если входные данные некорректны
     conn = get_db_connection()
-    respondent_data = conn.execute('SELECT * FROM ISeC_results WHERE userId = ?', (data.get('userId'),)).fetchone()
+    if conn is None:
+        return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
+    cursor = conn.cursor()
+    respondent_data = cursor.execute('SELECT * FROM ISeC_results WHERE userId = ?', (data.get('userId'),)).fetchone()
+    cursor.close()
     conn.close()
 
     if respondent_data is None:

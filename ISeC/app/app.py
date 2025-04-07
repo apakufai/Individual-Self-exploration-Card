@@ -2137,10 +2137,8 @@ def cab_login():
         hashed_password = cab_hash_password(request.form['adminAccess'])
         # Подключение к базе данных
         conn = get_db_connection()
-        if conn is None:
-            return jsonify({'error': 'connect_error'})  # Возвращаем сообщение об ошибке подключения
         # Сначала ищем пользователя по логину
-        user = cursor.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', 
+        user = conn.execute('SELECT * FROM ISeC_adminAccounts WHERE login = ?', 
                             (adminLogin,)).fetchone()
         if user is None:
             # Если пользователь не найден
@@ -2158,7 +2156,6 @@ def cab_login():
             'analysisAccess': user['analysisAccess'],
             'excelgenAccess': user['excelgenAccess']
         }  # Сохраняем данные в сессии
-        cursor.close()
         conn.close()
         return "sucsess"
     return render_template('cab_login.html')

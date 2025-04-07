@@ -1,4 +1,8 @@
+import logging
+from logging.handlers import RotatingFileHandler
+
 from flask import Flask, render_template, send_file, request, jsonify, send_from_directory, session, redirect, url_for
+from flask.logging import default_handler
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -27,48 +31,66 @@ from openpyxl.styles import PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
 
+log = logging.getLogger(__name__)
+log.addHandler(default_handler)
 
-app = Flask(__name__)
-CORS(app)  # Разрешить CORS для всех маршрутов
-app.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
+if (log_file := os.environ.get("LOGFILE_PATH")) is not None:
+    log_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    my_handler = RotatingFileHandler(
+        log_file,
+        mode='a',
+        maxBytes=5*1024*1024,
+        backupCount=2,
+        encoding=None,
+        delay=0
+    )
+    my_handler.setFormatter(log_formatter)
+    my_handler.setLevel(logging.DEBUG)
+    log.setLevel(logging.DEBUG)
+    log.addHandler(my_handler)
+
+application = Flask(__name__)
+CORS(application)  # Разрешить CORS для всех маршрутов
+application.secret_key = secrets.token_hex(16)  # Генерирует 32-значный шестнадцатеричный ключ
 
 user_locks = {}  # Словарь для хранения блокировок для каждого пользователя
 
 
-
 # Отображение фавикона
-@app.route('/favicon.ico')
+@application.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
-
+    return send_from_directory(os.path.join(application.root_path, 'static/images'), 'favicon.ico', mimetype='image/x-icon')
 
 
 # Функция подключение к беза данных
 def get_db_connection():
     try:
-        db_path = os.path.join(os.path.dirname(__file__), 'database/ISeC_database.db')
+        if (path := os.environ.get("DB_PATH")) is not None:
+            db_path = path
+        else:
+            db_path = os.path.join(os.path.dirname(__file__), 'database/ISeC_database.db')
         if not os.path.exists(db_path):
-            print(f"База данных не найдена по пути: {db_path}")
-        print("Попытка подключения к базе данных...")
-        conn = sqlite3.connect(db_path)  # Путь к базе данных
+            log.info(f"База данных не найдена по пути: {db_path}")
+        log.info("Попытка подключения к базе данных...")
+        conn = sqlite3.connect(db_path)  # Укажите путь к вашей базе данных
         conn.row_factory = sqlite3.Row  # Позволяет обращаться к столбцам по именам
-        print("Подключение успешно.")
+        log.info("Подключение успешно.")
         return conn
     except sqlite3.Error as e:
-        print(f"Ошибка подключения к базе данных: {e}")
+        log.info(f"Ошибка подключения к базе данных: {e}")
         return None
 
 
 
 # Маршруты переходов для страниц
-@app.route('/')
+@application.route('/')
 def index():
     return render_template('index.html')
 
 
 
 # Функция проверки существования в базе кодов доступа к тесту (возвращает название группы)
-@app.route('/check_code', methods=['POST'])
+@application.route('/check_code', methods=['POST'])
 def check_code():
     input_code = request.json.get('code')  # Получаем код из запроса
     conn = get_db_connection()
@@ -77,7 +99,6 @@ def check_code():
     cursor = conn.cursor()
     cursor.execute('SELECT testGroup, dateFrom, dateUntil FROM ISeC_accessCodes WHERE code = ?', (input_code,))
     result = cursor.fetchone()
-    cursor.close()
     conn.close()
     if result:
         test_group = result['testGroup']
@@ -97,105 +118,105 @@ def check_code():
         return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
 
 
-@app.route('/set_index_pass', methods=['POST'])
+@application.route('/set_index_pass', methods=['POST'])
 def set_index_pass():
     data = request.get_json()
     if 'indexPass' in data and data['indexPass'] == True:
         session['indexPass'] = True
     return jsonify(success=True)
 
-@app.route('/user_data_input')
+@application.route('/user_data_input')
 def user_data_input():
     if 'indexPass' not in session or not session['indexPass']:
         return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
     return render_template('user_data_input.html')
 
-@app.route('/set_UDI_pass', methods=['POST'])
+@application.route('/set_UDI_pass', methods=['POST'])
 def set_UDI_pass():
     data = request.get_json()
     if 'UDIPass' in data and data['UDIPass'] == True:
         session['UDIPass'] = True
     return jsonify(success=True)
 
-@app.route('/test_1')
+@application.route('/test_1')
 def test_1():
     if 'UDIPass' not in session or not session['UDIPass']:
         return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
     return render_template('test_1.html')
 
-@app.route('/set_test_1_pass', methods=['POST'])
+@application.route('/set_test_1_pass', methods=['POST'])
 def set_test_1_pass():
     data = request.get_json()
     if 'test1Pass' in data and data['test1Pass'] == True:
         session['test1Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_2')
+@application.route('/test_2')
 def test_2():
     if 'test1Pass' not in session or not session['test1Pass']:
         return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
     return render_template('test_2.html')
 
-@app.route('/set_test_2_pass', methods=['POST'])
+@application.route('/set_test_2_pass', methods=['POST'])
 def set_test_2_pass():
     data = request.get_json()
     if 'test2Pass' in data and data['test2Pass'] == True:
         session['test2Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_3')
+@application.route('/test_3')
 def test_3():
     if 'test2Pass' not in session or not session['test2Pass']:
         return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
     return render_template('test_3.html')
 
-@app.route('/set_test_3_pass', methods=['POST'])
+@application.route('/set_test_3_pass', methods=['POST'])
 def set_test_3_pass():
     data = request.get_json()
     if 'test3Pass' in data and data['test3Pass'] == True:
         session['test3Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_4')
+@application.route('/test_4')
 def test_4():
     if 'test3Pass' not in session or not session['test3Pass']:
         return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
     return render_template('test_4.html')
 
-@app.route('/set_test_4_pass', methods=['POST'])
+@application.route('/set_test_4_pass', methods=['POST'])
 def set_test_4_pass():
     data = request.get_json()
     if 'test4Pass' in data and data['test4Pass'] == True:
         session['test4Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_5')
+@application.route('/test_5')
 def test_5():
     if 'test4Pass' not in session or not session['test4Pass']:
         return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
     return render_template('test_5.html')
 
-@app.route('/set_test_5_pass', methods=['POST'])
+@application.route('/set_test_5_pass', methods=['POST'])
 def set_test_5_pass():
     data = request.get_json()
     if 'test5Pass' in data and data['test5Pass'] == True:
         session['test5Pass'] = True
     return jsonify(success=True)
 
-@app.route('/test_6')
+@application.route('/test_6')
 def test_6():
     if 'test5Pass' not in session or not session['test5Pass']:
         return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
     return render_template('test_6.html')
 
-@app.route('/set_test_6_pass', methods=['POST'])
+@application.route('/set_test_6_pass', methods=['POST'])
 def set_test_6_pass():
     data = request.get_json()
     if 'test6Pass' in data and data['test6Pass'] == True:
         session['test6Pass'] = True
     return jsonify(success=True)
 
-@app.route('/results')
+@application.route('/results')
 def results():
     if 'test6Pass' not in session or not session['test6Pass']:
         return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
@@ -204,7 +225,7 @@ def results():
 
 
 # Функция проверки существования id респондента в базе (нужна для исключения дубликатов)
-@app.route('/check_user_id', methods=['POST'])
+@application.route('/check_user_id', methods=['POST'])
 def check_user_id():
     input_id = request.json.get('userId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -244,13 +265,13 @@ def send_email(user_email, pdf_path, pdf_filename):
     msg['To'] = user_email
     msg['Subject'] = pdf_filename  # Устанавливаем тему письма
     # Устанавливаем текст тела письма
-    body = """Вы получили это письмо по результатам прохождения методики аудита персонального стиля влияния на сайте isec.smart-skills.pro.
-Приложением к письму направляем Ваш ИКС-файл. Рекомендуем сохранить его в удобном доступе для вдумчивого ознакомления.
-На титульном листе ИКС-файла указан Ваш персональный ID. По нему на том же сайте вы можете запросить консультацию или повторную генерацию ИКС-файла.
-Желаем Вам интересного и полезного изучения Вашего профиля влияния в коммуникации.
+    body = """Вы получили это письмо по результатам прохождения методики аудита персонального стиля влияния на сайте _.
+    Приложением к письму направляем Ваш ИКС-файл. Рекомендуем сохранить его в удобном доступе для вдумчивого ознакомления.
+    На титульном листе ИКС-файла указан Ваш персональный ID. По нему на том же сайте вы можете запросить консультацию или повторную генерацию ИКС-файла.
+    Желаем Вам интересного и полезного изучения Вашего профиля влияния в коммуникации.
     
-ВАЖНО: мы не храним Ваши персональные данные. Ваш ID - уникальный КЛЮЧ для извлечения строки ответов из базы статистической информации,
-которую мы используем для анализа и совершенствования методики. При потере ID Ваш ИКС-файл не может быть сгенерирован повторно."""  # Текст тела письма
+    ВАЖНО: мы не храним Ваши персональные данные. Ваш ID - уникальный КЛЮЧ для извлечения строки ответов из базы статистической информации,
+    которую мы используем для анализа и совершенствования методики. При потере ID Ваш ИКС-файл не может быть сгенерирован повторно."""  # Текст тела письма
     msg.attach(MIMEText(body, 'plain'))  # Прикрепляем текст к сообщению
     # Прикрепляем PDF-файл
     with open(pdf_path, 'rb') as attachment:
@@ -266,12 +287,12 @@ def send_email(user_email, pdf_path, pdf_filename):
             server.login(smtp_user, smtp_password)  # Аутентификация в почтовом ящике
             server.send_message(msg)  # Отправляем сообщение
     except Exception as e:
-        print(f"Ошибка при отправке email: {e}")
+        log.info(f"Ошибка при отправке email: {e}")
 
 
 
 # Работа с итоговым PDF-файлом и занесение данных в базу
-@app.route('/generate_and_download_pdf', methods=['POST'])
+@application.route('/generate_and_download_pdf', methods=['POST'])
 def generate_and_download_pdf():
 
     # Локальный массив для хранения результатов
@@ -515,7 +536,7 @@ def generate_and_download_pdf():
         image_path_1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_1.png")
         # Проверяем, существует ли изображение
         if not os.path.exists(image_path_1):
-            print(f"Изображение {image_path_1} не найдено.")
+            log.info(f"Изображение {image_path_1} не найдено.")
         # Добавляем изображение на страницу
         can.drawImage(image_path_1, 0, 0, width=width, height=height)
 
@@ -539,7 +560,7 @@ def generate_and_download_pdf():
         image_path_2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_2.png")
         # Проверяем, существует ли изображение
         if not os.path.exists(image_path_2):
-            print(f"Изображение {image_path_2} не найдено.")
+            log.info(f"Изображение {image_path_2} не найдено.")
         # Добавляем изображение на страницу
         can.drawImage(image_path_2, 0, 0, width=width, height=height)
 
@@ -630,7 +651,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 3
         image_path_3 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_3.png")
         if not os.path.exists(image_path_3):
-            print(f"Изображение {image_path_3} не найдено.")
+            log.info(f"Изображение {image_path_3} не найдено.")
             return
         can.drawImage(image_path_3, 0, 0, width=width, height=height)
             
@@ -678,7 +699,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 4
         image_path_4 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_4.png")
         if not os.path.exists(image_path_4):
-            print(f"Изображение {image_path_4} не найдено.")
+            log.info(f"Изображение {image_path_4} не найдено.")
             return
         can.drawImage(image_path_4, 0, 0, width=width, height=height)
 
@@ -751,7 +772,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 5
         image_path_5 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_5.png")
         if not os.path.exists(image_path_5):
-            print(f"Изображение {image_path_5} не найдено.")
+            log.info(f"Изображение {image_path_5} не найдено.")
             return
         can.drawImage(image_path_5, 0, 0, width=width, height=height)
         if adaptation_2 is not None:  # Проверяем, что adaptation_2 не None
@@ -1500,7 +1521,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 6
         image_path_6 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_6.png")
         if not os.path.exists(image_path_6):
-            print(f"Изображение {image_path_6} не найдено.")
+            log.info(f"Изображение {image_path_6} не найдено.")
             return
         can.drawImage(image_path_6, 0, 0, width=width, height=height)
 
@@ -1537,7 +1558,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 7
         image_path_7 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_7.png")
         if not os.path.exists(image_path_7):
-            print(f"Изображение {image_path_7} не найдено.")
+            log.info(f"Изображение {image_path_7} не найдено.")
             return
         can.drawImage(image_path_7, 0, 0, width=width, height=height)
 
@@ -1574,7 +1595,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 8
         image_path_8 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_8.png")
         if not os.path.exists(image_path_8):
-            print(f"Изображение {image_path_8} не найдено.")
+            log.info(f"Изображение {image_path_8} не найдено.")
             return
         can.drawImage(image_path_8, 0, 0, width=width, height=height)
 
@@ -1600,7 +1621,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 9
         image_path_9 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_9.png")
         if not os.path.exists(image_path_9):
-            print(f"Изображение {image_path_9} не найдено.")
+            log.info(f"Изображение {image_path_9} не найдено.")
             return
         can.drawImage(image_path_9, 0, 0, width=width, height=height)
         # Вычленяем значения из sorted_result[0] и sorted_result[4] для подсчёта разницы между минимумом и максимумом
@@ -1618,7 +1639,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 10
         image_path_10 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_10.png")
         if not os.path.exists(image_path_10):
-            print(f"Изображение {image_path_10} не найдено.")
+            log.info(f"Изображение {image_path_10} не найдено.")
             return
         can.drawImage(image_path_10, 0, 0, width=width, height=height)
 
@@ -1722,7 +1743,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 11
         image_path_11 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_11.png")
         if not os.path.exists(image_path_11):
-            print(f"Изображение {image_path_11} не найдено.")
+            log.info(f"Изображение {image_path_11} не найдено.")
             return
         can.drawImage(image_path_11, 0, 0, width=width, height=height)
 
@@ -1732,7 +1753,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 12
         image_path_12 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_12.png")
         if not os.path.exists(image_path_12):
-            print(f"Изображение {image_path_12} не найдено.")
+            log.info(f"Изображение {image_path_12} не найдено.")
             return
         can.drawImage(image_path_12, 0, 0, width=width, height=height)
 
@@ -1742,7 +1763,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 13
         image_path_13 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_13.png")
         if not os.path.exists(image_path_13):
-            print(f"Изображение {image_path_13} не найдено.")
+            log.info(f"Изображение {image_path_13} не найдено.")
             return
         can.drawImage(image_path_13, 0, 0, width=width, height=height)
         can.drawString(249.658, height - 254.288, str(strengthInstallation_4))  # Силовая модель
@@ -1784,7 +1805,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 14
         image_path_14 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_14.png")
         if not os.path.exists(image_path_14):
-            print(f"Изображение {image_path_14} не найдено.")
+            log.info(f"Изображение {image_path_14} не найдено.")
             return
         can.drawImage(image_path_14, 0, 0, width=width, height=height)
 
@@ -1794,7 +1815,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 15
         image_path_15 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_15.png")
         if not os.path.exists(image_path_15):
-            print(f"Изображение {image_path_15} не найдено.")
+            log.info(f"Изображение {image_path_15} не найдено.")
             return
         can.drawImage(image_path_15, 0, 0, width=width, height=height)
 
@@ -1804,7 +1825,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 16
         image_path_16 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_16.png")
         if not os.path.exists(image_path_16):
-            print(f"Изображение {image_path_16} не найдено.")
+            log.info(f"Изображение {image_path_16} не найдено.")
             return
         can.drawImage(image_path_16, 0, 0, width=width, height=height)
 
@@ -1841,7 +1862,7 @@ def generate_and_download_pdf():
         # СТРАНИЦА 17
         image_path_17 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pagesPDF", "page_17.png")
         if not os.path.exists(image_path_17):
-            print(f"Изображение {image_path_17} не найдено.")
+            log.info(f"Изображение {image_path_17} не найдено.")
             return
         can.drawImage(image_path_17, 0, 0, width=width, height=height)
         # Цвет шкал
@@ -1886,7 +1907,7 @@ def generate_and_download_pdf():
 
         # Сохранение документа
         can.save()
-        # print(f"PDF-файл успешно создан: {pdf_path}")  # Отладочный вывод
+        # log.info(f"PDF-файл успешно создан: {pdf_path}")  # Отладочный вывод
 
         if not ISeC_results_exists:
             # SQL-запрос для создания таблицы, если она не существует
@@ -1933,7 +1954,7 @@ def generate_and_download_pdf():
         exists = cursor.fetchone()[0] > 0
 
         if exists:
-            print("Данные уже существуют в базе")  # Выводим сообщение в консоль, если запись уже существует
+            log.info("Данные уже существуют в базе")  # Выводим сообщение в консоль, если запись уже существует
         elif insertData:
             # SQL-запрос для вставки данных
             sql = '''INSERT INTO ISeC_results (
@@ -2014,8 +2035,8 @@ def generate_and_download_pdf():
         conn.close()
         
         # # Отладочные выводы
-        # print(f"PDF path: {pdf_path}")
-        # print(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
+        # log.info(f"PDF path: {pdf_path}")
+        # log.info(f"downloadToPC: {downloadToPC}, receiveByEmail: {receiveByEmail}, insertData: {insertData}")  # Проверка значений сессий
 
         # Проверяем, существует ли файл перед отправкой
         if not os.path.isfile(pdf_path):
@@ -2073,17 +2094,17 @@ def cleanup_ISeC(userId, pdf_path):
     # Удаляем PDF-файл
     if userId in user_locks:
         del user_locks[userId]
-        # print(f"Блокировка для пользователя {userId} удалена.")  # Отладочный вывод
+        # log.info(f"Блокировка для пользователя {userId} удалена.")  # Отладочный вывод
 
     # Удаляем userId из словаря блокировок
     if os.path.isfile(pdf_path):
         os.remove(pdf_path)
-        # print(f"PDF-файл {pdf_path} удален.")  # Отладочный вывод
+        # log.info(f"PDF-файл {pdf_path} удален.")  # Отладочный вывод
 
 
 
 # Очистка сессии после скачивания pdf-файла
-@app.route('/clear_session', methods=['POST'])
+@application.route('/clear_session', methods=['POST'])
 def clear_session():
     data = request.get_json()
     if 'clearSession' in data and data['clearSession'] == True:
@@ -2109,7 +2130,7 @@ def cab_hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 # Маршрут для авторизации
-@app.route('/cab_login', methods=['GET', 'POST'])
+@application.route('/cab_login', methods=['GET', 'POST'])
 def cab_login():
     if request.method == 'POST':
         adminLogin = request.form['adminLogin']
@@ -2144,7 +2165,7 @@ def cab_login():
     return render_template('cab_login.html')
 
 # Маршрут для выхода из системы
-@app.route('/cab_logout')
+@application.route('/cab_logout')
 def cab_logout():
     session.pop('admin_data', None)
     return redirect(url_for('cab_login'))
@@ -2152,14 +2173,14 @@ def cab_logout():
 
 
 # Маршрут для главной страницы кабинета администратора
-@app.route('/cab_archive')
+@application.route('/cab_archive')
 def cab_archive():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
     return render_template('cab_archive.html')
 
 # Внесение дополнительных адресов в БД
-@app.route('/cab_add_resend', methods=['POST'])
+@application.route('/cab_add_resend', methods=['POST'])
 def cab_add_resend():
     # Инициализация базы данных и создание таблицы, если она не существует
     conn = get_db_connection()
@@ -2190,7 +2211,7 @@ def cab_add_resend():
         conn.close()
 
 # Маршрут для получения данных пользователя по userId
-@app.route('/cab_get_respondent_data', methods=['POST'])
+@application.route('/cab_get_respondent_data', methods=['POST'])
 def cab_get_respondent_data():
     data = request.get_json()
     if not data or 'userId' not in data:
@@ -2377,7 +2398,7 @@ def cab_get_respondent_data():
 
 
 # Маршрут для страницы кодов доступа
-@app.route('/cab_codes')
+@application.route('/cab_codes')
 def cab_codes():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2417,7 +2438,7 @@ def cab_codes():
     return render_template('cab_codes.html', codesRows=sorted_codes_list)
 
 # Проверка существования кодов доступа в базе данных перед созданием/обновлением
-@app.route('/cab_check_code', methods=['POST'])
+@application.route('/cab_check_code', methods=['POST'])
 def cab_check_code():
     action = request.json.get('action')  # Операция
     isGroupInDB = False  # Проверка на наличие группы в базе данных
@@ -2458,7 +2479,7 @@ def cab_check_code():
     return jsonify({'isGroupInDB': isGroupInDB, 'isCodeInDB': isCodeInDB})
 
 # Проверка существования id кода доступа в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_code_id', methods=['POST'])
+@application.route('/cab_check_code_id', methods=['POST'])
 def cab_check_code_id():
     input_id = request.json.get('codeId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -2484,7 +2505,7 @@ def cab_check_code_id():
         conn.close()
 
 # Создание нового кода доступа
-@app.route('/cab_create_code', methods=['POST'])
+@application.route('/cab_create_code', methods=['POST'])
 def cab_create_code():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2517,7 +2538,7 @@ def cab_create_code():
     return redirect(url_for('cab_codes'))
 
 # Изменение кодов доступа
-@app.route('/cab_update_code/<code_id>', methods=['POST'])
+@application.route('/cab_update_code/<code_id>', methods=['POST'])
 def cab_update_code(code_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2545,7 +2566,7 @@ def cab_update_code(code_id):
     return redirect(url_for('cab_codes'))
 
 # Удаление кодов доступа
-@app.route('/cab_delete_code/<code_id>', methods=['POST'])
+@application.route('/cab_delete_code/<code_id>', methods=['POST'])
 def cab_delete_code(code_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2561,7 +2582,7 @@ def cab_delete_code(code_id):
 
 
 # Маршрут для страницы аналитики
-@app.route('/cab_analysis')
+@application.route('/cab_analysis')
 def cab_analysis():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2672,7 +2693,7 @@ def cab_process_analysis_data(data):
 
 
 # Маршрут для страницы выборок
-@app.route('/cab_excelgen')
+@application.route('/cab_excelgen')
 def cab_excelgen():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2712,7 +2733,7 @@ def sort_groups_by_date(groups):
     return sorted(groups, key=extract_date, reverse=True)  # Сортируем группы по дате в обратном порядке (от самой поздней к самой ранней)
 
 # Создание sql-запроса из данных на html-странице
-@app.route('/cab_generate_query', methods=['POST'])
+@application.route('/cab_generate_query', methods=['POST'])
 def cab_generate_query():
     # Проверяем, существует ли директория 'temp', и, если нет, создаем её
     directory = 'temp'
@@ -2878,7 +2899,7 @@ def cab_generate_query():
                     if cell_length > max_length:
                         max_length = cell_length
             except Exception as e:
-                print(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")  # Отладочный вывод
+                log.info(f"Ошибка при обработке ячейки {cell.coordinate}: {e}")  # Отладочный вывод
 
         # Устанавливаем ширину для каждого столбца от A до AO
         ws.column_dimensions[column_letter].width = max(ws.column_dimensions[column_letter].width, max_length, default_min_width)
@@ -2907,7 +2928,7 @@ def delete_excel(file_path):
 
 
 # Маршрут для страницы администраторов
-@app.route('/cab_admins')
+@application.route('/cab_admins')
 def cab_admins():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -2947,7 +2968,7 @@ def cab_admins():
     return render_template('cab_admins.html', adminData=admin_data, adminsRows=admins_list)
 
 # Проверка существования администраторов в базе данных перед созданием/обновлением
-@app.route('/cab_check_admin', methods=['POST'])
+@application.route('/cab_check_admin', methods=['POST'])
 def cab_check_admin():
     action = request.json.get('action')  # Операция
     isLoginInDB = False  # Проверка на наличие логина в базе данных
@@ -2988,7 +3009,7 @@ def cab_check_admin():
     return jsonify({'isLoginInDB': isLoginInDB, 'isAdminNameInDB': isAdminNameInDB})
 
 # Проверка существования id администратора в базе перед созданием (нужна для исключения дубликатов)
-@app.route('/cab_check_admin_id', methods=['POST'])
+@application.route('/cab_check_admin_id', methods=['POST'])
 def cab_check_admin_id():
     input_adminId = request.json.get('adminId')  # Получаем код из запроса
     conn = get_db_connection()
@@ -3014,7 +3035,7 @@ def cab_check_admin_id():
         conn.close()
 
 # Создание нового администратора
-@app.route('/cab_create_admin', methods=['POST'])
+@application.route('/cab_create_admin', methods=['POST'])
 def cab_create_admin():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3053,7 +3074,7 @@ def cab_create_admin():
     return redirect(url_for('cab_admins'))
 
 # Изменение администраторов
-@app.route('/cab_update_admin/<admin_id>', methods=['POST'])
+@application.route('/cab_update_admin/<admin_id>', methods=['POST'])
 def cab_update_admin(admin_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3094,7 +3115,7 @@ def cab_update_admin(admin_id):
     return redirect(url_for('cab_admins'))
 
 # Удаление администраторов
-@app.route('/cab_delete_admin/<admin_id>', methods=['POST'])
+@application.route('/cab_delete_admin/<admin_id>', methods=['POST'])
 def cab_delete_admin(admin_id):
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3108,7 +3129,7 @@ def cab_delete_admin(admin_id):
     return redirect(url_for('cab_admins'))
 
 # Изменение главного администратора
-@app.route('/cab_update_main_admin', methods=['POST'])
+@application.route('/cab_update_main_admin', methods=['POST'])
 def cab_update_main_admin():
     if 'admin_data' not in session:
         return redirect(url_for('cab_login'))
@@ -3147,7 +3168,7 @@ def cab_update_main_admin():
         conn.close()
     return redirect(url_for('cab_admins'))
 
-@app.route('/download_emaildata', methods=['POST'])
+@application.route('/download_emaildata', methods=['POST'])
 def download_emaildata():
     # Подключение к базе данных
     conn = get_db_connection()
@@ -3168,7 +3189,6 @@ def download_emaildata():
         emails2 = []
 
     # Закрытие соединения с БД
-    cursor.close()
     conn.close()
 
     # Проверка на пустые списки
@@ -3198,7 +3218,5 @@ def delete_txt(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
 
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(host="0.0.0.0")

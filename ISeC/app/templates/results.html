@@ -226,6 +226,18 @@
 							}
 						});
 					} else {
+						// Устанавливаем свойство disabled для всех кнопок
+						PDF_buttons.forEach(button => {
+							button.disabled = true;
+						});
+						// Изменяем CSS-свойства выбранной кнопки
+						btn_PDF_send.style.border = '5px solid #5b7ead';
+						btn_PDF_send.style.color = '#5b7ead';
+						btn_PDF_send.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
+						// Устанавливаем значения в sessionStorage
+						sessionStorage.setItem('changedButton', 'PDF_send');
+						sessionStorage.setItem('downloadToPC', 'false');
+						sessionStorage.setItem('receiveByEmail', 'true');
 						// Запускаем функцию генерации PDF
 						generatePDF(true);
 					}
@@ -260,18 +272,23 @@
 								sessionStorage.setItem('changedButton', 'PDF_dwnl_and_send');
 								sessionStorage.setItem('downloadToPC', 'true');
 								sessionStorage.setItem('receiveByEmail', 'true');
-
-								// Перебираем все ключи в sessionStorage
-								for (let i = 0; i < sessionStorage.length; i++) {
-									const key = sessionStorage.key(i); // Получаем ключ
-									const value = sessionStorage.getItem(key); // Получаем значение по ключу
-									console.log(`${key}: ${value}`); // Выводим ключ и значение в консоль
-								}
 								// Запускаем функцию генерации PDF
 								generatePDF(true);
 							}
 						});
 					} else {
+						// Устанавливаем свойство disabled для всех кнопок
+						PDF_buttons.forEach(button => {
+							button.disabled = true;
+						});
+						// Изменяем CSS-свойства выбранной кнопки
+						btn_PDF_dwnl_and_send.style.border = '5px solid #5b7ead';
+						btn_PDF_dwnl_and_send.style.color = '#5b7ead';
+						btn_PDF_dwnl_and_send.style.backgroundColor = 'rgba(172, 189, 214, 0.85)';
+						// Устанавливаем значения в sessionStorage
+						sessionStorage.setItem('changedButton', 'PDF_dwnl_and_send');
+						sessionStorage.setItem('downloadToPC', 'true');
+						sessionStorage.setItem('receiveByEmail', 'true');
 						// Запускаем функцию генерации PDF
 						generatePDF(true);
 					}
@@ -398,7 +415,7 @@
 					const strengthInstallationCount_4 = parseFloat(sessionStorage.getItem('strengthInstallationCount_4'));
 					const manipulationInstallationCount_4 = parseFloat(sessionStorage.getItem('manipulationInstallationCount_4'));
 					const negotiationsInstallationCount_4 = parseFloat(sessionStorage.getItem('negotiationsInstallationCount_4'));
-					
+
 					const b4_q1 = parseInt(sessionStorage.getItem('b4_q1'), 10);
 					const b4_q2 = parseInt(sessionStorage.getItem('b4_q2'), 10);
 					const b4_q3 = parseInt(sessionStorage.getItem('b4_q3'), 10);
@@ -427,7 +444,7 @@
 					const logicArgumentCount_5 = parseFloat(sessionStorage.getItem('logicArgumentCount_5'));
 					const emotionsArgumentCount_5 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_5'));
 					const avoidanceCount_5 = parseFloat(sessionStorage.getItem('avoidanceCount_5'));
-					
+
 					const b5_q1 = parseInt(sessionStorage.getItem('b5_q1'), 10);
 					const b5_q2 = parseInt(sessionStorage.getItem('b5_q2'), 10);
 					const b5_q3 = parseInt(sessionStorage.getItem('b5_q3'), 10);
@@ -445,7 +462,7 @@
 					const emotionsArgument_6 = parseInt(sessionStorage.getItem('emotionsArgument_6'), 10);
 					const logicArgumentCount_6 = parseFloat(sessionStorage.getItem('logicArgumentCount_6'));
 					const emotionsArgumentCount_6 = parseFloat(sessionStorage.getItem('emotionsArgumentCount_6'));
-					
+
 					const b6_q1 = parseInt(sessionStorage.getItem('b6_q1'), 10);
 					const b6_q2 = parseInt(sessionStorage.getItem('b6_q2'), 10);
 					const b6_q3 = parseInt(sessionStorage.getItem('b6_q3'), 10);

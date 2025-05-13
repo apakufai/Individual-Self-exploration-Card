@@ -444,6 +444,15 @@ main {
    font-weight: lighter;
 }
 
+.index_about_link {
+   color: #5b7ead;
+   text-decoration: none;
+}
+
+.index_about_link:hover {
+   color: #142440;
+}
+
 
 
 /* ------------------------------------------------ */
@@ -1035,12 +1044,12 @@ main {
 
 /* Цвет кружка при активном состоянии*/
 .inpRadio:active {
-   background-color: #5b7ead;
+   background-color: #ffffff;
 }
 
 /* Цвет кружка при нажатии */
 .inpRadio:checked {
-   background-color: #ffffff;
+   background-color: #5b7ead;
    border-color: #5b7ead;
 }
 
@@ -1065,12 +1074,12 @@ main {
 
 /* Цвет кружка при активном состоянии*/
 .inpRadio_UDI:active {
-   background-color: #5b7ead;
+   background-color: #ffffff;
 }
 
 /* Цвет кружка при нажатии */
 .inpRadio_UDI:checked {
-   background-color: #ffffff;
+   background-color: #5b7ead;
    border-color: #5b7ead;
 }
 

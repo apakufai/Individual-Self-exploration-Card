@@ -119,7 +119,7 @@ def check_code():
 
 
 def get_session_key(base_key):
-    return f"{base_key}_{app.secret_key}"
+    return f"{base_key}_{application.secret_key}"
 
 @application.route('/set_index_pass', methods=['POST'])
 def set_index_pass():

@@ -118,108 +118,111 @@ def check_code():
         return jsonify({'error': 'accessCode_not_found'})  # Возвращаем сообщение, если код не найден
 
 
+def get_session_key(base_key):
+    return f"{base_key}_{app.secret_key}"
+
 @application.route('/set_index_pass', methods=['POST'])
 def set_index_pass():
     data = request.get_json()
     if 'indexPass' in data and data['indexPass'] == True:
-        session['indexPass'] = True
+        session[get_session_key('indexPass')] = True
     return jsonify(success=True)
 
 @application.route('/user_data_input')
 def user_data_input():
-    if 'indexPass' not in session or not session['indexPass']:
-        return redirect(url_for('index'))  # Перенаправляем на главную страницу, если indexPass не установлен
+    if get_session_key('indexPass') not in session or not session[get_session_key('indexPass')]:
+        return redirect(url_for('index'))
     return render_template('user_data_input.html')
 
 @application.route('/set_UDI_pass', methods=['POST'])
 def set_UDI_pass():
     data = request.get_json()
     if 'UDIPass' in data and data['UDIPass'] == True:
-        session['UDIPass'] = True
+        session[get_session_key('UDIPass')] = True
     return jsonify(success=True)
 
 @application.route('/test_1')
 def test_1():
-    if 'UDIPass' not in session or not session['UDIPass']:
-        return redirect(url_for('user_data_input'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('UDIPass') not in session or not session[get_session_key('UDIPass')]:
+        return redirect(url_for('user_data_input'))
     return render_template('test_1.html')
 
 @application.route('/set_test_1_pass', methods=['POST'])
 def set_test_1_pass():
     data = request.get_json()
     if 'test1Pass' in data and data['test1Pass'] == True:
-        session['test1Pass'] = True
+        session[get_session_key('test1Pass')] = True
     return jsonify(success=True)
 
 @application.route('/test_2')
 def test_2():
-    if 'test1Pass' not in session or not session['test1Pass']:
-        return redirect(url_for('test_1'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('test1Pass') not in session or not session[get_session_key('test1Pass')]:
+        return redirect(url_for('test_1'))
     return render_template('test_2.html')
 
 @application.route('/set_test_2_pass', methods=['POST'])
 def set_test_2_pass():
     data = request.get_json()
     if 'test2Pass' in data and data['test2Pass'] == True:
-        session['test2Pass'] = True
+        session[get_session_key('test2Pass')] = True
     return jsonify(success=True)
 
 @application.route('/test_3')
 def test_3():
-    if 'test2Pass' not in session or not session['test2Pass']:
-        return redirect(url_for('test_2'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('test2Pass') not in session or not session[get_session_key('test2Pass')]:
+        return redirect(url_for('test_2'))
     return render_template('test_3.html')
 
 @application.route('/set_test_3_pass', methods=['POST'])
 def set_test_3_pass():
     data = request.get_json()
     if 'test3Pass' in data and data['test3Pass'] == True:
-        session['test3Pass'] = True
+        session[get_session_key('test3Pass')] = True
     return jsonify(success=True)
 
 @application.route('/test_4')
 def test_4():
-    if 'test3Pass' not in session or not session['test3Pass']:
-        return redirect(url_for('test_3'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('test3Pass') not in session or not session[get_session_key('test3Pass')]:
+        return redirect(url_for('test_3'))
     return render_template('test_4.html')
 
 @application.route('/set_test_4_pass', methods=['POST'])
 def set_test_4_pass():
     data = request.get_json()
     if 'test4Pass' in data and data['test4Pass'] == True:
-        session['test4Pass'] = True
+        session[get_session_key('test4Pass')] = True
     return jsonify(success=True)
 
 @application.route('/test_5')
 def test_5():
-    if 'test4Pass' not in session or not session['test4Pass']:
-        return redirect(url_for('test_4'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('test4Pass') not in session or not session[get_session_key('test4Pass')]:
+        return redirect(url_for('test_4'))
     return render_template('test_5.html')
 
 @application.route('/set_test_5_pass', methods=['POST'])
 def set_test_5_pass():
     data = request.get_json()
     if 'test5Pass' in data and data['test5Pass'] == True:
-        session['test5Pass'] = True
+        session[get_session_key('test5Pass')] = True
     return jsonify(success=True)
 
 @application.route('/test_6')
 def test_6():
-    if 'test5Pass' not in session or not session['test5Pass']:
-        return redirect(url_for('test_5'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('test5Pass') not in session or not session[get_session_key('test5Pass')]:
+        return redirect(url_for('test_5'))
     return render_template('test_6.html')
 
 @application.route('/set_test_6_pass', methods=['POST'])
 def set_test_6_pass():
     data = request.get_json()
     if 'test6Pass' in data and data['test6Pass'] == True:
-        session['test6Pass'] = True
+        session[get_session_key('test6Pass')] = True
     return jsonify(success=True)
 
 @application.route('/results')
 def results():
-    if 'test6Pass' not in session or not session['test6Pass']:
-        return redirect(url_for('test_6'))  # Перенаправляем на предыдущую страницу
+    if get_session_key('test6Pass') not in session or not session[get_session_key('test6Pass')]:
+        return redirect(url_for('test_6'))
     return render_template('results.html')
 
 
@@ -2108,16 +2111,22 @@ def cleanup_ISeC(userId, pdf_path):
 def clear_session():
     data = request.get_json()
     if 'clearSession' in data and data['clearSession'] == True:
-        session.pop('indexPass', None)
-        session.pop('UDIPass', None)
-        session.pop('test1Pass', None)
-        session.pop('test2Pass', None)
-        session.pop('test3Pass', None)
-        session.pop('test4Pass', None)
-        session.pop('test5Pass', None)
-        session.pop('test6Pass', None)
+        keys_to_clear = [
+            'indexPass',
+            'UDIPass',
+            'test1Pass',
+            'test2Pass',
+            'test3Pass',
+            'test4Pass',
+            'test5Pass',
+            'test6Pass'
+        ]
+        for key in keys_to_clear:
+            session.pop(get_session_key(key), None)
+        # Можно также убрать сам флаг clearSession, если он есть
         session.pop('clearSession', None)
     return jsonify(success=True)
+
 
 
 
